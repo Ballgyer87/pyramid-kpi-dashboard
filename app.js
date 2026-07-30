@@ -5,6 +5,7 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   setupTabs();
+  setupSidebarToggle();
   renderOverview();
   renderRevenue();
   renderShrink();
@@ -24,6 +25,25 @@ function setupTabs() {
       btn.classList.add("active");
       document.getElementById(`panel-${btn.dataset.tab}`).classList.add("active");
     });
+  });
+}
+
+function setupSidebarToggle() {
+  const nav = document.querySelector(".side-nav");
+  const btn = document.getElementById("sidebar-toggle");
+
+  const applyState = (collapsed) => {
+    nav.classList.toggle("collapsed", collapsed);
+    btn.textContent = collapsed ? "›" : "‹";
+    btn.setAttribute("aria-label", collapsed ? "Expand sidebar" : "Collapse sidebar");
+  };
+
+  applyState(localStorage.getItem("sidebarCollapsed") === "true");
+
+  btn.addEventListener("click", () => {
+    const collapsed = !nav.classList.contains("collapsed");
+    applyState(collapsed);
+    localStorage.setItem("sidebarCollapsed", collapsed);
   });
 }
 

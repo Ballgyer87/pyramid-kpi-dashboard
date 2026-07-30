@@ -44,10 +44,11 @@ function renderOverview() {
     { label: "Net Income (MTD)", value: finance.stats[1].value, format: "currency", delta: finance.stats[1].delta, deltaLabel: "vs last month" },
   ];
 
-  renderStatGrid(panel, headline);
-
-  const meterCard = createGoalMeter(rev.goalMeter);
+  const meterCard = createGoalMeter(rev.goalMeter, "2026 Sales Goal Tracker");
   panel.appendChild(el("div", { class: "grid" }, [el("div", { class: "card-wide" }, meterCard)]));
+
+  panel.appendChild(el("div", { class: "section-label" }, "Headline KPIs"));
+  renderStatGrid(panel, headline);
 }
 
 /* --------------------------------------------------------------- revenue */
@@ -57,7 +58,7 @@ function renderRevenue() {
   const data = KPI_DATA.revenue;
 
   panel.appendChild(el("div", { class: "grid" }, [
-    el("div", { class: "card-wide" }, createGoalMeter(data.goalMeter)),
+    el("div", { class: "card-wide" }, createGoalMeter(data.goalMeter, "2026 Sales Goal Tracker")),
   ]));
 
   panel.appendChild(el("div", { class: "grid" }, [

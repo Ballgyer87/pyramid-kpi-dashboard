@@ -46,29 +46,8 @@
   --shadow: 0 1px 2px rgba(11,11,11,0.06), 0 1px 8px rgba(11,11,11,0.04);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --surface-1:      #1e1c18;
-    --page-plane:     #141310;
-    --text-primary:   #ffffff;
-    --text-secondary: #c3c2b7;
-    --text-muted:     #92908a;
-    --gridline:       #33312b;
-    --baseline:       #45423a;
-    --border:         rgba(255,255,255,0.10);
-    --success-text:   #0ca30c;
-
-    --cat-1: #3987e5;
-    --cat-2: #d95926;
-    --cat-3: #199e70;
-    --cat-4: #c98500;
-    --cat-5: #d55181;
-    --cat-6: #2fae2f;
-    --cat-7: #9085e9;
-    --cat-8: #e66767;
-  }
-}
+/* Theme is fixed to light on purpose — matches the brand reference imagery
+   and stays consistent for every viewer regardless of their device setting. */
 
 * { box-sizing: border-box; }
 
@@ -186,10 +165,6 @@ img { max-width: 100%; }
   border-bottom-color: var(--brand-400);
 }
 
-@media (prefers-color-scheme: dark) {
-  .tab-btn.active { color: var(--brand-250); border-bottom-color: var(--brand-400); }
-}
-
 main {
   max-width: 1280px;
   margin: 0 auto;
@@ -229,6 +204,15 @@ main {
   border: 1px solid color-mix(in srgb, var(--status-warning) 40%, transparent);
   padding: 3px 9px;
   border-radius: 999px;
+}
+
+.section-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin: 22px 0 10px;
 }
 
 /* ------------------------------------------------------------- grid/card */
@@ -285,9 +269,14 @@ main {
 
 /* ----------------------------------------------------------------- meter */
 
-.meter-card {
+.meter-title {
+  font-size: 15px;
+  margin-bottom: 18px;
+}
+
+.meter-row {
   display: flex;
-  gap: 28px;
+  gap: 32px;
   flex-wrap: wrap;
   align-items: flex-start;
 }
@@ -302,9 +291,9 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 260px;
+  height: 320px;
   text-align: right;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-muted);
   padding: 2px 0;
 }
@@ -316,9 +305,9 @@ main {
 }
 
 .meter-tube {
-  width: 64px;
-  height: 260px;
-  border-radius: 32px;
+  width: 84px;
+  height: 320px;
+  border-radius: 42px;
   background: var(--brand-100);
   position: relative;
   overflow: hidden;
@@ -333,23 +322,11 @@ main {
   background: linear-gradient(180deg, var(--brand-250) 0%, var(--brand-400) 45%, var(--brand-700) 100%);
 }
 
-.meter-bulb {
-  width: 84px;
-  height: 84px;
-  border-radius: 50%;
-  margin-top: -20px;
-  background: radial-gradient(circle at 35% 30%, var(--brand-250), var(--brand-700));
-  border: 1px solid var(--border);
-}
-
 .meter-percent {
-  margin-top: 10px;
-  font-size: 22px;
+  margin-top: 14px;
+  font-size: 26px;
   font-weight: 700;
   color: var(--brand-550);
-}
-@media (prefers-color-scheme: dark) {
-  .meter-percent { color: var(--brand-250); }
 }
 
 .meter-stats {

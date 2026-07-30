@@ -341,7 +341,7 @@ function statusPill(status, label) {
 
 /* ---------------------------------------------------------- goal meter -*/
 
-function createGoalMeter(cfg) {
+function createGoalMeter(cfg, title) {
   const pct = Math.min(100, (cfg.ytdSales / cfg.annualGoal) * 100);
   const stillNeeded = cfg.annualGoal - cfg.ytdSales;
   const weekDelta = cfg.lastWeekSales - cfg.weeklyTargetNeeded;
@@ -360,7 +360,6 @@ function createGoalMeter(cfg) {
       el("div", { class: "meter-tube" }, [
         el("div", { class: "meter-fill", style: `height:${pct}%` }),
       ]),
-      el("div", { class: "meter-bulb" }),
       el("div", { class: "meter-percent" }, `${pct.toFixed(1)}%`),
     ]),
   ]);
@@ -397,5 +396,6 @@ function createGoalMeter(cfg) {
     ]),
   ]);
 
-  return el("div", { class: "card meter-card" }, [visual, stats]);
+  const row = el("div", { class: "meter-row" }, [visual, stats]);
+  return el("div", { class: "card meter-card" }, title ? [el("div", { class: "card-title meter-title" }, title), row] : [row]);
 }

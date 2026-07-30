@@ -80,11 +80,11 @@ const KPI_DATA = {
   // -------------------------------------------------------- ROUTE/DRIVER --
   route: {
     stats: [
-      { label: "Assets / Route / Day", value: 26, format: "number", delta: -1, deltaType: "count", deltaLabel: "vs last month" },
+      { label: "Average Assets Serviced (All Routes)", value: 26, format: "number", delta: -1, deltaType: "count", deltaLabel: "vs last month" },
       { label: "Average Fill", value: 78.4, format: "percent", delta: 1.6, deltaLabel: "vs last month" },
       { label: "RPS %", value: 91.2, format: "percent", delta: 0.8, deltaLabel: "vs last month" },
     ],
-    stopsByRoute: {
+    weeklyAssetsByRoute: {
       labels: ROUTE_NAMES,
       values: [142, 128, 156, 119, 133, 147, 121],
     },

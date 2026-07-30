@@ -152,8 +152,8 @@ function renderRoute() {
 
   panel.appendChild(el("div", { class: "grid" }, [
     el("div", { class: "card card-wide" }, [
-      el("div", { class: "card-title" }, "Assets per Route (Today)"),
-      createBarChart({ labels: data.stopsByRoute.labels, values: data.stopsByRoute.values, colorVar: "var(--cat-1)", format: "number" }),
+      el("div", { class: "card-title" }, "Total Assets Serviced This Week (by Route)"),
+      createBarChart({ labels: data.weeklyAssetsByRoute.labels, values: data.weeklyAssetsByRoute.values, colorVar: "var(--cat-1)", format: "number" }),
     ]),
   ]));
 }

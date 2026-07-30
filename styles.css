@@ -412,6 +412,12 @@ main {
 }
 .meter-stat-row.highlight-good .v { color: var(--success-text); }
 
+.meter-stat-row .v.fun-fact-text {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
 /* ------------------------------------------------------------------ svg */
 
 .chart-svg { display: block; width: 100%; height: auto; overflow: visible; }

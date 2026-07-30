@@ -432,7 +432,6 @@ function createGoalMeter(cfg, title, opts = {}) {
   const stillNeeded = cfg.annualGoal - cfg.ytdSales;
   const weekDelta = cfg.lastWeekSales - cfg.weeklyTargetNeeded;
   const weekDeltaGood = weekDelta >= 0;
-  const yoyGood = cfg.yoyValue >= 0;
 
   const tickCount = 4;
   const ticks = [];
@@ -477,11 +476,9 @@ function createGoalMeter(cfg, title, opts = {}) {
       el("div", { class: `sub delta ${weekDeltaGood ? "up" : "down"}` },
         `${weekDeltaGood ? "+" : "-"}${formatFull(Math.abs(weekDelta), "currency")} vs target`),
     ]),
-    el("div", { class: `meter-stat-row ${yoyGood ? "highlight-good" : ""}` }, [
-      el("div", { class: "k" }, cfg.yoyLabel),
-      el("div", { class: "v" }, `${yoyGood ? "+" : "-"}${formatFull(Math.abs(cfg.yoyValue), "currency")}`),
-      el("div", { class: `sub delta ${yoyGood ? "up" : "down"}` },
-        `${yoyGood ? "+" : ""}${cfg.yoyPercent.toFixed(1)}% YoY`),
+    el("div", { class: "meter-stat-row highlight-good" }, [
+      el("div", { class: "k" }, "Fun Fact of the Week"),
+      el("div", { class: "v fun-fact-text" }, cfg.funFact),
     ]),
   ]);
 

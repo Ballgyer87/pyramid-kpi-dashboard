@@ -24,9 +24,8 @@ const KPI_DATA = {
       lastWeekSales: 216046,
       weeklyTargetNeeded: 248960,
       weeksLeft: 26,
-      yoyLabel: "June YoY Growth",
-      yoyValue: 226506,
-      yoyPercent: 29.3,
+      // Update this before each week's meeting — whatever's worth calling out.
+      funFact: "June revenue is up 29.3% year-over-year (+$226,506)!",
     },
     monthlyTrend: {
       labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],

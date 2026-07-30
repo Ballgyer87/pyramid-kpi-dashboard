@@ -321,7 +321,7 @@ function createLineChart({ labels, series, format = "number", height = 240 }) {
   const padL = 56, padR = 16, padT = 16, padB = 34;
   const plotW = W - padL - padR, plotH = H - padT - padB;
 
-  const allValues = series.flatMap((s) => s.values);
+  const allValues = series.flatMap((s) => s.values).filter((v) => v != null);
   const { min: minVal, max: maxVal } = niceRange(Math.min(...allValues), Math.max(...allValues), format === "percent");
   const yTicks = 4;
   const n = labels.length;
@@ -348,9 +348,16 @@ function createLineChart({ labels, series, format = "number", height = 240 }) {
   });
 
   series.forEach((s) => {
-    const d = s.values.map((v, i) => `${i === 0 ? "M" : "L"} ${xFor(i)} ${yFor(v)}`).join(" ");
-    svg.appendChild(svgEl("path", { d, fill: "none", stroke: s.color, "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+    let d = "";
     s.values.forEach((v, i) => {
+      if (v == null) return;
+      d += `${d === "" ? "M" : "L"} ${xFor(i)} ${yFor(v)} `;
+    });
+    const pathAttrs = { d, fill: "none", stroke: s.color, "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" };
+    if (s.dashed) pathAttrs["stroke-dasharray"] = "7 5";
+    svg.appendChild(svgEl("path", pathAttrs));
+    s.values.forEach((v, i) => {
+      if (v == null) return;
       svg.appendChild(svgEl("circle", { cx: xFor(i), cy: yFor(v), r: 4, fill: s.color, stroke: "var(--surface-1)", "stroke-width": 2 }));
     });
   });
@@ -376,7 +383,10 @@ function createLineChart({ labels, series, format = "number", height = 240 }) {
     const wrapBounds = wrap.getBoundingClientRect();
     const box = el("div", {});
     box.appendChild(el("div", { style: "font-weight:600;margin-bottom:4px;" }, labels[idx]));
-    series.forEach((s) => box.appendChild(tooltipRow(s.name, formatFull(s.values[idx], format), s.color)));
+    series.forEach((s) => {
+      if (s.values[idx] == null) return;
+      box.appendChild(tooltipRow(s.name, formatFull(s.values[idx], format), s.color));
+    });
     tooltip.show(e.clientX - wrapBounds.left, e.clientY - wrapBounds.top, box);
   });
   hit.addEventListener("pointerleave", () => { tooltip.hide(); crosshair.setAttribute("opacity", 0); });
@@ -387,8 +397,10 @@ function createLineChart({ labels, series, format = "number", height = 240 }) {
   if (series.length > 1) {
     const legend = el("div", { class: "legend" });
     series.forEach((s) => {
+      const swatchClass = s.dashed ? "legend-swatch line dashed" : "legend-swatch line";
+      const swatchStyle = s.dashed ? `--legend-dash-color:${s.color}` : `background:${s.color}`;
       legend.appendChild(el("span", { class: "legend-item" }, [
-        el("span", { class: "legend-swatch line", style: `background:${s.color}` }),
+        el("span", { class: swatchClass, style: swatchStyle }),
         s.name,
       ]));
     });

@@ -91,8 +91,8 @@ function renderRevenue() {
 
   panel.appendChild(el("div", { class: "grid" }, [
     el("div", { class: "card card-wide" }, [
-      el("div", { class: "card-title" }, "Monthly Revenue — This Year vs Last Year"),
-      createLineChart({ labels: data.monthlyTrend.labels, series: data.monthlyTrend.series, format: "currency" }),
+      el("div", { class: "card-title" }, "Sales Goal Tracker — Cumulative Goal vs Actual vs Last Year"),
+      createLineChart({ labels: data.cumulativeTracker.labels, series: data.cumulativeTracker.series, format: "currency" }),
     ]),
   ]));
 
@@ -132,7 +132,7 @@ function renderShrink() {
 
   panel.appendChild(el("div", { class: "grid" }, [
     el("div", { class: "card card-wide" }, [
-      el("div", { class: "card-title" }, "Top 10 Worst Shrink Locations"),
+      el("div", { class: "card-title" }, "Top 10 Highest Shrink Locations"),
       createTable(
         [
           { key: "location", label: "Location" },

@@ -511,6 +511,9 @@ main {
 .legend-item { display: flex; align-items: center; gap: 6px; }
 .legend-swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; flex: none; }
 .legend-swatch.line { width: 14px; height: 2px; border-radius: 1px; }
+.legend-swatch.line.dashed {
+  background: repeating-linear-gradient(90deg, var(--legend-dash-color, currentColor) 0 4px, transparent 4px 7px);
+}
 
 .pie-wrap { display: flex; flex-direction: column; align-items: center; }
 .pie-svg { width: 100%; max-width: 220px; height: auto; }

@@ -28,11 +28,19 @@ const KPI_DATA = {
       // Update this before each week's meeting — whatever's worth calling out.
       funFact: "June revenue is up 29.3% year-over-year (+$226,506)!",
     },
-    monthlyTrend: {
-      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+    // Cumulative running-total tracker: goal pace (dashed) vs actual 2026 (stops at
+    // the current month) vs full prior year 2025. Mirrors the "Sales Goal Tracker"
+    // spreadsheet chart — update the actualCumulative values weekly/monthly, and
+    // pad with null for months that haven't happened yet.
+    cumulativeTracker: {
+      labels: MONTHS_YTD,
       series: [
-        { name: "2026 Revenue", color: "var(--cat-1)", values: [712000, 768000, 799000, 845000, 861000, 905000, 537039] },
-        { name: "2025 Revenue", color: "var(--cat-4)", values: [640000, 690000, 715000, 760000, 780000, 700000, 690000] },
+        { name: "Cumulative Goal", color: "var(--brand-700)", dashed: true,
+          values: [991667, 1983333, 2975000, 3966667, 4958333, 5950000, 6941667, 7933333, 8925000, 9916667, 10908333, 11900000] },
+        { name: "Actual Cumulative Total", color: "var(--cat-1)",
+          values: [712000, 1480000, 2279000, 3124000, 3985000, 4890000, 5427039, null, null, null, null, null] },
+        { name: "2025 Cumulative Total", color: "var(--cat-4)",
+          values: [640000, 1330000, 2045000, 2805000, 3585000, 4285000, 4975000, 5695000, 6440000, 7200000, 7905000, 8685000] },
       ],
     },
     byChannel: {

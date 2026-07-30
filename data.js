@@ -80,24 +80,14 @@ const KPI_DATA = {
   // -------------------------------------------------------- ROUTE/DRIVER --
   route: {
     stats: [
-      { label: "Active Routes", value: 7, format: "number", delta: 0, deltaType: "count", deltaLabel: "vs last month" },
-      { label: "On-Time Route Completion", value: 94.2, format: "percent", delta: 1.1, deltaLabel: "vs last month" },
-      { label: "Avg Stops / Route / Day", value: 26, format: "number", delta: -1, deltaType: "count", deltaLabel: "vs last month", inverse: true },
-      { label: "Avg Service Time / Stop", value: 11.5, format: "minutes", delta: -0.4, deltaLabel: "vs last month", inverse: true },
+      { label: "Assets / Route / Day", value: 26, format: "number", delta: -1, deltaType: "count", deltaLabel: "vs last month" },
+      { label: "Average Fill", value: 78.4, format: "percent", delta: 1.6, deltaLabel: "vs last month" },
+      { label: "RPS %", value: 91.2, format: "percent", delta: 0.8, deltaLabel: "vs last month" },
     ],
     stopsByRoute: {
       labels: ROUTE_NAMES,
       values: [142, 128, 156, 119, 133, 147, 121],
     },
-    drivers: [
-      { name: "M. Alvarez", route: "Kings", onTimePct: 98.1, stops: 156, incidents: 0, status: "good" },
-      { name: "T. Brooks", route: "Bulls", onTimePct: 96.4, stops: 142, incidents: 0, status: "good" },
-      { name: "J. Nguyen", route: "Suns", onTimePct: 93.8, stops: 147, incidents: 1, status: "good" },
-      { name: "R. Palmer", route: "Celtics", onTimePct: 91.0, stops: 128, incidents: 1, status: "warning" },
-      { name: "S. Okafor", route: "Magic", onTimePct: 89.5, stops: 133, incidents: 2, status: "warning" },
-      { name: "D. Whitfield", route: "Lakers", onTimePct: 84.7, stops: 119, incidents: 3, status: "critical" },
-      { name: "K. Osei", route: "Thunder", onTimePct: 92.6, stops: 121, incidents: 1, status: "good" },
-    ],
     spoilageByRoute: {
       labels: ROUTE_NAMES,
       values: [420, 380, 510, 290, 460, 340, 275],
@@ -149,6 +139,7 @@ const KPI_DATA = {
     stats: [
       { label: "Total Food Spoiled (% of Units)", value: 2.3, format: "percent", delta: -0.2, deltaLabel: "vs last month", inverse: true },
       { label: "Total Spoiled Cost (% of COGS)", value: 1.8, format: "percent", delta: -0.1, deltaLabel: "vs last month", inverse: true },
+      { label: "Month Total Margin", value: 42.8, format: "percent", delta: -0.3, deltaLabel: "vs last month" },
     ],
     marginByCategory: [
       { category: "Snacks", marginPct: 46.2, momChangePts: 1.4 },
@@ -165,6 +156,15 @@ const KPI_DATA = {
         { name: "Total Margin %", color: "var(--cat-6)", values: [40.8, 41.0, 41.5, 41.9, 42.1, 42.4, 42.6, 42.5, 42.8, 43.0, 43.1, 42.8] },
       ],
     },
+  },
+
+  // --------------------------------------------------------- OPERATIONS ---
+  operations: {
+    stats: [
+      { label: "Picks per Hour", value: 142, format: "number", goalPct: 88 },
+      { label: "Total Receives — Last Week", value: 36, format: "number", goalPct: 95 },
+      { label: "Total Inventories Run", value: 21, format: "number", goalPct: 70 },
+    ],
   },
 
 };

@@ -89,6 +89,10 @@ function createStatTile(stat) {
     tile.appendChild(el("div", { class: "delta flat" }, stat.deltaLabel));
   }
 
+  if (stat.goalPct != null) {
+    tile.appendChild(el("div", { class: "goal-note" }, `${stat.goalPct}% of goal`));
+  }
+
   return tile;
 }
 
@@ -423,7 +427,7 @@ function statusPill(status, label) {
 
 /* ---------------------------------------------------------- goal meter -*/
 
-function createGoalMeter(cfg, title) {
+function createGoalMeter(cfg, title, opts = {}) {
   const pct = Math.min(100, (cfg.ytdSales / cfg.annualGoal) * 100);
   const stillNeeded = cfg.annualGoal - cfg.ytdSales;
   const weekDelta = cfg.lastWeekSales - cfg.weeklyTargetNeeded;
@@ -436,12 +440,15 @@ function createGoalMeter(cfg, title) {
     ticks.push(el("div", {}, formatFull((cfg.annualGoal / tickCount) * i, "currency")));
   }
 
+  const tubeClass = opts.thermometer ? "meter-tube thermo-tube" : "meter-tube";
+
   const visual = el("div", { class: "meter-visual" }, [
     el("div", { class: "meter-ticks" }, ticks),
     el("div", { class: "meter-tube-wrap" }, [
-      el("div", { class: "meter-tube" }, [
+      el("div", { class: tubeClass }, [
         el("div", { class: "meter-fill", style: `height:${pct}%` }),
       ]),
+      opts.thermometer ? el("div", { class: "thermo-bulb" }) : null,
       el("div", { class: "meter-percent" }, `${pct.toFixed(1)}%`),
     ]),
   ]);
@@ -479,5 +486,6 @@ function createGoalMeter(cfg, title) {
   ]);
 
   const row = el("div", { class: "meter-row" }, [visual, stats]);
-  return el("div", { class: "card meter-card" }, title ? [el("div", { class: "card-title meter-title" }, title), row] : [row]);
+  const cardClass = `card meter-card${opts.hero ? " meter-hero" : ""}`;
+  return el("div", { class: cardClass }, title ? [el("div", { class: "card-title meter-title" }, title), row] : [row]);
 }

@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderDelivery();
   renderFinance();
   renderProducts();
+  renderOperations();
 });
 
 function setupTabs() {
@@ -40,12 +41,12 @@ function renderOverview() {
     { label: "YTD Revenue", value: rev.goalMeter.ytdSales, format: "currency", delta: rev.goalMeter.yoyPercent, deltaLabel: "YoY" },
     { label: "Shrink % of Sales", value: shrink.stats[1].value, format: "percent", delta: shrink.stats[1].delta, deltaLabel: "vs last month", inverse: true },
     { label: "Weekly $ per Delivery", value: delivery.stats[2].value, format: "currency", delta: delivery.stats[2].delta, deltaLabel: "vs last month" },
-    { label: "Active Routes", value: route.stats[0].value, format: "number", delta: route.stats[0].delta, deltaType: route.stats[0].deltaType, deltaLabel: "vs last month" },
+    { label: "Average Fill", value: route.stats[1].value, format: "percent", delta: route.stats[1].delta, deltaLabel: "vs last month" },
     { label: "Gross Margin", value: finance.stats[0].value, format: "percent", delta: finance.stats[0].delta, deltaLabel: "vs last month" },
     { label: "Net Income (MTD)", value: finance.stats[1].value, format: "currency", delta: finance.stats[1].delta, deltaLabel: "vs last month" },
   ];
 
-  const meterCard = createGoalMeter(rev.goalMeter, "2026 Sales Goal Tracker");
+  const meterCard = createGoalMeter(rev.goalMeter, "2026 Sales Goal Tracker", { thermometer: true, hero: true });
   panel.appendChild(el("div", { class: "grid" }, [el("div", { class: "card-wide" }, meterCard)]));
 
   panel.appendChild(el("div", { class: "section-label" }, "Headline KPIs"));
@@ -145,25 +146,8 @@ function renderRoute() {
 
   panel.appendChild(el("div", { class: "grid" }, [
     el("div", { class: "card card-wide" }, [
-      el("div", { class: "card-title" }, "Stops per Route (Today)"),
+      el("div", { class: "card-title" }, "Assets per Route (Today)"),
       createBarChart({ labels: data.stopsByRoute.labels, values: data.stopsByRoute.values, colorVar: "var(--cat-1)", format: "number" }),
-    ]),
-  ]));
-
-  panel.appendChild(el("div", { class: "grid" }, [
-    el("div", { class: "card card-wide" }, [
-      el("div", { class: "card-title" }, "Driver Performance"),
-      createTable(
-        [
-          { key: "name", label: "Driver" },
-          { key: "route", label: "Route" },
-          { key: "onTimePct", label: "On-Time %", numeric: true, render: (v) => `${v.toFixed(1)}%` },
-          { key: "stops", label: "Stops", numeric: true },
-          { key: "incidents", label: "Incidents", numeric: true },
-          { key: "status", label: "Status", render: (v) => statusPill(v, v === "good" ? "On target" : v === "warning" ? "Watch" : "Needs coaching") },
-        ],
-        data.drivers
-      ),
     ]),
   ]));
 }
@@ -253,4 +237,13 @@ function renderProducts() {
       createLineChart({ labels: data.marginTrend.labels, series: data.marginTrend.series, format: "percent" }),
     ]),
   ]));
+}
+
+/* ------------------------------------------------------------- operations */
+
+function renderOperations() {
+  const panel = document.getElementById("panel-operations");
+  const data = KPI_DATA.operations;
+
+  renderStatGrid(panel, data.stats);
 }

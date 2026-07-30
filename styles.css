@@ -267,6 +267,12 @@ main {
 
 .stat-tile .sparkline { margin-top: 8px; display: block; }
 
+.goal-note {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
 /* ----------------------------------------------------------------- meter */
 
 .meter-title {
@@ -279,6 +285,7 @@ main {
   gap: 32px;
   flex-wrap: wrap;
   align-items: flex-start;
+  justify-content: center;
 }
 
 .meter-visual {
@@ -333,8 +340,38 @@ main {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-width: 220px;
-  flex: 1;
+  width: 100%;
+  max-width: 360px;
+  flex: 0 1 360px;
+}
+
+/* ---- hero variant (Overview): literal thermometer, bigger, centered ---- */
+
+.meter-hero .meter-row { gap: 48px; }
+.meter-hero .meter-ticks { height: 400px; font-size: 13px; }
+.meter-hero .meter-percent { font-size: 32px; }
+.meter-hero .meter-stats { max-width: 400px; flex-basis: 400px; }
+.meter-hero .meter-stat-row { padding: 12px 16px; }
+.meter-hero .meter-stat-row .v { font-size: 18px; }
+
+.thermo-tube {
+  width: 80px;
+  height: 400px;
+  border-radius: 40px 40px 0 0;
+  margin-bottom: -70px;
+  position: relative;
+  z-index: 2;
+  border-bottom: none;
+}
+
+.thermo-bulb {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--brand-400), var(--brand-700));
+  border: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
 }
 
 .meter-stat-row {

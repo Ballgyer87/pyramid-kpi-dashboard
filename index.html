@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pyramid Food Service — KPI Dashboard</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">
+    <img id="logo" src="assets/logo.png" alt="Pyramid Food Service logo"
+         onerror="this.style.display='none'; document.getElementById('brand-fallback').style.display='flex';" />
+    <div id="brand-fallback" class="brand-fallback" style="display:none;">PFS</div>
+    <div class="brand-text">
+      <div class="name"><span class="food">Pyramid</span>FoodService</div>
+      <div class="tagline">Vending, Micro-Markets, &amp; Office Coffee</div>
+    </div>
+  </div>
+  <div class="header-meta">KPI Dashboard<br />Placeholder data</div>
+</header>
+
+<nav class="tab-nav">
+  <button class="tab-btn active" data-tab="overview">Overview</button>
+  <button class="tab-btn" data-tab="revenue">Revenue</button>
+  <button class="tab-btn" data-tab="shrink">Shrink</button>
+  <button class="tab-btn" data-tab="route">Route / Driver</button>
+  <button class="tab-btn" data-tab="delivery">Delivery</button>
+  <button class="tab-btn" data-tab="finance">Finance</button>
+</nav>
+
+<main>
+
+  <section id="panel-overview" class="tab-panel active">
+    <div class="panel-heading">
+      <div>
+        <h1>Overview</h1>
+        <div class="panel-subtitle">Headline numbers across the business</div>
+      </div>
+      <span class="placeholder-badge">● Placeholder data</span>
+    </div>
+  </section>
+
+  <section id="panel-revenue" class="tab-panel">
+    <div class="panel-heading">
+      <div>
+        <h1>Revenue</h1>
+        <div class="panel-subtitle">Progress toward the annual sales goal</div>
+      </div>
+      <span class="placeholder-badge">● Placeholder data</span>
+    </div>
+  </section>
+
+  <section id="panel-shrink" class="tab-panel">
+    <div class="panel-heading">
+      <div>
+        <h1>Shrink</h1>
+        <div class="panel-subtitle">Inventory loss across locations and categories</div>
+      </div>
+      <span class="placeholder-badge">● Placeholder data</span>
+    </div>
+  </section>
+
+  <section id="panel-route" class="tab-panel">
+    <div class="panel-heading">
+      <div>
+        <h1>Route / Driver</h1>
+        <div class="panel-subtitle">Route efficiency and driver performance</div>
+      </div>
+      <span class="placeholder-badge">● Placeholder data</span>
+    </div>
+  </section>
+
+  <section id="panel-delivery" class="tab-panel">
+    <div class="panel-heading">
+      <div>
+        <h1>Delivery</h1>
+        <div class="panel-subtitle">On-time performance and delivery volume</div>
+      </div>
+      <span class="placeholder-badge">● Placeholder data</span>
+    </div>
+  </section>
+
+  <section id="panel-finance" class="tab-panel">
+    <div class="panel-heading">
+      <div>
+        <h1>Finance</h1>
+        <div class="panel-subtitle">Margin, expenses, and receivables</div>
+      </div>
+      <span class="placeholder-badge">● Placeholder data</span>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">Pyramid Food Service — Internal KPI Dashboard</footer>
+
+<script src="data.js"></script>
+<script src="charts.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,401 @@
+/* ============================================================================
+   charts.js — small dependency-free SVG chart + component builders.
+   Everything returns a DOM node you can append. No build step, no libraries.
+   ============================================================================ */
+
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+function el(tag, attrs = {}, children = []) {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") node.className = v;
+    else if (k === "html") node.innerHTML = v; // only used with trusted, static strings
+    else node.setAttribute(k, v);
+  }
+  for (const child of [].concat(children)) {
+    if (child == null) continue;
+    node.appendChild(typeof child === "string" ? document.createTextNode(child) : child);
+  }
+  return node;
+}
+
+function svgEl(tag, attrs = {}) {
+  const node = document.createElementNS(SVG_NS, tag);
+  for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+  return node;
+}
+
+/* ---------------------------------------------------------------- format */
+
+function formatValue(value, format) {
+  if (value == null) return "—";
+  switch (format) {
+    case "currency":
+      return formatCompactCurrency(value);
+    case "percent":
+      return `${value.toFixed(1)}%`;
+    case "minutes":
+      return `${value.toFixed(1)} min`;
+    default:
+      return Math.round(value).toLocaleString("en-US");
+  }
+}
+
+function formatFull(value, format) {
+  if (value == null) return "—";
+  switch (format) {
+    case "currency":
+      return `$${Math.round(value).toLocaleString("en-US")}`;
+    case "percent":
+      return `${value.toFixed(1)}%`;
+    case "minutes":
+      return `${value.toFixed(1)} min`;
+    default:
+      return Math.round(value).toLocaleString("en-US");
+  }
+}
+
+function formatCompactCurrency(value) {
+  const abs = Math.abs(value);
+  if (abs >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
+  if (abs >= 1_000) return `$${(value / 1_000).toFixed(1)}K`;
+  return `$${Math.round(value).toLocaleString("en-US")}`;
+}
+
+/* ------------------------------------------------------------- stat tile */
+
+function createStatTile(stat) {
+  const value = formatValue(stat.value, stat.format);
+  const tile = el("div", { class: "card stat-tile" }, [
+    el("div", { class: "label" }, stat.label),
+    el("div", { class: "value" }, value),
+  ]);
+
+  if (stat.delta != null) {
+    const goodDirection = stat.inverse ? stat.delta < 0 : stat.delta > 0;
+    const dir = stat.delta === 0 ? "flat" : goodDirection ? "up" : "down";
+    const arrow = stat.delta === 0 ? "→" : stat.delta > 0 ? "↑" : "↓";
+    const sign = stat.delta > 0 ? "+" : "";
+    let deltaText;
+    if (stat.format === "percent") {
+      deltaText = `${arrow} ${sign}${stat.delta.toFixed(1)} pts`;
+    } else if (stat.deltaType === "count") {
+      deltaText = `${arrow} ${sign}${stat.delta}`;
+    } else {
+      deltaText = `${arrow} ${sign}${stat.delta.toFixed(1)}%`;
+    }
+    tile.appendChild(el("div", { class: `delta ${dir}` }, `${deltaText} ${stat.deltaLabel || ""}`));
+  } else if (stat.deltaLabel) {
+    tile.appendChild(el("div", { class: "delta flat" }, stat.deltaLabel));
+  }
+
+  return tile;
+}
+
+function renderStatGrid(container, stats) {
+  const grid = el("div", { class: "grid" });
+  stats.forEach((s) => grid.appendChild(createStatTile(s)));
+  container.appendChild(grid);
+}
+
+/* -------------------------------------------------------------- tooltip */
+
+function makeTooltip(wrap) {
+  const tip = el("div", { class: "tooltip" });
+  wrap.appendChild(tip);
+  return {
+    show(x, y, html) {
+      tip.innerHTML = "";
+      tip.appendChild(html);
+      tip.style.left = `${x + 12}px`;
+      tip.style.top = `${y - 8}px`;
+      tip.classList.add("visible");
+    },
+    hide() { tip.classList.remove("visible"); },
+  };
+}
+
+function tooltipRow(label, value, colorVar) {
+  const row = el("div", { class: "tooltip-row" });
+  if (colorVar) {
+    const key = el("span", { style: `display:inline-block;width:9px;height:9px;border-radius:2px;background:${colorVar};margin-right:5px;` });
+    row.appendChild(key);
+  }
+  row.appendChild(el("span", {}, `${label}: `));
+  const strong = document.createElement("strong");
+  strong.className = "t-value";
+  strong.textContent = value;
+  row.appendChild(strong);
+  return row;
+}
+
+/* --------------------------------------------------------------- scales */
+
+function niceMax(max) {
+  if (max <= 0) return 10;
+  const pow = Math.pow(10, Math.floor(Math.log10(max)));
+  const n = max / pow;
+  let step;
+  if (n <= 1) step = 1;
+  else if (n <= 2) step = 2;
+  else if (n <= 5) step = 5;
+  else step = 10;
+  return step * pow;
+}
+
+function niceRange(dataMin, dataMax, cap100) {
+  if (dataMin === dataMax) { dataMin -= 1; dataMax += 1; }
+  const pad = (dataMax - dataMin) * 0.15;
+  let lo = dataMin - pad;
+  let hi = dataMax + pad;
+  const rawStep = (hi - lo) / 4;
+  const mag = Math.pow(10, Math.floor(Math.log10(rawStep)));
+  const norm = rawStep / mag;
+  let step = norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 5 ? 5 : 10;
+  step *= mag;
+  lo = Math.floor(lo / step) * step;
+  hi = Math.ceil(hi / step) * step;
+  if (lo < 0 && dataMin >= 0) lo = 0;
+  if (cap100 && hi > 100) hi = 100;
+  return { min: lo, max: hi };
+}
+
+/* ----------------------------------------------------------- bar chart */
+
+function createBarChart({ labels, values, colorVar = "var(--cat-1)", format = "number", height = 220, valueLabels = true }) {
+  const W = 600, H = height;
+  const padL = 56, padR = 12, padT = 16, padB = 34;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+
+  const maxVal = niceMax(Math.max(...values) * 1.15);
+  const yTicks = 4;
+
+  const svg = svgEl("svg", { class: "chart-svg", viewBox: `0 0 ${W} ${H}`, role: "img" });
+
+  for (let i = 0; i <= yTicks; i++) {
+    const v = (maxVal / yTicks) * i;
+    const y = padT + plotH - (v / maxVal) * plotH;
+    svg.appendChild(svgEl("line", { class: "gridline", x1: padL, x2: W - padR, y1: y, y2: y }));
+    const t = svgEl("text", { x: padL - 8, y: y + 4, "text-anchor": "end", "font-size": 10 });
+    t.textContent = formatValue(v, format);
+    svg.appendChild(t);
+  }
+  svg.appendChild(svgEl("line", { class: "axis-line", x1: padL, x2: W - padR, y1: padT + plotH, y2: padT + plotH }));
+
+  const n = values.length;
+  const slot = plotW / n;
+  const barW = Math.min(40, slot * 0.5);
+
+  const wrap = el("div", { class: "chart-wrap" });
+  const tooltip = makeTooltip(wrap);
+
+  values.forEach((v, i) => {
+    const cx = padL + slot * i + slot / 2;
+    const barH = (v / maxVal) * plotH;
+    const y = padT + plotH - barH;
+
+    const hit = svgEl("rect", {
+      x: cx - slot / 2, y: padT, width: slot, height: plotH, fill: "transparent",
+    });
+
+    const rect = svgEl("rect", {
+      x: cx - barW / 2, y, width: barW, height: Math.max(barH, 1), rx: 4, ry: 4, fill: colorVar,
+    });
+
+    hit.addEventListener("pointermove", (e) => {
+      const r = wrap.getBoundingClientRect();
+      tooltip.show(e.clientX - r.left, e.clientY - r.top, tooltipRow(labels[i], formatFull(v, format), colorVar));
+      rect.style.opacity = 0.85;
+    });
+    hit.addEventListener("pointerleave", () => { tooltip.hide(); rect.style.opacity = 1; });
+
+    svg.appendChild(rect);
+
+    if (valueLabels && barH > 14) {
+      const lbl = svgEl("text", { class: "value-label", x: cx, y: y - 6, "text-anchor": "middle", "font-size": 11 });
+      lbl.textContent = formatValue(v, format);
+      svg.appendChild(lbl);
+    }
+
+    svg.appendChild(hit);
+
+    const xl = svgEl("text", { x: cx, y: H - padB + 16, "text-anchor": "middle", "font-size": 10.5 });
+    xl.textContent = labels[i];
+    svg.appendChild(xl);
+  });
+
+  wrap.appendChild(svg);
+  return wrap;
+}
+
+/* ---------------------------------------------------------- line chart */
+
+function createLineChart({ labels, series, format = "number", height = 240 }) {
+  const W = 600, H = height;
+  const padL = 56, padR = 16, padT = 16, padB = 34;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+
+  const allValues = series.flatMap((s) => s.values);
+  const { min: minVal, max: maxVal } = niceRange(Math.min(...allValues), Math.max(...allValues), format === "percent");
+  const yTicks = 4;
+  const n = labels.length;
+
+  const xFor = (i) => padL + (n === 1 ? plotW / 2 : (plotW / (n - 1)) * i);
+  const yFor = (v) => padT + plotH - ((v - minVal) / (maxVal - minVal)) * plotH;
+
+  const svg = svgEl("svg", { class: "chart-svg", viewBox: `0 0 ${W} ${H}`, role: "img" });
+
+  for (let i = 0; i <= yTicks; i++) {
+    const v = minVal + ((maxVal - minVal) / yTicks) * i;
+    const y = yFor(v);
+    svg.appendChild(svgEl("line", { class: "gridline", x1: padL, x2: W - padR, y1: y, y2: y }));
+    const t = svgEl("text", { x: padL - 8, y: y + 4, "text-anchor": "end", "font-size": 10 });
+    t.textContent = formatValue(v, format);
+    svg.appendChild(t);
+  }
+  svg.appendChild(svgEl("line", { class: "axis-line", x1: padL, x2: W - padR, y1: padT + plotH, y2: padT + plotH }));
+
+  labels.forEach((lab, i) => {
+    const t = svgEl("text", { x: xFor(i), y: H - padB + 16, "text-anchor": "middle", "font-size": 10.5 });
+    t.textContent = lab;
+    svg.appendChild(t);
+  });
+
+  series.forEach((s) => {
+    const d = s.values.map((v, i) => `${i === 0 ? "M" : "L"} ${xFor(i)} ${yFor(v)}`).join(" ");
+    svg.appendChild(svgEl("path", { d, fill: "none", stroke: s.color, "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+    s.values.forEach((v, i) => {
+      svg.appendChild(svgEl("circle", { cx: xFor(i), cy: yFor(v), r: 4, fill: s.color, stroke: "var(--surface-1)", "stroke-width": 2 }));
+    });
+  });
+
+  // crosshair
+  const crosshair = svgEl("line", { class: "axis-line", x1: 0, x2: 0, y1: padT, y2: padT + plotH, stroke: "var(--baseline)", "stroke-dasharray": "3 3", opacity: 0 });
+  svg.appendChild(crosshair);
+
+  const wrap = el("div", { class: "chart-wrap" });
+  const tooltip = makeTooltip(wrap);
+
+  const hit = svgEl("rect", { x: padL, y: padT, width: plotW, height: plotH, fill: "transparent" });
+  hit.addEventListener("pointermove", (e) => {
+    const rectBounds = svg.getBoundingClientRect();
+    const scale = W / rectBounds.width;
+    const px = (e.clientX - rectBounds.left) * scale;
+    let idx = Math.round((px - padL) / (n === 1 ? plotW : plotW / (n - 1)));
+    idx = Math.max(0, Math.min(n - 1, idx));
+    crosshair.setAttribute("x1", xFor(idx));
+    crosshair.setAttribute("x2", xFor(idx));
+    crosshair.setAttribute("opacity", 1);
+
+    const wrapBounds = wrap.getBoundingClientRect();
+    const box = el("div", {});
+    box.appendChild(el("div", { style: "font-weight:600;margin-bottom:4px;" }, labels[idx]));
+    series.forEach((s) => box.appendChild(tooltipRow(s.name, formatFull(s.values[idx], format), s.color)));
+    tooltip.show(e.clientX - wrapBounds.left, e.clientY - wrapBounds.top, box);
+  });
+  hit.addEventListener("pointerleave", () => { tooltip.hide(); crosshair.setAttribute("opacity", 0); });
+  svg.appendChild(hit);
+
+  wrap.appendChild(svg);
+
+  if (series.length > 1) {
+    const legend = el("div", { class: "legend" });
+    series.forEach((s) => {
+      legend.appendChild(el("span", { class: "legend-item" }, [
+        el("span", { class: "legend-swatch line", style: `background:${s.color}` }),
+        s.name,
+      ]));
+    });
+    wrap.appendChild(legend);
+  }
+
+  return wrap;
+}
+
+/* -------------------------------------------------------------- table --*/
+
+function createTable(columns, rows) {
+  const table = el("table", { class: "kpi-table" });
+  const thead = el("thead", {}, el("tr", {}, columns.map((c) => el("th", {}, c.label))));
+  const tbody = el("tbody");
+  rows.forEach((row) => {
+    const tr = el("tr");
+    columns.forEach((c) => {
+      const raw = row[c.key];
+      const content = c.render ? c.render(raw, row) : raw;
+      const td = el("td", { class: c.numeric ? "num" : "" });
+      if (content instanceof Node) td.appendChild(content);
+      else td.textContent = content;
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  table.appendChild(thead);
+  table.appendChild(tbody);
+  return table;
+}
+
+function statusPill(status, label) {
+  return el("span", { class: `status-pill ${status}` }, label);
+}
+
+/* ---------------------------------------------------------- goal meter -*/
+
+function createGoalMeter(cfg) {
+  const pct = Math.min(100, (cfg.ytdSales / cfg.annualGoal) * 100);
+  const stillNeeded = cfg.annualGoal - cfg.ytdSales;
+  const weekDelta = cfg.lastWeekSales - cfg.weeklyTargetNeeded;
+  const weekDeltaGood = weekDelta >= 0;
+  const yoyGood = cfg.yoyValue >= 0;
+
+  const tickCount = 4;
+  const ticks = [];
+  for (let i = tickCount; i >= 0; i--) {
+    ticks.push(el("div", {}, formatFull((cfg.annualGoal / tickCount) * i, "currency")));
+  }
+
+  const visual = el("div", { class: "meter-visual" }, [
+    el("div", { class: "meter-ticks" }, ticks),
+    el("div", { class: "meter-tube-wrap" }, [
+      el("div", { class: "meter-tube" }, [
+        el("div", { class: "meter-fill", style: `height:${pct}%` }),
+      ]),
+      el("div", { class: "meter-bulb" }),
+      el("div", { class: "meter-percent" }, `${pct.toFixed(1)}%`),
+    ]),
+  ]);
+
+  const stats = el("div", { class: "meter-stats" }, [
+    el("div", { class: "meter-stat-row" }, [
+      el("div", { class: "k" }, "YTD Sales"),
+      el("div", { class: "v" }, formatFull(cfg.ytdSales, "currency")),
+    ]),
+    el("div", { class: "meter-stat-row" }, [
+      el("div", { class: "k" }, "Annual Goal"),
+      el("div", { class: "v" }, formatFull(cfg.annualGoal, "currency")),
+    ]),
+    el("div", { class: "meter-stat-row" }, [
+      el("div", { class: "k" }, "Still Needed"),
+      el("div", { class: "v" }, formatFull(stillNeeded, "currency")),
+    ]),
+    el("div", { class: "meter-stat-row highlight-warn" }, [
+      el("div", { class: "k" }, "Weekly Target Needed"),
+      el("div", { class: "v" }, formatFull(cfg.weeklyTargetNeeded, "currency")),
+      el("div", { class: "sub" }, `≈${cfg.weeksLeft} weeks left`),
+    ]),
+    el("div", { class: "meter-stat-row" }, [
+      el("div", { class: "k" }, "Last Week's Sales"),
+      el("div", { class: "v" }, formatFull(cfg.lastWeekSales, "currency")),
+      el("div", { class: `sub delta ${weekDeltaGood ? "up" : "down"}` },
+        `${weekDeltaGood ? "+" : "-"}${formatFull(Math.abs(weekDelta), "currency")} vs target`),
+    ]),
+    el("div", { class: `meter-stat-row ${yoyGood ? "highlight-good" : ""}` }, [
+      el("div", { class: "k" }, cfg.yoyLabel),
+      el("div", { class: "v" }, `${yoyGood ? "+" : "-"}${formatFull(Math.abs(cfg.yoyValue), "currency")}`),
+      el("div", { class: `sub delta ${yoyGood ? "up" : "down"}` },
+        `${yoyGood ? "+" : ""}${cfg.yoyPercent.toFixed(1)}% YoY`),
+    ]),
+  ]);
+
+  return el("div", { class: "card meter-card" }, [visual, stats]);
+}

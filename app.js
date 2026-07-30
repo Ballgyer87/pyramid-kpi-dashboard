@@ -49,6 +49,12 @@ function renderOverview() {
   const meterCard = createGoalMeter(rev.goalMeter, "2026 Sales Goal Tracker", { thermometer: true, hero: true });
   panel.appendChild(el("div", { class: "grid" }, [el("div", { class: "card-wide" }, meterCard)]));
 
+  if (rev.goalMeter.funFact) {
+    panel.appendChild(el("div", { class: "grid" }, [
+      el("div", { class: "card-wide" }, createFunFactCard(rev.goalMeter.funFact)),
+    ]));
+  }
+
   panel.appendChild(el("div", { class: "section-label" }, "Headline KPIs"));
   renderStatGrid(panel, headline);
 }

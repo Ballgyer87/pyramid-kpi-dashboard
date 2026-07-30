@@ -36,8 +36,8 @@ const KPI_DATA = {
       ],
     },
     byChannel: {
-      labels: ["Vending", "Micro-Markets / OCS", "Water Delivery"],
-      values: [2650000, 1980000, 797039],
+      labels: ["Vending", "Micro-Markets", "Delivery"],
+      values: [2650000, 1200000, 1577039],
     },
   },
 

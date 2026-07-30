@@ -476,13 +476,16 @@ function createGoalMeter(cfg, title, opts = {}) {
       el("div", { class: `sub delta ${weekDeltaGood ? "up" : "down"}` },
         `${weekDeltaGood ? "+" : "-"}${formatFull(Math.abs(weekDelta), "currency")} vs target`),
     ]),
-    el("div", { class: "meter-stat-row highlight-good" }, [
-      el("div", { class: "k" }, "Fun Fact of the Week"),
-      el("div", { class: "v fun-fact-text" }, cfg.funFact),
-    ]),
   ]);
 
   const row = el("div", { class: "meter-row" }, [visual, stats]);
   const cardClass = `card meter-card${opts.hero ? " meter-hero" : ""}`;
   return el("div", { class: cardClass }, title ? [el("div", { class: "card-title meter-title" }, title), row] : [row]);
+}
+
+function createFunFactCard(text) {
+  return el("div", { class: "card fun-fact-card" }, [
+    el("div", { class: "fun-fact-label" }, "🎉 Fun Fact of the Week"),
+    el("div", { class: "fun-fact-body" }, text),
+  ]);
 }

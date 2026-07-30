@@ -104,14 +104,28 @@ img { max-width: 100%; }
   gap: 12px;
 }
 
-.brand img { height: 44px; width: auto; display: block; }
+.brand-logo {
+  height: 48px;
+  width: auto;
+  display: block;
+  background: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
 
 .brand-fallback {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-fallback-icon {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 44px;
   width: 44px;
+  flex: none;
   border-radius: 8px;
   background: linear-gradient(135deg, var(--brand-250), var(--brand-700));
   color: #fff;

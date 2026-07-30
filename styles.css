@@ -392,8 +392,12 @@ main {
   color: var(--text-secondary);
 }
 .legend-item { display: flex; align-items: center; gap: 6px; }
-.legend-swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.legend-swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; flex: none; }
 .legend-swatch.line { width: 14px; height: 2px; border-radius: 1px; }
+
+.pie-wrap { display: flex; flex-direction: column; align-items: center; }
+.pie-svg { width: 100%; max-width: 220px; height: auto; }
+.pie-wrap .legend { flex-direction: column; gap: 6px; width: 100%; margin-top: 14px; }
 
 .tooltip {
   position: absolute;

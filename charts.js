@@ -160,6 +160,88 @@ function niceRange(dataMin, dataMax, cap100) {
   return { min: lo, max: hi };
 }
 
+/* ------------------------------------------------------------ pie chart */
+
+const CAT_SLOTS = ["var(--cat-1)", "var(--cat-2)", "var(--cat-3)", "var(--cat-4)", "var(--cat-5)", "var(--cat-6)", "var(--cat-7)", "var(--cat-8)"];
+const CAT_HEX = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#4a3aa7", "#e34948"];
+
+function relativeLuminance(hex) {
+  const c = hex.replace("#", "");
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(c.slice(i, i + 2), 16) / 255);
+  const lin = [r, g, b].map((v) => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)));
+  return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2];
+}
+
+function polarPoint(cx, cy, r, angleDeg) {
+  const rad = (angleDeg * Math.PI) / 180;
+  return { x: cx + r * Math.sin(rad), y: cy - r * Math.cos(rad) };
+}
+
+function createPieChart({ labels, values, format = "currency", size = 240 }) {
+  const total = values.reduce((a, b) => a + b, 0);
+  const cx = size / 2, cy = size / 2, r = size / 2 - 6;
+
+  const svg = svgEl("svg", { class: "chart-svg pie-svg", viewBox: `0 0 ${size} ${size}`, role: "img" });
+  const wrap = el("div", { class: "chart-wrap pie-wrap" });
+  const tooltip = makeTooltip(wrap);
+
+  let cumulative = 0;
+  values.forEach((v, i) => {
+    const fraction = total > 0 ? v / total : 0;
+    const startAngle = (cumulative / total) * 360;
+    cumulative += v;
+    const endAngle = (cumulative / total) * 360;
+    const large = endAngle - startAngle > 180 ? 1 : 0;
+    const p1 = polarPoint(cx, cy, r, startAngle);
+    const p2 = polarPoint(cx, cy, r, endAngle);
+    const colorVar = CAT_SLOTS[i % CAT_SLOTS.length];
+    const colorHex = CAT_HEX[i % CAT_HEX.length];
+
+    const path = svgEl("path", {
+      d: `M ${cx} ${cy} L ${p1.x} ${p1.y} A ${r} ${r} 0 ${large} 1 ${p2.x} ${p2.y} Z`,
+      fill: colorVar,
+      stroke: "var(--surface-1)",
+      "stroke-width": 2,
+    });
+
+    path.addEventListener("pointermove", (e) => {
+      const b = wrap.getBoundingClientRect();
+      const box = el("div", {});
+      box.appendChild(el("div", { style: "font-weight:600;margin-bottom:4px;" }, labels[i]));
+      box.appendChild(tooltipRow(`${(fraction * 100).toFixed(1)}%`, formatFull(v, format)));
+      tooltip.show(e.clientX - b.left, e.clientY - b.top, box);
+      path.style.opacity = 0.85;
+    });
+    path.addEventListener("pointerleave", () => { tooltip.hide(); path.style.opacity = 1; });
+
+    svg.appendChild(path);
+
+    if (fraction >= 0.06) {
+      const midAngle = (startAngle + endAngle) / 2;
+      const labelPoint = polarPoint(cx, cy, r * 0.66, midAngle);
+      const textColor = relativeLuminance(colorHex) > 0.55 ? "#0b0b0b" : "#ffffff";
+      const lbl = svgEl("text", {
+        x: labelPoint.x, y: labelPoint.y, "text-anchor": "middle", "font-size": 12, "font-weight": 700, fill: textColor,
+      });
+      lbl.textContent = `${Math.round(fraction * 100)}%`;
+      svg.appendChild(lbl);
+    }
+  });
+
+  wrap.appendChild(svg);
+
+  const legend = el("div", { class: "legend" });
+  labels.forEach((lab, i) => {
+    legend.appendChild(el("span", { class: "legend-item" }, [
+      el("span", { class: "legend-swatch", style: `background:${CAT_SLOTS[i % CAT_SLOTS.length]}` }),
+      `${lab} — ${formatFull(values[i], format)}`,
+    ]));
+  });
+  wrap.appendChild(legend);
+
+  return wrap;
+}
+
 /* ----------------------------------------------------------- bar chart */
 
 function createBarChart({ labels, values, colorVar = "var(--cat-1)", format = "number", height = 220, valueLabels = true }) {

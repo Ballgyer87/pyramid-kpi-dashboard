@@ -6,7 +6,13 @@
    of each ":" — you don't need to touch any other file.
 
    Tip: numbers are plain (no $ or commas needed), the dashboard formats them.
+   Route names are defined once below — rename them there and they update
+   everywhere (stops chart, driver table, shrink-by-route, the 3 pie charts).
    ============================================================================ */
+
+const ROUTE_NAMES = ["Bulls", "Celtics", "Kings", "Lakers", "Magic", "Suns", "Thunder"];
+
+const MONTHS_YTD = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 const KPI_DATA = {
 
@@ -40,24 +46,33 @@ const KPI_DATA = {
     stats: [
       { label: "Shrink $ (MTD)", value: 8420, format: "currency", delta: -6.2, deltaLabel: "vs last month", inverse: true },
       { label: "Shrink % of Sales", value: 1.9, format: "percent", delta: -0.3, deltaLabel: "vs last month", inverse: true },
-      { label: "Target Shrink %", value: 1.5, format: "percent", delta: null, deltaLabel: "goal" },
+      { label: "Shrink Goal", value: 2.0, format: "percent", delta: null, deltaLabel: "target ceiling" },
       { label: "Locations Over Target", value: 7, format: "number", delta: 2, deltaType: "count", deltaLabel: "vs last month", inverse: true },
     ],
     trend: {
-      labels: ["Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+      labels: MONTHS_YTD,
       series: [
-        { name: "Shrink %", color: "var(--cat-8)", values: [2.4, 2.2, 2.3, 2.0, 2.2, 1.9] },
+        { name: "Shrink %", color: "var(--cat-8)", values: [2.6, 2.5, 2.4, 2.2, 2.3, 2.0, 2.2, 1.9, 2.1, 2.0, 1.8, 1.9] },
       ],
     },
     byCategory: {
       labels: ["Snacks", "Beverages", "Fresh Food", "Water/OCS Supplies"],
       values: [3200, 2650, 1890, 680],
     },
+    byRoute: {
+      labels: ROUTE_NAMES,
+      values: [1180, 940, 1420, 860, 1050, 730, 890],
+    },
     topLocations: [
       { location: "Riverbend Office Park", shrinkPct: 4.8, shrinkDollars: 1120, status: "critical" },
+      { location: "Union Station Depot", shrinkPct: 4.3, shrinkDollars: 990, status: "critical" },
       { location: "Lakeside Manufacturing", shrinkPct: 3.6, shrinkDollars: 940, status: "warning" },
+      { location: "Northgate Distribution", shrinkPct: 3.4, shrinkDollars: 870, status: "warning" },
       { location: "Midtown Business Center", shrinkPct: 3.1, shrinkDollars: 810, status: "warning" },
+      { location: "Ashford Medical Plaza", shrinkPct: 2.9, shrinkDollars: 745, status: "warning" },
       { location: "Harbor Logistics Hub", shrinkPct: 2.7, shrinkDollars: 605, status: "warning" },
+      { location: "Southpark Corporate Center", shrinkPct: 2.2, shrinkDollars: 510, status: "warning" },
+      { location: "Willow Creek Campus", shrinkPct: 1.8, shrinkDollars: 385, status: "warning" },
       { location: "Cedar Grove Campus", shrinkPct: 1.4, shrinkDollars: 260, status: "good" },
     ],
   },
@@ -65,43 +80,45 @@ const KPI_DATA = {
   // -------------------------------------------------------- ROUTE/DRIVER --
   route: {
     stats: [
-      { label: "Active Routes", value: 18, format: "number", delta: 1, deltaType: "count", deltaLabel: "vs last month" },
+      { label: "Active Routes", value: 7, format: "number", delta: 0, deltaType: "count", deltaLabel: "vs last month" },
       { label: "On-Time Route Completion", value: 94.2, format: "percent", delta: 1.1, deltaLabel: "vs last month" },
       { label: "Avg Stops / Route / Day", value: 26, format: "number", delta: -1, deltaType: "count", deltaLabel: "vs last month", inverse: true },
       { label: "Avg Service Time / Stop", value: 11.5, format: "minutes", delta: -0.4, deltaLabel: "vs last month", inverse: true },
     ],
     stopsByRoute: {
-      labels: ["Route 1", "Route 2", "Route 3", "Route 4", "Route 5", "Route 6"],
-      values: [142, 128, 156, 119, 133, 147],
+      labels: ROUTE_NAMES,
+      values: [142, 128, 156, 119, 133, 147, 121],
     },
     drivers: [
-      { name: "M. Alvarez", route: "Route 3", onTimePct: 98.1, stops: 156, incidents: 0, status: "good" },
-      { name: "T. Brooks", route: "Route 1", onTimePct: 96.4, stops: 142, incidents: 0, status: "good" },
-      { name: "J. Nguyen", route: "Route 6", onTimePct: 93.8, stops: 147, incidents: 1, status: "good" },
-      { name: "R. Palmer", route: "Route 2", onTimePct: 91.0, stops: 128, incidents: 1, status: "warning" },
-      { name: "S. Okafor", route: "Route 5", onTimePct: 89.5, stops: 133, incidents: 2, status: "warning" },
-      { name: "D. Whitfield", route: "Route 4", onTimePct: 84.7, stops: 119, incidents: 3, status: "critical" },
+      { name: "M. Alvarez", route: "Kings", onTimePct: 98.1, stops: 156, incidents: 0, status: "good" },
+      { name: "T. Brooks", route: "Bulls", onTimePct: 96.4, stops: 142, incidents: 0, status: "good" },
+      { name: "J. Nguyen", route: "Suns", onTimePct: 93.8, stops: 147, incidents: 1, status: "good" },
+      { name: "R. Palmer", route: "Celtics", onTimePct: 91.0, stops: 128, incidents: 1, status: "warning" },
+      { name: "S. Okafor", route: "Magic", onTimePct: 89.5, stops: 133, incidents: 2, status: "warning" },
+      { name: "D. Whitfield", route: "Lakers", onTimePct: 84.7, stops: 119, incidents: 3, status: "critical" },
+      { name: "K. Osei", route: "Thunder", onTimePct: 92.6, stops: 121, incidents: 1, status: "good" },
     ],
+    spoilageByRoute: {
+      labels: ROUTE_NAMES,
+      values: [420, 380, 510, 290, 460, 340, 275],
+    },
+    productShortByRoute: {
+      labels: ROUTE_NAMES,
+      values: [310, 265, 480, 190, 355, 220, 175],
+    },
+    revenueByRoute: {
+      labels: ROUTE_NAMES,
+      values: [186000, 164000, 214000, 142000, 178000, 151000, 139000],
+    },
   },
 
   // ----------------------------------------------------------- DELIVERY ---
   delivery: {
     stats: [
-      { label: "On-Time Delivery Rate", value: 95.6, format: "percent", delta: 0.8, deltaLabel: "vs last month" },
-      { label: "Deliveries Completed (MTD)", value: 3184, format: "number", delta: 4.5, deltaLabel: "vs last month" },
-      { label: "Missed / Rescheduled", value: 22, format: "number", delta: -5, deltaType: "count", deltaLabel: "vs last month", inverse: true },
-      { label: "Avg Delivery Window Accuracy", value: 12, format: "minutes", delta: -1.2, deltaLabel: "vs last month", inverse: true },
+      { label: "YTD Pallet Water Deliveries", value: 486, format: "number", delta: 5.4, deltaLabel: "vs last year" },
+      { label: "YTD 5-Gallon Deliveries", value: 12840, format: "number", delta: 3.1, deltaLabel: "vs last year" },
+      { label: "Weekly $ per Delivery", value: 186, format: "currency", delta: 2.8, deltaLabel: "vs last month" },
     ],
-    onTimeTrend: {
-      labels: ["Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-      series: [
-        { name: "On-Time %", color: "var(--cat-3)", values: [92.1, 93.4, 94.0, 94.8, 95.1, 95.6] },
-      ],
-    },
-    volumeByType: {
-      labels: ["Vending Restock", "Micro-Market", "Water/OCS"],
-      values: [1520, 980, 684],
-    },
   },
 
   // ------------------------------------------------------------ FINANCE ---
@@ -123,6 +140,29 @@ const KPI_DATA = {
       labels: ["Feb", "Mar", "Apr", "May", "Jun", "Jul"],
       series: [
         { name: "Gross Margin %", color: "var(--cat-6)", values: [39.5, 40.1, 40.9, 41.5, 41.8, 42.8] },
+      ],
+    },
+  },
+
+  // ----------------------------------------------------------- PRODUCTS ---
+  products: {
+    stats: [
+      { label: "Total Food Spoiled (% of Units)", value: 2.3, format: "percent", delta: -0.2, deltaLabel: "vs last month", inverse: true },
+      { label: "Total Spoiled Cost (% of COGS)", value: 1.8, format: "percent", delta: -0.1, deltaLabel: "vs last month", inverse: true },
+    ],
+    marginByCategory: [
+      { category: "Snacks", marginPct: 46.2, momChangePts: 1.4 },
+      { category: "Beverages", marginPct: 51.8, momChangePts: 0.6 },
+      { category: "Fresh Food", marginPct: 34.1, momChangePts: -2.8 },
+      { category: "Candy & Confections", marginPct: 49.5, momChangePts: 0.3 },
+      { category: "Frozen / Ice Cream", marginPct: 38.7, momChangePts: -1.9 },
+      { category: "Water / OCS Supplies", marginPct: 44.0, momChangePts: 2.1 },
+      { category: "Health & Better-For-You", marginPct: 41.3, momChangePts: 3.2 },
+    ],
+    marginTrend: {
+      labels: MONTHS_YTD,
+      series: [
+        { name: "Total Margin %", color: "var(--cat-6)", values: [40.8, 41.0, 41.5, 41.9, 42.1, 42.4, 42.6, 42.5, 42.8, 43.0, 43.1, 42.8] },
       ],
     },
   },

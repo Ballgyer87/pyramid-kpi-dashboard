@@ -169,6 +169,11 @@ function niceRange(dataMin, dataMax, cap100) {
 const CAT_SLOTS = ["var(--cat-1)", "var(--cat-2)", "var(--cat-3)", "var(--cat-4)", "var(--cat-5)", "var(--cat-6)", "var(--cat-7)", "var(--cat-8)"];
 const CAT_HEX = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#4a3aa7", "#e34948"];
 
+// Same per-route colors as the Excel charts everyone already reads (Bulls, Celtics,
+// Kings, Lakers, Magic, Suns, Thunder, in that order) — keep any new route chart on
+// this exact palette so the colors stay consistent with what people are used to.
+const ROUTE_COLORS = ["#156082", "#E97132", "#196B24", "#0F9ED5", "#A02B93", "#4EA72E", "#0D3A4E"];
+
 function relativeLuminance(hex) {
   const c = hex.replace("#", "");
   const [r, g, b] = [0, 2, 4].map((i) => parseInt(c.slice(i, i + 2), 16) / 255);
@@ -181,7 +186,7 @@ function polarPoint(cx, cy, r, angleDeg) {
   return { x: cx + r * Math.sin(rad), y: cy - r * Math.cos(rad) };
 }
 
-function createPieChart({ labels, values, format = "currency", size = 240 }) {
+function createPieChart({ labels, values, format = "currency", size = 240, colors = null }) {
   const total = values.reduce((a, b) => a + b, 0);
   const cx = size / 2, cy = size / 2, r = size / 2 - 6;
 
@@ -198,8 +203,8 @@ function createPieChart({ labels, values, format = "currency", size = 240 }) {
     const large = endAngle - startAngle > 180 ? 1 : 0;
     const p1 = polarPoint(cx, cy, r, startAngle);
     const p2 = polarPoint(cx, cy, r, endAngle);
-    const colorVar = CAT_SLOTS[i % CAT_SLOTS.length];
-    const colorHex = CAT_HEX[i % CAT_HEX.length];
+    const colorHex = colors ? colors[i % colors.length] : CAT_HEX[i % CAT_HEX.length];
+    const colorVar = colors ? colorHex : CAT_SLOTS[i % CAT_SLOTS.length];
 
     const path = svgEl("path", {
       d: `M ${cx} ${cy} L ${p1.x} ${p1.y} A ${r} ${r} 0 ${large} 1 ${p2.x} ${p2.y} Z`,
@@ -236,8 +241,9 @@ function createPieChart({ labels, values, format = "currency", size = 240 }) {
 
   const legend = el("div", { class: "legend" });
   labels.forEach((lab, i) => {
+    const swatchColor = colors ? colors[i % colors.length] : CAT_SLOTS[i % CAT_SLOTS.length];
     legend.appendChild(el("span", { class: "legend-item" }, [
-      el("span", { class: "legend-swatch", style: `background:${CAT_SLOTS[i % CAT_SLOTS.length]}` }),
+      el("span", { class: "legend-swatch", style: `background:${swatchColor}` }),
       `${lab} — ${formatFull(values[i], format)}`,
     ]));
   });
@@ -248,7 +254,7 @@ function createPieChart({ labels, values, format = "currency", size = 240 }) {
 
 /* ----------------------------------------------------------- bar chart */
 
-function createBarChart({ labels, values, colorVar = "var(--cat-1)", format = "number", height = 220, valueLabels = true }) {
+function createBarChart({ labels, values, colorVar = "var(--cat-1)", colors = null, format = "number", height = 220, valueLabels = true }) {
   const W = 600, H = height;
   const padL = 56, padR = 12, padT = 16, padB = 34;
   const plotW = W - padL - padR, plotH = H - padT - padB;
@@ -279,18 +285,19 @@ function createBarChart({ labels, values, colorVar = "var(--cat-1)", format = "n
     const cx = padL + slot * i + slot / 2;
     const barH = (v / maxVal) * plotH;
     const y = padT + plotH - barH;
+    const barColor = colors ? colors[i % colors.length] : colorVar;
 
     const hit = svgEl("rect", {
       x: cx - slot / 2, y: padT, width: slot, height: plotH, fill: "transparent",
     });
 
     const rect = svgEl("rect", {
-      x: cx - barW / 2, y, width: barW, height: Math.max(barH, 1), rx: 4, ry: 4, fill: colorVar,
+      x: cx - barW / 2, y, width: barW, height: Math.max(barH, 1), rx: 4, ry: 4, fill: barColor,
     });
 
     hit.addEventListener("pointermove", (e) => {
       const r = wrap.getBoundingClientRect();
-      tooltip.show(e.clientX - r.left, e.clientY - r.top, tooltipRow(labels[i], formatFull(v, format), colorVar));
+      tooltip.show(e.clientX - r.left, e.clientY - r.top, tooltipRow(labels[i], formatFull(v, format), barColor));
       rect.style.opacity = 0.85;
     });
     hit.addEventListener("pointerleave", () => { tooltip.hide(); rect.style.opacity = 1; });

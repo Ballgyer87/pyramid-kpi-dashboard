@@ -125,8 +125,8 @@ function renderShrink() {
       createBarChart({ labels: data.byCategory.labels, values: data.byCategory.values, colorVar: "var(--cat-8)", format: "currency" }),
     ]),
     el("div", { class: "card" }, [
-      el("div", { class: "card-title" }, "Shrink $ by Route (MTD)"),
-      createBarChart({ labels: data.byRoute.labels, values: data.byRoute.values, colorVar: "var(--cat-2)", format: "currency" }),
+      el("div", { class: "card-title" }, "Shrink $ by Route (YTD)"),
+      createBarChart({ labels: data.byRoute.labels, values: data.byRoute.values, colors: ROUTE_COLORS, format: "currency" }),
     ]),
   ]));
 
@@ -157,23 +157,23 @@ function renderRoute() {
   panel.appendChild(el("div", { class: "section-label" }, "By Route"));
   panel.appendChild(el("div", { class: "grid" }, [
     el("div", { class: "card" }, [
-      el("div", { class: "card-title" }, "$ Spoilage per Route"),
-      createPieChart({ labels: data.spoilageByRoute.labels, values: data.spoilageByRoute.values, format: "currency" }),
+      el("div", { class: "card-title" }, "$ Spoilage per Route (YTD)"),
+      createPieChart({ labels: data.spoilageByRoute.labels, values: data.spoilageByRoute.values, format: "currency", colors: ROUTE_COLORS }),
     ]),
     el("div", { class: "card" }, [
-      el("div", { class: "card-title" }, "$ Product Short per Route"),
-      createPieChart({ labels: data.productShortByRoute.labels, values: data.productShortByRoute.values, format: "currency" }),
+      el("div", { class: "card-title" }, "$ Shrink per Route (YTD)"),
+      createPieChart({ labels: KPI_DATA.shrink.byRoute.labels, values: KPI_DATA.shrink.byRoute.values, format: "currency", colors: ROUTE_COLORS }),
     ]),
     el("div", { class: "card" }, [
-      el("div", { class: "card-title" }, "$ Revenue per Route"),
-      createPieChart({ labels: data.revenueByRoute.labels, values: data.revenueByRoute.values, format: "currency" }),
+      el("div", { class: "card-title" }, "$ Revenue per Route (YTD)"),
+      createPieChart({ labels: data.revenueByRoute.labels, values: data.revenueByRoute.values, format: "currency", colors: ROUTE_COLORS }),
     ]),
   ]));
 
   panel.appendChild(el("div", { class: "grid" }, [
     el("div", { class: "card card-wide" }, [
       el("div", { class: "card-title" }, "Total Assets Serviced This Week (by Route)"),
-      createBarChart({ labels: data.weeklyAssetsByRoute.labels, values: data.weeklyAssetsByRoute.values, colorVar: "var(--cat-1)", format: "number" }),
+      createBarChart({ labels: data.weeklyAssetsByRoute.labels, values: data.weeklyAssetsByRoute.values, colors: ROUTE_COLORS, format: "number" }),
     ]),
   ]));
 }

@@ -228,14 +228,14 @@ function renderProducts() {
   panel.appendChild(el("div", { class: "grid" }, [
     el("div", { class: "card card-wide" }, [
       el("div", { class: "card-title" }, "Net Margin % by Product Category"),
-      createTable(
+      el("div", { class: "table-scroll" }, createTable(
         [
           { key: "category", label: "Category" },
           { key: "marginPct", label: "Net Margin %", numeric: true, render: (v) => `${v.toFixed(1)}%` },
           { key: "momChangePts", label: "Change vs Last Month", numeric: true, render: momChangeCell },
         ],
         data.marginByCategory
-      ),
+      )),
     ]),
   ]));
 

@@ -560,6 +560,17 @@ table.kpi-table th {
 table.kpi-table td.num { font-variant-numeric: tabular-nums; text-align: right; }
 table.kpi-table tr:last-child td { border-bottom: none; }
 
+.table-scroll {
+  max-height: 420px;
+  overflow-y: auto;
+}
+.table-scroll table.kpi-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--surface-1);
+  box-shadow: 0 1px 0 var(--gridline);
+}
+
 .status-pill {
   display: inline-flex;
   align-items: center;

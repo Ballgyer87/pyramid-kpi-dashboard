@@ -67,10 +67,10 @@ const KPI_DATA = {
       labels: ["Snacks", "Beverages", "Fresh Food", "Water/OCS Supplies"],
       values: [3200, 2650, 1890, 680],
     },
-    // Real YTD (Jan-Jun) shrink $ per route, from PFS Analysis copy.xlsx / "2026 Shrink Charts".
+    // Real June (latest closed month) shrink $ per route, from PFS Analysis copy.xlsx / "2026 Shrink Charts".
     byRoute: {
       labels: ROUTE_NAMES,
-      values: [3861.83, 2170.67, 5035.31, 11607.32, 608.98, 7810.42, 2904.62],
+      values: [1687.82, 997.32, 4440.69, 8188.42, 565.06, 1892.56, 2468.84],
     },
     topLocations: [
       { location: "Riverbend Office Park", shrinkPct: 4.8, shrinkDollars: 1120, status: "critical" },
@@ -97,14 +97,14 @@ const KPI_DATA = {
       labels: ROUTE_NAMES,
       values: [142, 128, 156, 119, 133, 147, 121],
     },
-    // Real YTD (Jan-Jun) numbers below, from PFS Analysis copy.xlsx.
+    // Real June (latest closed month) numbers below, from PFS Analysis copy.xlsx.
     spoilageByRoute: {
       labels: ROUTE_NAMES,
-      values: [9500.27, 15894.09, 9414.09, 5962.35, 10967.11, 3763.45, 11225.05],
+      values: [1498.44, 2785.83, 1564.67, 655.67, 1502.47, 767.76, 1675.36],
     },
     revenueByRoute: {
       labels: ROUTE_NAMES,
-      values: [587239.92, 635729.13, 860176.59, 698645.69, 622893.25, 587323.45, 583390.61],
+      values: [108574.45, 123920.31, 148899.70, 134606.34, 121454.81, 119268.06, 112049.46],
     },
   },
 

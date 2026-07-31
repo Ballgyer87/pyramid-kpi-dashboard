@@ -125,7 +125,7 @@ function renderShrink() {
       createBarChart({ labels: data.byCategory.labels, values: data.byCategory.values, colorVar: "var(--cat-8)", format: "currency" }),
     ]),
     el("div", { class: "card" }, [
-      el("div", { class: "card-title" }, "Shrink $ by Route (YTD)"),
+      el("div", { class: "card-title" }, "Shrink $ by Route (June)"),
       createBarChart({ labels: data.byRoute.labels, values: data.byRoute.values, colors: ROUTE_COLORS, format: "currency" }),
     ]),
   ]));
@@ -157,15 +157,15 @@ function renderRoute() {
   panel.appendChild(el("div", { class: "section-label" }, "By Route"));
   panel.appendChild(el("div", { class: "grid" }, [
     el("div", { class: "card" }, [
-      el("div", { class: "card-title" }, "$ Spoilage per Route (YTD)"),
+      el("div", { class: "card-title" }, "$ Spoilage per Route (June)"),
       createPieChart({ labels: data.spoilageByRoute.labels, values: data.spoilageByRoute.values, format: "currency", colors: ROUTE_COLORS }),
     ]),
     el("div", { class: "card" }, [
-      el("div", { class: "card-title" }, "$ Shrink per Route (YTD)"),
+      el("div", { class: "card-title" }, "$ Shrink per Route (June)"),
       createPieChart({ labels: KPI_DATA.shrink.byRoute.labels, values: KPI_DATA.shrink.byRoute.values, format: "currency", colors: ROUTE_COLORS }),
     ]),
     el("div", { class: "card" }, [
-      el("div", { class: "card-title" }, "$ Revenue per Route (YTD)"),
+      el("div", { class: "card-title" }, "$ Revenue per Route (June)"),
       createPieChart({ labels: data.revenueByRoute.labels, values: data.revenueByRoute.values, format: "currency", colors: ROUTE_COLORS }),
     ]),
   ]));

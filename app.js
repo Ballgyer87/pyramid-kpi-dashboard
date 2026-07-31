@@ -92,7 +92,7 @@ function renderRevenue() {
   panel.appendChild(el("div", { class: "grid" }, [
     el("div", { class: "card card-wide" }, [
       el("div", { class: "card-title" }, "Sales Goal Tracker — Cumulative Goal vs Actual vs Last Year"),
-      createLineChart({ labels: data.cumulativeTracker.labels, series: data.cumulativeTracker.series, format: "currency" }),
+      createLineChart({ labels: data.cumulativeTracker.labels, series: data.cumulativeTracker.series, format: "currency", yMax: 12000000 }),
     ]),
   ]));
 

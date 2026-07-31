@@ -22,11 +22,10 @@ const KPI_DATA = {
   // the most recent complete week (7/19-7/25) from the weekly tracker.
   revenue: {
     goalMeter: {
-      ytdSales: 5354495.42,
+      ytdSales: 6313349.22,
       annualGoal: 11900000,
-      chartMax: 12000000, // gives the tube headroom above the goal so the top tick reads a clean $12M
       lastWeekSales: 219612.07,
-      weeklyTargetNeeded: 297522.94,
+      weeklyTargetNeeded: 253938.67,
       weeksLeft: 22,
       yoyPercent: 29.3, // used by the "YTD Revenue" headline tile on the Overview tab
       // Update this before each week's meeting — whatever's worth calling out.

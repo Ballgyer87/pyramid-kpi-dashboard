@@ -333,13 +333,14 @@ function createBarChart({ labels, values, colorVar = "var(--cat-1)", colors = nu
 
 /* ---------------------------------------------------------- line chart */
 
-function createLineChart({ labels, series, format = "number", height = 240, decimals = 1 }) {
+function createLineChart({ labels, series, format = "number", height = 240, decimals = 1, yMax = null }) {
   const W = 600, H = height;
   const padL = 56, padR = 16, padT = 16, padB = 34;
   const plotW = W - padL - padR, plotH = H - padT - padB;
 
   const allValues = series.flatMap((s) => s.values).filter((v) => v != null);
-  const { min: minVal, max: maxVal } = niceRange(Math.min(...allValues), Math.max(...allValues), format === "percent");
+  const { min: minVal, max: autoMax } = niceRange(Math.min(...allValues), Math.max(...allValues), format === "percent");
+  const maxVal = yMax != null ? yMax : autoMax;
   const yTicks = 4;
   const n = labels.length;
 

@@ -17,13 +17,16 @@ const MONTHS_YTD = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep
 const KPI_DATA = {
 
   // ------------------------------------------------------------ REVENUE ---
+  // Real numbers below, synced from the PFS KPI Master Tracker.xlsx Revenue tab.
+  // ytdSales/cumulative are through June (last closed month); lastWeekSales is
+  // the most recent complete week (7/19-7/25) from the weekly tracker.
   revenue: {
     goalMeter: {
-      ytdSales: 5427039,
+      ytdSales: 5354495.42,
       annualGoal: 11900000,
-      lastWeekSales: 216046,
-      weeklyTargetNeeded: 248960,
-      weeksLeft: 26,
+      lastWeekSales: 219612.07,
+      weeklyTargetNeeded: 297522.94,
+      weeksLeft: 22,
       yoyPercent: 29.3, // used by the "YTD Revenue" headline tile on the Overview tab
       // Update this before each week's meeting — whatever's worth calling out.
       funFact: "June revenue is up 29.3% year-over-year (+$226,506)!",
@@ -38,9 +41,9 @@ const KPI_DATA = {
         { name: "Cumulative Goal", color: "var(--brand-700)", dashed: true,
           values: [991667, 1983333, 2975000, 3966667, 4958333, 5950000, 6941667, 7933333, 8925000, 9916667, 10908333, 11900000] },
         { name: "Actual Cumulative Total", color: "var(--cat-1)",
-          values: [712000, 1480000, 2279000, 3124000, 3985000, 4890000, 5427039, null, null, null, null, null] },
+          values: [718373.51, 1564093.53, 2510617.76, 3428690.84, 4353630.53, 5354495.42, null, null, null, null, null, null] },
         { name: "2025 Cumulative Total", color: "var(--cat-4)",
-          values: [640000, 1330000, 2045000, 2805000, 3585000, 4285000, 4975000, 5695000, 6440000, 7200000, 7905000, 8685000] },
+          values: [713050.18, 1392245.19, 2162894.10, 2943028.48, 3720990.33, 4495348.97, 5305122.37, 6089178.86, 6909086.01, 7770062.97, 8510491.25, 9368699.79] },
       ],
     },
     byChannel: {

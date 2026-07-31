@@ -162,7 +162,7 @@ function renderRoute() {
     ]),
     el("div", { class: "card" }, [
       el("div", { class: "card-title" }, "$ Shrink per Route (June)"),
-      createPieChart({ labels: KPI_DATA.shrink.byRoute.labels, values: KPI_DATA.shrink.byRoute.values, format: "currency", colors: ROUTE_COLORS, sliceLabel: "value" }),
+      createPieChart({ labels: KPI_DATA.shrink.byRoute.labels, values: KPI_DATA.shrink.byRoute.values, format: "currency", colors: ROUTE_COLORS }),
     ]),
     el("div", { class: "card" }, [
       el("div", { class: "card-title" }, "$ Revenue per Route (June)"),

@@ -225,14 +225,23 @@ function createPieChart({ labels, values, format = "currency", size = 240, color
 
     svg.appendChild(path);
 
-    if (fraction >= 0.06) {
+    if (fraction >= 0.09) {
       const midAngle = (startAngle + endAngle) / 2;
-      const labelPoint = polarPoint(cx, cy, r * 0.66, midAngle);
+      const labelPoint = polarPoint(cx, cy, r * 0.68, midAngle);
+      const text = sliceLabel === "value" ? formatValue(v, format) : `${Math.round(fraction * 100)}%`;
+      const fontSize = sliceLabel === "value" ? 10.5 : 11.5;
+      const chipW = text.length * (fontSize * 0.62) + 10;
+      const chipH = fontSize + 8;
+
+      svg.appendChild(svgEl("rect", {
+        x: labelPoint.x - chipW / 2, y: labelPoint.y - chipH / 2 - 1, width: chipW, height: chipH,
+        rx: chipH / 2, ry: chipH / 2, fill: "#ffffff", "fill-opacity": 0.92,
+      }));
       const lbl = svgEl("text", {
-        x: labelPoint.x, y: labelPoint.y, "text-anchor": "middle", "font-size": sliceLabel === "value" ? 10.5 : 12, "font-weight": 700,
-        fill: "#0b0b0b", stroke: "#ffffff", "stroke-width": 3, "paint-order": "stroke",
+        x: labelPoint.x, y: labelPoint.y, "text-anchor": "middle", "dominant-baseline": "central", "font-size": fontSize, "font-weight": 700,
+        fill: "#0b0b0b",
       });
-      lbl.textContent = sliceLabel === "value" ? formatValue(v, format) : `${Math.round(fraction * 100)}%`;
+      lbl.textContent = text;
       svg.appendChild(lbl);
     }
   });

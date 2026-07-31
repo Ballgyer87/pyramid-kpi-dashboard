@@ -186,7 +186,7 @@ function polarPoint(cx, cy, r, angleDeg) {
   return { x: cx + r * Math.sin(rad), y: cy - r * Math.cos(rad) };
 }
 
-function createPieChart({ labels, values, format = "currency", size = 240, colors = null }) {
+function createPieChart({ labels, values, format = "currency", size = 240, colors = null, sliceLabel = "percent" }) {
   const total = values.reduce((a, b) => a + b, 0);
   const cx = size / 2, cy = size / 2, r = size / 2 - 6;
 
@@ -229,10 +229,10 @@ function createPieChart({ labels, values, format = "currency", size = 240, color
       const midAngle = (startAngle + endAngle) / 2;
       const labelPoint = polarPoint(cx, cy, r * 0.66, midAngle);
       const lbl = svgEl("text", {
-        x: labelPoint.x, y: labelPoint.y, "text-anchor": "middle", "font-size": 12, "font-weight": 700,
+        x: labelPoint.x, y: labelPoint.y, "text-anchor": "middle", "font-size": sliceLabel === "value" ? 10.5 : 12, "font-weight": 700,
         fill: "#0b0b0b", stroke: "#ffffff", "stroke-width": 3, "paint-order": "stroke",
       });
-      lbl.textContent = `${Math.round(fraction * 100)}%`;
+      lbl.textContent = sliceLabel === "value" ? formatValue(v, format) : `${Math.round(fraction * 100)}%`;
       svg.appendChild(lbl);
     }
   });

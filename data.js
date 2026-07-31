@@ -72,6 +72,11 @@ const KPI_DATA = {
       labels: ROUTE_NAMES,
       values: [1687.82, 997.32, 4440.69, 8188.42, 565.06, 1892.56, 2468.84],
     },
+    // Shrink $ above, as a % of that route's June revenue.
+    byRoutePct: {
+      labels: ROUTE_NAMES,
+      values: [1.55, 0.80, 2.98, 6.08, 0.47, 1.59, 2.20],
+    },
     topLocations: [
       { location: "Riverbend Office Park", shrinkPct: 4.8, shrinkDollars: 1120, status: "critical" },
       { location: "Union Station Depot", shrinkPct: 4.3, shrinkDollars: 990, status: "critical" },

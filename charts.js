@@ -518,9 +518,53 @@ function createGoalMeter(cfg, title, opts = {}) {
   return el("div", { class: cardClass }, title ? [el("div", { class: "card-title meter-title" }, title), row] : [row]);
 }
 
-function createFunFactCard(text) {
+function createHeightComparison({ items, caption }) {
+  const maxBarPx = 220;
+  const tallestFt = Math.max(...items.map((it) => it.heightFt));
+
+  const cols = items.map((it) => {
+    const barPx = Math.max(18, Math.round((it.heightFt / tallestFt) * maxBarPx));
+    const isBuilding = it.icon === "building";
+    const barColor = it.color || "var(--text-muted)";
+
+    const svg = svgEl("svg", { width: 56, height: maxBarPx + 4, viewBox: `0 0 56 ${maxBarPx + 4}`, style: "display:block;margin:0 auto;" });
+    const barY = maxBarPx + 4 - barPx;
+
+    if (isBuilding) {
+      // simple stepped skyscraper silhouette, anchored to the baseline
+      const w1 = 30, w2 = 20, w3 = 8;
+      const stepH = barPx * 0.28;
+      const x0 = 28 - w1 / 2, x1 = 28 - w2 / 2, x2 = 28 - w3 / 2;
+      svg.appendChild(svgEl("rect", { x: x0, y: barY + stepH * 2, width: w1, height: barPx - stepH * 2, fill: barColor, rx: 1 }));
+      svg.appendChild(svgEl("rect", { x: x1, y: barY + stepH, width: w2, height: stepH * 1.3, fill: barColor, rx: 1 }));
+      svg.appendChild(svgEl("rect", { x: x2, y: barY, width: w3, height: stepH * 1.1, fill: barColor, rx: 1 }));
+    } else {
+      svg.appendChild(svgEl("rect", { x: 13, y: barY, width: 30, height: barPx, fill: barColor, rx: 5 }));
+      const segments = Math.max(1, Math.round(barPx / 26));
+      for (let s = 1; s < segments; s++) {
+        svg.appendChild(svgEl("line", { x1: 13, x2: 43, y1: barY + (barPx / segments) * s, y2: barY + (barPx / segments) * s, stroke: "var(--surface-1)", "stroke-width": 2 }));
+      }
+    }
+
+    return el("div", { class: "height-compare-col" }, [
+      svg,
+      el("div", { class: "height-compare-label" }, it.label),
+      el("div", { class: "height-compare-value" }, it.height),
+    ]);
+  });
+
+  return el("div", { class: "height-compare" }, [
+    el("div", { class: "height-compare-row" }, cols),
+    caption ? el("div", { class: "height-compare-caption" }, caption) : null,
+  ]);
+}
+
+function createFunFactCard(cfg) {
+  const text = typeof cfg === "string" ? cfg : cfg.text;
+  const visual = typeof cfg === "object" && cfg.visual ? createHeightComparison(cfg.visual) : null;
   return el("div", { class: "card fun-fact-card" }, [
     el("div", { class: "fun-fact-label" }, "🎉 Fun Fact of the Week"),
     el("div", { class: "fun-fact-body" }, text),
+    visual,
   ]);
 }

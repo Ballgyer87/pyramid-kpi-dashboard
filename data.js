@@ -29,7 +29,17 @@ const KPI_DATA = {
       weeksLeft: 22,
       yoyPercent: 29.3, // used by the "YTD Revenue" headline tile on the Overview tab
       // Update this before each week's meeting — whatever's worth calling out.
-      funFact: "June revenue is up 29.3% year-over-year (+$226,506)!",
+      // "visual" is optional — omit it (or the whole field) for a text-only fact.
+      funFact: {
+        text: "14,480 Coke bottles sold YTD",
+        visual: {
+          items: [
+            { label: "Empire State Building", height: "1,454 ft", heightFt: 1454, icon: "building", color: "var(--text-muted)" },
+            { label: "Coke bottles stacked", height: "10,257 ft", heightFt: 10257, icon: "bottles", color: "#D0242A" },
+          ],
+          caption: "Stacked bottles = 7x taller than the Empire State Building",
+        },
+      },
     },
     // Cumulative running-total tracker: goal pace (dashed) vs actual 2026 (stops at
     // the current month) vs full prior year 2025. Mirrors the "Sales Goal Tracker"

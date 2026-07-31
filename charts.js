@@ -228,9 +228,9 @@ function createPieChart({ labels, values, format = "currency", size = 240, color
     if (fraction >= 0.06) {
       const midAngle = (startAngle + endAngle) / 2;
       const labelPoint = polarPoint(cx, cy, r * 0.66, midAngle);
-      const textColor = relativeLuminance(colorHex) > 0.55 ? "#0b0b0b" : "#ffffff";
       const lbl = svgEl("text", {
-        x: labelPoint.x, y: labelPoint.y, "text-anchor": "middle", "font-size": 12, "font-weight": 700, fill: textColor,
+        x: labelPoint.x, y: labelPoint.y, "text-anchor": "middle", "font-size": 12, "font-weight": 700,
+        fill: "#0b0b0b", stroke: "#ffffff", "stroke-width": 3, "paint-order": "stroke",
       });
       lbl.textContent = `${Math.round(fraction * 100)}%`;
       svg.appendChild(lbl);

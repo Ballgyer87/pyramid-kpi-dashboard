@@ -24,6 +24,7 @@ const KPI_DATA = {
     goalMeter: {
       ytdSales: 5354495.42,
       annualGoal: 11900000,
+      chartMax: 12000000, // gives the tube headroom above the goal so the top tick reads a clean $12M
       lastWeekSales: 219612.07,
       weeklyTargetNeeded: 297522.94,
       weeksLeft: 22,
@@ -153,9 +154,9 @@ const KPI_DATA = {
   // Category stats are June (latest closed month); momChangePts is June vs May.
   products: {
     stats: [
-      { label: "Total Food Spoiled %", value: 11.0, format: "percent", delta: 0.06, deltaLabel: "vs last month", inverse: true },
-      { label: "Total % Spoiled Cost", value: 1.16, format: "percent", delta: 0.0, deltaLabel: "vs last month", inverse: true },
-      { label: "Month Total Margin", value: 48.26, format: "percent", delta: 1.79, deltaLabel: "vs last month" },
+      { label: "Total Food Spoiled %", value: 11.0, format: "percent", delta: 0.06, deltaLabel: "vs last month", inverse: true, decimals: 2 },
+      { label: "Total % Spoiled Cost", value: 1.16, format: "percent", delta: 0.0, deltaLabel: "vs last month", inverse: true, decimals: 2 },
+      { label: "Month Total Margin", value: 48.26, format: "percent", delta: 1.79, deltaLabel: "vs last month", decimals: 2 },
     ],
     marginByCategory: [
       { category: "BAG CANDY", marginPct: 46.56, momChangePts: 0.48 },

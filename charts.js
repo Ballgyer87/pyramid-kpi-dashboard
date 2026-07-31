@@ -27,13 +27,13 @@ function svgEl(tag, attrs = {}) {
 
 /* ---------------------------------------------------------------- format */
 
-function formatValue(value, format) {
+function formatValue(value, format, decimals = 1) {
   if (value == null) return "—";
   switch (format) {
     case "currency":
       return formatCompactCurrency(value);
     case "percent":
-      return `${value.toFixed(1)}%`;
+      return `${value.toFixed(decimals)}%`;
     case "minutes":
       return `${value.toFixed(1)} min`;
     default:
@@ -41,13 +41,13 @@ function formatValue(value, format) {
   }
 }
 
-function formatFull(value, format) {
+function formatFull(value, format, decimals = 1) {
   if (value == null) return "—";
   switch (format) {
     case "currency":
       return `$${Math.round(value).toLocaleString("en-US")}`;
     case "percent":
-      return `${value.toFixed(1)}%`;
+      return `${value.toFixed(decimals)}%`;
     case "minutes":
       return `${value.toFixed(1)} min`;
     default:
@@ -65,7 +65,8 @@ function formatCompactCurrency(value) {
 /* ------------------------------------------------------------- stat tile */
 
 function createStatTile(stat) {
-  const value = formatValue(stat.value, stat.format);
+  const decimals = stat.decimals != null ? stat.decimals : 1;
+  const value = formatValue(stat.value, stat.format, decimals);
   const tile = el("div", { class: "card stat-tile" }, [
     el("div", { class: "label" }, stat.label),
     el("div", { class: "value" }, value),
@@ -78,11 +79,11 @@ function createStatTile(stat) {
     const sign = stat.delta > 0 ? "+" : "";
     let deltaText;
     if (stat.format === "percent") {
-      deltaText = `${arrow} ${sign}${stat.delta.toFixed(1)} pts`;
+      deltaText = `${arrow} ${sign}${stat.delta.toFixed(decimals)} pts`;
     } else if (stat.deltaType === "count") {
       deltaText = `${arrow} ${sign}${stat.delta}`;
     } else {
-      deltaText = `${arrow} ${sign}${stat.delta.toFixed(1)}%`;
+      deltaText = `${arrow} ${sign}${stat.delta.toFixed(decimals)}%`;
     }
     tile.appendChild(el("div", { class: `delta ${dir}` }, `${deltaText} ${stat.deltaLabel || ""}`));
   } else if (stat.deltaLabel) {
@@ -332,7 +333,7 @@ function createBarChart({ labels, values, colorVar = "var(--cat-1)", colors = nu
 
 /* ---------------------------------------------------------- line chart */
 
-function createLineChart({ labels, series, format = "number", height = 240 }) {
+function createLineChart({ labels, series, format = "number", height = 240, decimals = 1 }) {
   const W = 600, H = height;
   const padL = 56, padR = 16, padT = 16, padB = 34;
   const plotW = W - padL - padR, plotH = H - padT - padB;
@@ -352,7 +353,7 @@ function createLineChart({ labels, series, format = "number", height = 240 }) {
     const y = yFor(v);
     svg.appendChild(svgEl("line", { class: "gridline", x1: padL, x2: W - padR, y1: y, y2: y }));
     const t = svgEl("text", { x: padL - 8, y: y + 4, "text-anchor": "end", "font-size": 10 });
-    t.textContent = formatValue(v, format);
+    t.textContent = formatValue(v, format, decimals);
     svg.appendChild(t);
   }
   svg.appendChild(svgEl("line", { class: "axis-line", x1: padL, x2: W - padR, y1: padT + plotH, y2: padT + plotH }));
@@ -401,7 +402,7 @@ function createLineChart({ labels, series, format = "number", height = 240 }) {
     box.appendChild(el("div", { style: "font-weight:600;margin-bottom:4px;" }, labels[idx]));
     series.forEach((s) => {
       if (s.values[idx] == null) return;
-      box.appendChild(tooltipRow(s.name, formatFull(s.values[idx], format), s.color));
+      box.appendChild(tooltipRow(s.name, formatFull(s.values[idx], format, decimals), s.color));
     });
     tooltip.show(e.clientX - wrapBounds.left, e.clientY - wrapBounds.top, box);
   });
@@ -456,7 +457,12 @@ function statusPill(status, label) {
 /* ---------------------------------------------------------- goal meter -*/
 
 function createGoalMeter(cfg, title, opts = {}) {
+  // chartMax gives the tube some headroom above the goal (e.g. a clean $12M
+  // ceiling on an $11.9M goal) — it only affects the tick scale and the fill
+  // height. The displayed percentage is always % of the real annual goal.
+  const chartMax = cfg.chartMax || cfg.annualGoal;
   const pct = Math.min(100, (cfg.ytdSales / cfg.annualGoal) * 100);
+  const fillPct = Math.min(100, (cfg.ytdSales / chartMax) * 100);
   const stillNeeded = cfg.annualGoal - cfg.ytdSales;
   const weekDelta = cfg.lastWeekSales - cfg.weeklyTargetNeeded;
   const weekDeltaGood = weekDelta >= 0;
@@ -464,7 +470,7 @@ function createGoalMeter(cfg, title, opts = {}) {
   const tickCount = 4;
   const ticks = [];
   for (let i = tickCount; i >= 0; i--) {
-    ticks.push(el("div", {}, formatFull((cfg.annualGoal / tickCount) * i, "currency")));
+    ticks.push(el("div", {}, formatFull((chartMax / tickCount) * i, "currency")));
   }
 
   const tubeClass = opts.thermometer ? "meter-tube thermo-tube" : "meter-tube";
@@ -473,7 +479,7 @@ function createGoalMeter(cfg, title, opts = {}) {
     el("div", { class: "meter-ticks" }, ticks),
     el("div", { class: "meter-tube-wrap" }, [
       el("div", { class: tubeClass }, [
-        el("div", { class: "meter-fill", style: `height:${pct}%` }),
+        el("div", { class: "meter-fill", style: `height:${fillPct}%` }),
       ]),
       opts.thermometer ? el("div", { class: "thermo-bulb" }) : null,
       el("div", { class: "meter-percent" }, `${pct.toFixed(1)}%`),

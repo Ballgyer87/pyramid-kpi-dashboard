@@ -216,7 +216,7 @@ function momChangeCell(pts) {
   const dir = pts === 0 ? "flat" : pts > 0 ? "up" : "down";
   const arrow = pts === 0 ? "→" : pts > 0 ? "↑" : "↓";
   const sign = pts > 0 ? "+" : "";
-  return el("span", { class: `delta ${dir}` }, `${arrow} ${sign}${pts.toFixed(1)} pts`);
+  return el("span", { class: `delta ${dir}` }, `${arrow} ${sign}${pts.toFixed(2)} pts`);
 }
 
 function renderProducts() {
@@ -231,7 +231,7 @@ function renderProducts() {
       el("div", { class: "table-scroll" }, createTable(
         [
           { key: "category", label: "Category" },
-          { key: "marginPct", label: "Net Margin %", numeric: true, render: (v) => `${v.toFixed(1)}%` },
+          { key: "marginPct", label: "Net Margin %", numeric: true, render: (v) => `${v.toFixed(2)}%` },
           { key: "momChangePts", label: "Change vs Last Month", numeric: true, render: momChangeCell },
         ],
         data.marginByCategory
@@ -249,7 +249,7 @@ function renderProducts() {
       createTable(
         [
           { key: "category", label: "Category" },
-          { key: "marginPct", label: "Net Margin %", numeric: true, render: (v) => `${v.toFixed(1)}%` },
+          { key: "marginPct", label: "Net Margin %", numeric: true, render: (v) => `${v.toFixed(2)}%` },
           { key: "momChangePts", label: "Change vs Last Month", numeric: true, render: momChangeCell },
         ],
         topVariance
@@ -260,7 +260,7 @@ function renderProducts() {
   panel.appendChild(el("div", { class: "grid" }, [
     el("div", { class: "card card-wide" }, [
       el("div", { class: "card-title" }, "Total Margin % — Month by Month"),
-      createLineChart({ labels: data.marginTrend.labels, series: data.marginTrend.series, format: "percent" }),
+      createLineChart({ labels: data.marginTrend.labels, series: data.marginTrend.series, format: "percent", decimals: 2 }),
     ]),
   ]));
 }

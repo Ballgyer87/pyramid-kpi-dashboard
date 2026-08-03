@@ -108,8 +108,6 @@ const KPI_DATA = {
   route: {
     stats: [
       { label: "Average Assets Serviced (All Routes)", value: 26, format: "number", delta: -1, deltaType: "count", deltaLabel: "vs last month" },
-      { label: "Average Fill", value: 78.4, format: "percent", delta: 1.6, deltaLabel: "vs last month" },
-      { label: "RPS %", value: 91.2, format: "percent", delta: 0.8, deltaLabel: "vs last month" },
     ],
     weeklyAssetsByRoute: {
       labels: ROUTE_NAMES,
@@ -212,6 +210,8 @@ const KPI_DATA = {
       { label: "Picks per Hour", value: 142, format: "number", goalPct: 88 },
       { label: "Total Receives — Last Week", value: 36, format: "number", goalPct: 95 },
       { label: "Total Inventories Run", value: 21, format: "number", goalPct: 70 },
+      { label: "Average Fill", value: 78.4, format: "percent", delta: 1.6, deltaLabel: "vs last month" },
+      { label: "RPC Compatibility", value: 91.2, format: "percent", delta: 0.8, deltaLabel: "vs last month" },
     ],
   },
 

@@ -53,15 +53,15 @@ function renderOverview() {
   const panel = document.getElementById("panel-overview");
   const rev = KPI_DATA.revenue;
   const shrink = KPI_DATA.shrink;
-  const route = KPI_DATA.route;
   const delivery = KPI_DATA.delivery;
   const finance = KPI_DATA.finance;
+  const operations = KPI_DATA.operations;
 
   const headline = [
     { label: "YTD Revenue", value: rev.goalMeter.ytdSales, format: "currency", delta: rev.goalMeter.yoyPercent, deltaLabel: "YoY" },
     { label: "Shrink % of Sales", value: shrink.stats[1].value, format: "percent", delta: shrink.stats[1].delta, deltaLabel: "vs last month", inverse: true },
     { label: "Weekly $ per Delivery", value: delivery.stats[2].value, format: "currency", delta: delivery.stats[2].delta, deltaLabel: "vs last month" },
-    { label: "Average Fill", value: route.stats[1].value, format: "percent", delta: route.stats[1].delta, deltaLabel: "vs last month" },
+    { label: "Average Fill", value: operations.stats[3].value, format: "percent", delta: operations.stats[3].delta, deltaLabel: "vs last month" },
     { label: "Gross Margin", value: finance.stats[0].value, format: "percent", delta: finance.stats[0].delta, deltaLabel: "vs last month" },
     { label: "Net Income (MTD)", value: finance.stats[1].value, format: "currency", delta: finance.stats[1].delta, deltaLabel: "vs last month" },
   ];

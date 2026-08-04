@@ -22,10 +22,10 @@ const KPI_DATA = {
   // the most recent complete week (7/19-7/25) from the weekly tracker.
   revenue: {
     goalMeter: {
-      ytdSales: 6313349.22,
+      ytdSales: 6352097.66,
       annualGoal: 11900000,
       lastWeekSales: 219612.07,
-      weeklyTargetNeeded: 253938.67,
+      weeklyTargetNeeded: 252177.38,
       weeksLeft: 22,
       yoyPercent: 29.3, // used by the "YTD Revenue" headline tile on the Overview tab
       // Update this before each week's meeting — whatever's worth calling out.
@@ -51,7 +51,7 @@ const KPI_DATA = {
         { name: "Cumulative Goal", color: "var(--brand-700)", dashed: true,
           values: [991667, 1983333, 2975000, 3966667, 4958333, 5950000, 6941667, 7933333, 8925000, 9916667, 10908333, 11900000] },
         { name: "Actual Cumulative Total", color: "var(--cat-1)",
-          values: [718373.51, 1564093.53, 2510617.76, 3428690.84, 4353630.53, 5354495.42, null, null, null, null, null, null] },
+          values: [718373.51, 1564093.53, 2510617.76, 3428690.84, 4353630.53, 5354495.42, 6352097.66, null, null, null, null, null] },
         { name: "2025 Cumulative Total", color: "var(--cat-4)",
           values: [713050.18, 1392245.19, 2162894.10, 2943028.48, 3720990.33, 4495348.97, 5305122.37, 6089178.86, 6909086.01, 7770062.97, 8510491.25, 9368699.79] },
       ],

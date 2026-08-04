@@ -187,11 +187,11 @@ function polarPoint(cx, cy, r, angleDeg) {
   return { x: cx + r * Math.sin(rad), y: cy - r * Math.cos(rad) };
 }
 
-function createPieChart({ labels, values, format = "currency", size = 240, colors = null, sliceLabel = "percent" }) {
+function createPieChart({ labels, values, format = "currency", size = 240, colors = null, sliceLabel = "percent", expanded = false }) {
   const total = values.reduce((a, b) => a + b, 0);
   const cx = size / 2, cy = size / 2, r = size / 2 - 6;
 
-  const svg = svgEl("svg", { class: "chart-svg pie-svg", viewBox: `0 0 ${size} ${size}`, role: "img" });
+  const svg = svgEl("svg", { class: "chart-svg pie-svg", viewBox: `0 0 ${size} ${size}`, role: "img", style: `max-width:${size}px` });
   const wrap = el("div", { class: "chart-wrap pie-wrap" });
   const tooltip = makeTooltip(wrap);
 
@@ -226,11 +226,12 @@ function createPieChart({ labels, values, format = "currency", size = 240, color
 
     svg.appendChild(path);
 
-    if (fraction >= 0.09) {
+    if (fraction >= (expanded ? 0.02 : 0.09)) {
       const midAngle = (startAngle + endAngle) / 2;
       const labelPoint = polarPoint(cx, cy, r * 0.68, midAngle);
       const text = sliceLabel === "value" ? formatValue(v, format) : `${Math.round(fraction * 100)}%`;
-      const fontSize = sliceLabel === "value" ? 10.5 : 11.5;
+      const scale = size / 240;
+      const fontSize = (sliceLabel === "value" ? 10.5 : 11.5) * scale;
       const chipW = text.length * (fontSize * 0.62) + 10;
       const chipH = fontSize + 8;
 
@@ -333,7 +334,7 @@ function createBarChart({ labels, values, colorVar = "var(--cat-1)", colors = nu
 
 /* ---------------------------------------------------------- line chart */
 
-function createLineChart({ labels, series, format = "number", height = 240, decimals = 1, yMax = null }) {
+function createLineChart({ labels, series, format = "number", height = 240, decimals = 1, yMax = null, expanded = false }) {
   const W = 600, H = height;
   const padL = 56, padR = 16, padT = 16, padB = 34;
   const plotW = W - padL - padR, plotH = H - padT - padB;
@@ -376,7 +377,19 @@ function createLineChart({ labels, series, format = "number", height = 240, deci
     svg.appendChild(svgEl("path", pathAttrs));
     s.values.forEach((v, i) => {
       if (v == null) return;
-      svg.appendChild(svgEl("circle", { cx: xFor(i), cy: yFor(v), r: 4, fill: s.color, stroke: "var(--surface-1)", "stroke-width": 2 }));
+      const cx = xFor(i), cy = yFor(v);
+      svg.appendChild(svgEl("circle", { cx, cy, r: 4, fill: s.color, stroke: "var(--surface-1)", "stroke-width": 2 }));
+
+      if (expanded) {
+        const text = formatValue(v, format, decimals);
+        const labelAbove = cy - padT > 16;
+        const ly = labelAbove ? cy - 13 : cy + 17;
+        const chipW = text.length * 6.2 + 10;
+        svg.appendChild(svgEl("rect", { x: cx - chipW / 2, y: ly - 9, width: chipW, height: 15, rx: 7, ry: 7, fill: "#ffffff", "fill-opacity": 0.92 }));
+        const lbl = svgEl("text", { x: cx, y: ly, "text-anchor": "middle", "dominant-baseline": "central", "font-size": 10, "font-weight": 700, fill: "#0b0b0b" });
+        lbl.textContent = text;
+        svg.appendChild(lbl);
+      }
     });
   });
 
@@ -567,4 +580,63 @@ function createFunFactCard(cfg) {
     el("div", { class: "fun-fact-body" }, text),
     visual,
   ]);
+}
+
+/* ------------------------------------------------------ expand / modal */
+
+let modalRefs = null;
+
+function ensureModal() {
+  if (modalRefs) return modalRefs;
+  const title = el("div", { class: "modal-title" });
+  const closeBtn = el("button", { class: "modal-close-btn", "aria-label": "Close" }, "×");
+  const body = el("div", { class: "modal-body" });
+  const panel = el("div", { class: "modal-panel" }, [
+    el("div", { class: "modal-title-row" }, [title, closeBtn]),
+    body,
+  ]);
+  const overlay = el("div", { class: "modal-overlay" }, [panel]);
+  document.body.appendChild(overlay);
+
+  const close = () => overlay.classList.remove("open");
+  closeBtn.addEventListener("click", close);
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+
+  modalRefs = { overlay, title, body };
+  return modalRefs;
+}
+
+function openChartModal(titleText, buildFn) {
+  const { overlay, title, body } = ensureModal();
+  title.textContent = titleText;
+  body.innerHTML = "";
+  body.appendChild(buildFn());
+  overlay.classList.add("open");
+}
+
+function createExpandButton(titleText, buildFn) {
+  const btn = el("button", { class: "expand-btn", "aria-label": `Expand ${titleText}`, title: "Expand" }, [
+    (() => {
+      const svg = svgEl("svg", { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", "stroke-width": 2, "stroke-linecap": "round", "stroke-linejoin": "round" });
+      svg.appendChild(svgEl("polyline", { points: "9 3 3 3 3 9" }));
+      svg.appendChild(svgEl("polyline", { points: "15 3 21 3 21 9" }));
+      svg.appendChild(svgEl("polyline", { points: "9 21 3 21 3 15" }));
+      svg.appendChild(svgEl("polyline", { points: "15 21 21 21 21 15" }));
+      return svg;
+    })(),
+  ]);
+  btn.addEventListener("click", () => openChartModal(titleText, buildFn));
+  return btn;
+}
+
+// Wraps a chart in a card with a title + expand button. `smallNode` renders in
+// the card; `expandFactory` (called fresh each click) renders the modal's
+// bigger version — usually the same builder called with expanded:true.
+function chartCard(titleText, smallNode, expandFactory, extraClass = "") {
+  const titleRow = el("div", { class: "card-title-row" }, [
+    el("div", { class: "card-title" }, titleText),
+    expandFactory ? createExpandButton(titleText, expandFactory) : null,
+  ]);
+  return el("div", { class: `card ${extraClass}`.trim() }, [titleRow, smallNode]);
 }

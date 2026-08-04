@@ -90,17 +90,20 @@ function renderRevenue() {
   ]));
 
   panel.appendChild(el("div", { class: "grid" }, [
-    el("div", { class: "card card-wide" }, [
-      el("div", { class: "card-title" }, "Sales Goal Tracker — Cumulative Goal vs Actual vs Last Year"),
+    chartCard(
+      "Sales Goal Tracker — Cumulative Goal vs Actual vs Last Year",
       createLineChart({ labels: data.cumulativeTracker.labels, series: data.cumulativeTracker.series, format: "currency", yMax: 12000000 }),
-    ]),
+      () => createLineChart({ labels: data.cumulativeTracker.labels, series: data.cumulativeTracker.series, format: "currency", yMax: 12000000, height: 420, expanded: true }),
+      "card-wide"
+    ),
   ]));
 
   panel.appendChild(el("div", { class: "grid" }, [
-    el("div", { class: "card" }, [
-      el("div", { class: "card-title" }, "Revenue by Channel (YTD)"),
+    chartCard(
+      "Revenue by Channel (YTD)",
       createBarChart({ labels: data.byChannel.labels, values: data.byChannel.values, colorVar: "var(--brand-400)", format: "currency" }),
-    ]),
+      () => createBarChart({ labels: data.byChannel.labels, values: data.byChannel.values, colorVar: "var(--brand-400)", format: "currency", height: 380 })
+    ),
   ]));
 }
 
@@ -113,21 +116,25 @@ function renderShrink() {
   renderStatGrid(panel, data.stats);
 
   panel.appendChild(el("div", { class: "grid" }, [
-    el("div", { class: "card card-wide" }, [
-      el("div", { class: "card-title" }, "Shrink % — Month by Month"),
+    chartCard(
+      "Shrink % — Month by Month",
       createLineChart({ labels: data.trend.labels, series: data.trend.series, format: "percent" }),
-    ]),
+      () => createLineChart({ labels: data.trend.labels, series: data.trend.series, format: "percent", height: 420, expanded: true }),
+      "card-wide"
+    ),
   ]));
 
   panel.appendChild(el("div", { class: "grid" }, [
-    el("div", { class: "card" }, [
-      el("div", { class: "card-title" }, "Shrink $ by Category (MTD)"),
+    chartCard(
+      "Shrink $ by Category (MTD)",
       createBarChart({ labels: data.byCategory.labels, values: data.byCategory.values, colorVar: "var(--cat-8)", format: "currency" }),
-    ]),
-    el("div", { class: "card" }, [
-      el("div", { class: "card-title" }, "% Shrink by Route (June)"),
+      () => createBarChart({ labels: data.byCategory.labels, values: data.byCategory.values, colorVar: "var(--cat-8)", format: "currency", height: 380 })
+    ),
+    chartCard(
+      "% Shrink by Route (June)",
       createBarChart({ labels: data.byRoutePct.labels, values: data.byRoutePct.values, colors: ROUTE_COLORS, format: "percent" }),
-    ]),
+      () => createBarChart({ labels: data.byRoutePct.labels, values: data.byRoutePct.values, colors: ROUTE_COLORS, format: "percent", height: 380 })
+    ),
   ]));
 
   panel.appendChild(el("div", { class: "grid" }, [
@@ -156,25 +163,30 @@ function renderRoute() {
 
   panel.appendChild(el("div", { class: "section-label" }, "By Route"));
   panel.appendChild(el("div", { class: "grid" }, [
-    el("div", { class: "card" }, [
-      el("div", { class: "card-title" }, "$ Spoilage per Route (June)"),
+    chartCard(
+      "$ Spoilage per Route (June)",
       createPieChart({ labels: data.spoilageByRoute.labels, values: data.spoilageByRoute.values, format: "currency", colors: ROUTE_COLORS }),
-    ]),
-    el("div", { class: "card" }, [
-      el("div", { class: "card-title" }, "$ Shrink per Route (June)"),
+      () => createPieChart({ labels: data.spoilageByRoute.labels, values: data.spoilageByRoute.values, format: "currency", colors: ROUTE_COLORS, size: 380, expanded: true })
+    ),
+    chartCard(
+      "$ Shrink per Route (June)",
       createPieChart({ labels: KPI_DATA.shrink.byRoute.labels, values: KPI_DATA.shrink.byRoute.values, format: "currency", colors: ROUTE_COLORS }),
-    ]),
-    el("div", { class: "card" }, [
-      el("div", { class: "card-title" }, "$ Revenue per Route (June)"),
+      () => createPieChart({ labels: KPI_DATA.shrink.byRoute.labels, values: KPI_DATA.shrink.byRoute.values, format: "currency", colors: ROUTE_COLORS, size: 380, expanded: true })
+    ),
+    chartCard(
+      "$ Revenue per Route (June)",
       createPieChart({ labels: data.revenueByRoute.labels, values: data.revenueByRoute.values, format: "currency", colors: ROUTE_COLORS }),
-    ]),
+      () => createPieChart({ labels: data.revenueByRoute.labels, values: data.revenueByRoute.values, format: "currency", colors: ROUTE_COLORS, size: 380, expanded: true })
+    ),
   ]));
 
   panel.appendChild(el("div", { class: "grid" }, [
-    el("div", { class: "card card-wide" }, [
-      el("div", { class: "card-title" }, "Total Assets Serviced This Week (by Route)"),
+    chartCard(
+      "Total Assets Serviced This Week (by Route)",
       createBarChart({ labels: data.weeklyAssetsByRoute.labels, values: data.weeklyAssetsByRoute.values, colors: ROUTE_COLORS, format: "number" }),
-    ]),
+      () => createBarChart({ labels: data.weeklyAssetsByRoute.labels, values: data.weeklyAssetsByRoute.values, colors: ROUTE_COLORS, format: "number", height: 380 }),
+      "card-wide"
+    ),
   ]));
 }
 
@@ -196,17 +208,21 @@ function renderFinance() {
   renderStatGrid(panel, data.stats);
 
   panel.appendChild(el("div", { class: "grid" }, [
-    el("div", { class: "card card-wide" }, [
-      el("div", { class: "card-title" }, "Revenue vs Expenses"),
+    chartCard(
+      "Revenue vs Expenses",
       createLineChart({ labels: data.revenueVsExpenses.labels, series: data.revenueVsExpenses.series, format: "currency" }),
-    ]),
+      () => createLineChart({ labels: data.revenueVsExpenses.labels, series: data.revenueVsExpenses.series, format: "currency", height: 420, expanded: true }),
+      "card-wide"
+    ),
   ]));
 
   panel.appendChild(el("div", { class: "grid" }, [
-    el("div", { class: "card card-wide" }, [
-      el("div", { class: "card-title" }, "Gross Margin Trend"),
+    chartCard(
+      "Gross Margin Trend",
       createLineChart({ labels: data.marginTrend.labels, series: data.marginTrend.series, format: "percent" }),
-    ]),
+      () => createLineChart({ labels: data.marginTrend.labels, series: data.marginTrend.series, format: "percent", height: 420, expanded: true }),
+      "card-wide"
+    ),
   ]));
 }
 
@@ -258,10 +274,12 @@ function renderProducts() {
   ]));
 
   panel.appendChild(el("div", { class: "grid" }, [
-    el("div", { class: "card card-wide" }, [
-      el("div", { class: "card-title" }, "Total Margin % — Month by Month"),
+    chartCard(
+      "Total Margin % — Month by Month",
       createLineChart({ labels: data.marginTrend.labels, series: data.marginTrend.series, format: "percent", decimals: 2 }),
-    ]),
+      () => createLineChart({ labels: data.marginTrend.labels, series: data.marginTrend.series, format: "percent", decimals: 2, height: 420, expanded: true }),
+      "card-wide"
+    ),
   ]));
 }
 

@@ -698,6 +698,7 @@ table.kpi-table th, table.kpi-table td {
   text-align: left;
   padding: 8px 10px;
   border-bottom: 1px solid var(--gridline);
+  vertical-align: top;
 }
 table.kpi-table th {
   color: var(--text-muted);
@@ -708,6 +709,19 @@ table.kpi-table th {
 }
 table.kpi-table td.num { font-variant-numeric: tabular-nums; text-align: right; }
 table.kpi-table tr:last-child td { border-bottom: none; }
+
+.cell-value-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+.cell-value-row .history-toggle { margin-top: 0; }
+table.kpi-table .history-panel {
+  text-align: left;
+  min-width: 130px;
+  margin-left: auto;
+}
 
 .table-scroll {
   max-height: 420px;

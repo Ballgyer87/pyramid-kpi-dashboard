@@ -474,8 +474,41 @@ function createTable(columns, rows) {
       const raw = row[c.key];
       const content = c.render ? c.render(raw, row) : raw;
       const td = el("td", { class: c.numeric ? "num" : "" });
-      if (content instanceof Node) td.appendChild(content);
-      else td.textContent = content;
+
+      if (c.history) {
+        const valueRow = el("div", { class: "cell-value-row" });
+        const valueSpan = el("span", {});
+        if (content instanceof Node) valueSpan.appendChild(content);
+        else valueSpan.textContent = content;
+        const toggle = el("button", { class: "history-toggle", type: "button", "aria-label": "Show history" }, [
+          el("span", { class: "chevron" }, "▾"),
+        ]);
+        valueRow.appendChild(valueSpan);
+        valueRow.appendChild(toggle);
+        td.appendChild(valueRow);
+
+        const panel = el("div", { class: "history-panel" });
+        if (row.history && row.history.length) {
+          [...row.history].reverse().forEach((h) => {
+            panel.appendChild(el("div", { class: "history-row" }, [
+              el("span", { class: "period" }, h.label),
+              el("span", { class: "val" }, c.render ? c.render(h.value, row) : h.value),
+            ]));
+          });
+        } else {
+          panel.appendChild(el("div", { class: "history-empty" }, "No history logged yet"));
+        }
+        toggle.addEventListener("click", () => {
+          const open = panel.classList.toggle("open");
+          toggle.classList.toggle("open", open);
+        });
+        td.appendChild(panel);
+      } else if (content instanceof Node) {
+        td.appendChild(content);
+      } else {
+        td.textContent = content;
+      }
+
       tr.appendChild(td);
     });
     tbody.appendChild(tr);

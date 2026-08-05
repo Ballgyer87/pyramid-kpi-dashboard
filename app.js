@@ -248,7 +248,7 @@ function renderProducts() {
       el("div", { class: "table-scroll" }, createTable(
         [
           { key: "category", label: "Category" },
-          { key: "marginPct", label: "Net Margin %", numeric: true, render: (v) => `${v.toFixed(2)}%` },
+          { key: "marginPct", label: "Net Margin %", numeric: true, history: true, render: (v) => `${v.toFixed(2)}%` },
           { key: "momChangePts", label: "Change vs Last Month", numeric: true, render: momChangeCell },
         ],
         data.marginByCategory
@@ -266,7 +266,7 @@ function renderProducts() {
       createTable(
         [
           { key: "category", label: "Category" },
-          { key: "marginPct", label: "Net Margin %", numeric: true, render: (v) => `${v.toFixed(2)}%` },
+          { key: "marginPct", label: "Net Margin %", numeric: true, history: true, render: (v) => `${v.toFixed(2)}%` },
           { key: "momChangePts", label: "Change vs Last Month", numeric: true, render: momChangeCell },
         ],
         topVariance

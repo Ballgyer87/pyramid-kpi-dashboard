@@ -94,8 +94,7 @@ function createStatTile(stat) {
     tile.appendChild(el("div", { class: "goal-note" }, `${stat.goalPct}% of goal`));
   }
 
-  const toggle = el("button", { class: "history-toggle", type: "button" }, [
-    el("span", {}, "History"),
+  const toggle = el("button", { class: "history-toggle", type: "button", "aria-label": "Show history" }, [
     el("span", { class: "chevron" }, "▾"),
   ]);
   const panel = el("div", { class: "history-panel" });

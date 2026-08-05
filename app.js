@@ -58,11 +58,12 @@ function renderOverview() {
   const operations = KPI_DATA.operations;
 
   const headline = [
-    { label: "YTD Revenue", value: rev.goalMeter.ytdSales, format: "currency", delta: rev.goalMeter.yoyPercent, deltaLabel: "YoY" },
+    { label: "YTD Revenue", value: rev.goalMeter.ytdSales, format: "currency", delta: rev.goalMeter.yoyPercent, deltaLabel: "YoY",
+      history: rev.monthlyActual.labels.map((label, i) => ({ label, value: rev.monthlyActual.values[i] })) },
     { label: "Shrink % of Sales", value: shrink.stats[1].value, format: "percent", delta: shrink.stats[1].delta, deltaLabel: "vs last month", inverse: true },
     { label: "Weekly $ per Delivery", value: delivery.stats[2].value, format: "currency", delta: delivery.stats[2].delta, deltaLabel: "vs last month" },
     { label: "Average Fill", value: operations.stats[3].value, format: "percent", delta: operations.stats[3].delta, deltaLabel: "vs last month" },
-    { label: "Gross Margin", value: finance.stats[0].value, format: "percent", delta: finance.stats[0].delta, deltaLabel: "vs last month" },
+    { label: "Gross Margin", value: finance.stats[0].value, format: "percent", delta: finance.stats[0].delta, deltaLabel: "vs last month", history: finance.stats[0].history },
     { label: "Net Income (MTD)", value: finance.stats[1].value, format: "currency", delta: finance.stats[1].delta, deltaLabel: "vs last month" },
   ];
 

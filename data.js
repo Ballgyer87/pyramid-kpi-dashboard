@@ -60,6 +60,11 @@ const KPI_DATA = {
       labels: ["Vending", "Micro-Markets", "Delivery"],
       values: [2650000, 1200000, 1577039],
     },
+    // Monthly actual revenue (not cumulative) — feeds the Overview "YTD Revenue" history dropdown.
+    monthlyActual: {
+      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+      values: [718373.51, 845720.02, 946524.23, 918073.08, 924939.69, 1000864.89, 997602.24],
+    },
   },
 
   // ------------------------------------------------------------- SHRINK ---
@@ -136,7 +141,11 @@ const KPI_DATA = {
   // ------------------------------------------------------------ FINANCE ---
   finance: {
     stats: [
-      { label: "Gross Margin", value: 42.8, format: "percent", delta: 1.3, deltaLabel: "vs last month" },
+      { label: "Gross Margin", value: 42.8, format: "percent", delta: 1.3, deltaLabel: "vs last month",
+        history: [
+          { label: "Feb", value: 39.5 }, { label: "Mar", value: 40.1 }, { label: "Apr", value: 40.9 },
+          { label: "May", value: 41.5 }, { label: "Jun", value: 41.8 }, { label: "Jul", value: 42.8 },
+        ] },
       { label: "Net Income (MTD)", value: 184200, format: "currency", delta: 6.1, deltaLabel: "vs last month" },
       { label: "Operating Expenses (MTD)", value: 322500, format: "currency", delta: 2.4, deltaLabel: "vs last month", inverse: true },
       { label: "AR Over 60 Days", value: 41800, format: "currency", delta: -9.8, deltaLabel: "vs last month", inverse: true },
@@ -161,9 +170,21 @@ const KPI_DATA = {
   // Category stats are June (latest closed month); momChangePts is June vs May.
   products: {
     stats: [
-      { label: "Total Food Spoiled %", value: 11.0, format: "percent", delta: 0.06, deltaLabel: "vs last month", inverse: true, decimals: 2 },
-      { label: "Total % Spoiled Cost", value: 1.16, format: "percent", delta: 0.0, deltaLabel: "vs last month", inverse: true, decimals: 2 },
-      { label: "Month Total Margin", value: 48.26, format: "percent", delta: 1.79, deltaLabel: "vs last month", decimals: 2 },
+      { label: "Total Food Spoiled %", value: 11.0, format: "percent", delta: 0.06, deltaLabel: "vs last month", inverse: true, decimals: 2,
+        history: [
+          { label: "Dec '25", value: 12.1 }, { label: "Jan", value: 11.88 }, { label: "Feb", value: 10 },
+          { label: "Mar", value: 12.06 }, { label: "Apr", value: 14.06 }, { label: "May", value: 10.94 }, { label: "Jun", value: 11.0 },
+        ] },
+      { label: "Total % Spoiled Cost", value: 1.16, format: "percent", delta: 0.0, deltaLabel: "vs last month", inverse: true, decimals: 2,
+        history: [
+          { label: "Dec '25", value: 1.4 }, { label: "Jan", value: 1.49 }, { label: "Feb", value: 1.23 },
+          { label: "Mar", value: 1.42 }, { label: "Apr", value: 1.56 }, { label: "May", value: 1.16 }, { label: "Jun", value: 1.16 },
+        ] },
+      { label: "Month Total Margin", value: 48.26, format: "percent", delta: 1.79, deltaLabel: "vs last month", decimals: 2,
+        history: [
+          { label: "Dec '25", value: 47.08 }, { label: "Jan", value: 47.06 }, { label: "Feb", value: 46.25 },
+          { label: "Mar", value: 46.01 }, { label: "Apr", value: 45.81 }, { label: "May", value: 46.47 }, { label: "Jun", value: 48.26 },
+        ] },
     ],
     marginByCategory: [
       { category: "BAG CANDY", marginPct: 46.56, momChangePts: 0.48 },

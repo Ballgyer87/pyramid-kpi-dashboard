@@ -94,6 +94,28 @@ function createStatTile(stat) {
     tile.appendChild(el("div", { class: "goal-note" }, `${stat.goalPct}% of goal`));
   }
 
+  const toggle = el("button", { class: "history-toggle", type: "button" }, [
+    el("span", {}, "History"),
+    el("span", { class: "chevron" }, "▾"),
+  ]);
+  const panel = el("div", { class: "history-panel" });
+  if (stat.history && stat.history.length) {
+    [...stat.history].reverse().forEach((h) => {
+      panel.appendChild(el("div", { class: "history-row" }, [
+        el("span", { class: "period" }, h.label),
+        el("span", { class: "val" }, formatValue(h.value, stat.format, decimals)),
+      ]));
+    });
+  } else {
+    panel.appendChild(el("div", { class: "history-empty" }, "No history logged yet"));
+  }
+  toggle.addEventListener("click", () => {
+    const open = panel.classList.toggle("open");
+    toggle.classList.toggle("open", open);
+  });
+  tile.appendChild(toggle);
+  tile.appendChild(panel);
+
   return tile;
 }
 

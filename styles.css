@@ -386,8 +386,14 @@ main {
 }
 
 /* Stat tiles size to their own content instead of stretching to match
-   whichever tile in the row has its history dropdown open. */
-.stat-grid { align-items: start; }
+   whichever tile in the row has its history dropdown open.
+   auto-fill (not auto-fit) keeps the empty columns in place, so a row with
+   one or two stats renders them at normal tile width and leaves the rest of
+   the row open for metrics added later, rather than stretching to fill. */
+.stat-grid {
+  align-items: start;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
 
 .card {
   background: var(--surface-1);

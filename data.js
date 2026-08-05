@@ -85,7 +85,14 @@ const KPI_DATA = {
           { label: "Apr", value: 3.70 }, { label: "May", value: 4.29 }, { label: "Jun", value: 7.06 },
         ] },
       { label: "Shrink Goal", value: 2.0, format: "percent", delta: null, deltaLabel: "target ceiling" },
-      { label: "Locations Over Target", value: 7, format: "number", delta: 2, deltaType: "count", deltaLabel: "vs last month", inverse: true },
+      // Real count of active June micro-markets over the 2% goal (56 of 70), from
+      // Tim's Market Shrink Project 2026.xlsx. Recount each month the same way:
+      // active markets (nonzero sales) with Shrink % > 2%.
+      { label: "Locations Over Target", value: 56, format: "number", delta: 8, deltaType: "count", deltaLabel: "vs last month", inverse: true,
+        history: [
+          { label: "Jan", value: 46 }, { label: "Feb", value: 42 }, { label: "Mar", value: 52 },
+          { label: "Apr", value: 50 }, { label: "May", value: 48 }, { label: "Jun", value: 56 },
+        ] },
     ],
     trend: {
       labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],

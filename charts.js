@@ -518,10 +518,6 @@ function createTable(columns, rows) {
   return table;
 }
 
-function statusPill(status, label) {
-  return el("span", { class: `status-pill ${status}` }, label);
-}
-
 /* ---------------------------------------------------------- goal meter -*/
 
 function createGoalMeter(cfg, title, opts = {}) {

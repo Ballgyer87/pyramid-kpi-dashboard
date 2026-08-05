@@ -60,7 +60,7 @@ function renderOverview() {
   const headline = [
     { label: "YTD Revenue", value: rev.goalMeter.ytdSales, format: "currency", delta: rev.goalMeter.yoyPercent, deltaLabel: "YoY",
       history: rev.monthlyActual.labels.map((label, i) => ({ label, value: rev.monthlyActual.values[i] })) },
-    { label: "Shrink % of Sales", value: shrink.stats[1].value, format: "percent", delta: shrink.stats[1].delta, deltaLabel: "vs last month", inverse: true },
+    { label: "Micro-Market Shrink %", value: shrink.stats[1].value, format: "percent", delta: shrink.stats[1].delta, deltaLabel: "vs last month", inverse: true, history: shrink.stats[1].history },
     { label: "Weekly $ per Delivery", value: delivery.stats[2].value, format: "currency", delta: delivery.stats[2].delta, deltaLabel: "vs last month" },
     { label: "Average Fill", value: operations.stats[3].value, format: "percent", delta: operations.stats[3].delta, deltaLabel: "vs last month" },
     { label: "Gross Margin", value: finance.stats[0].value, format: "percent", delta: finance.stats[0].delta, deltaLabel: "vs last month", history: finance.stats[0].history },
@@ -118,7 +118,7 @@ function renderShrink() {
 
   panel.appendChild(el("div", { class: "grid" }, [
     chartCard(
-      "Shrink % — Month by Month",
+      "Micro-Market Shrink % — Month by Month",
       createLineChart({ labels: data.trend.labels, series: data.trend.series, format: "percent" }),
       () => createLineChart({ labels: data.trend.labels, series: data.trend.series, format: "percent", height: 420, expanded: true }),
       "card-wide"
@@ -140,13 +140,12 @@ function renderShrink() {
 
   panel.appendChild(el("div", { class: "grid" }, [
     el("div", { class: "card card-wide" }, [
-      el("div", { class: "card-title" }, "Top 10 Highest Shrink Locations"),
+      el("div", { class: "card-title" }, "Top 10 Worst Micro-Markets by Shrink % (June)"),
       createTable(
         [
           { key: "location", label: "Location" },
-          { key: "shrinkPct", label: "Shrink %", numeric: true, render: (v) => `${v.toFixed(1)}%` },
+          { key: "shrinkPct", label: "Shrink %", numeric: true, render: (v) => `${v.toFixed(2)}%` },
           { key: "shrinkDollars", label: "Shrink $", numeric: true, render: (v) => formatFull(v, "currency") },
-          { key: "status", label: "Status", render: (v) => statusPill(v, v === "good" ? "On target" : v === "warning" ? "Watch" : "Over target") },
         ],
         data.topLocations
       ),

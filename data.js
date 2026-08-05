@@ -68,17 +68,29 @@ const KPI_DATA = {
   },
 
   // ------------------------------------------------------------- SHRINK ---
+  // Micro-Market Shrink $/% below are real, from Tim's Market Shrink Project
+  // 2026.xlsx (company-wide monthly totals, Jan-Jun — July isn't closed yet).
+  // This tab is exclusively micro-markets — vending route shrink is tracked
+  // separately below (byRoute/byRoutePct, from PFS Analysis copy.xlsx).
   shrink: {
     stats: [
-      { label: "Shrink $ (MTD)", value: 8420, format: "currency", delta: -6.2, deltaLabel: "vs last month", inverse: true },
-      { label: "Shrink % of Sales", value: 1.9, format: "percent", delta: -0.3, deltaLabel: "vs last month", inverse: true },
+      { label: "Micro-Market Shrink $ (MTD)", value: 37949.84, format: "currency", delta: 78.8, deltaLabel: "vs last month", inverse: true,
+        history: [
+          { label: "Jan", value: 13952.53 }, { label: "Feb", value: 15595.69 }, { label: "Mar", value: 18133.83 },
+          { label: "Apr", value: 17749.49 }, { label: "May", value: 21220.95 }, { label: "Jun", value: 37949.84 },
+        ] },
+      { label: "Micro-Market Shrink %", value: 7.06, format: "percent", delta: 2.77, deltaLabel: "vs last month", inverse: true,
+        history: [
+          { label: "Jan", value: 3.67 }, { label: "Feb", value: 3.45 }, { label: "Mar", value: 3.61 },
+          { label: "Apr", value: 3.70 }, { label: "May", value: 4.29 }, { label: "Jun", value: 7.06 },
+        ] },
       { label: "Shrink Goal", value: 2.0, format: "percent", delta: null, deltaLabel: "target ceiling" },
       { label: "Locations Over Target", value: 7, format: "number", delta: 2, deltaType: "count", deltaLabel: "vs last month", inverse: true },
     ],
     trend: {
-      labels: MONTHS_YTD,
+      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
       series: [
-        { name: "Shrink %", color: "var(--cat-8)", values: [2.6, 2.5, 2.4, 2.2, 2.3, 2.0, 2.2, 1.9, 2.1, 2.0, 1.8, 1.9] },
+        { name: "Micro-Market Shrink %", color: "var(--cat-8)", values: [3.67, 3.45, 3.61, 3.70, 4.29, 7.06] },
       ],
     },
     byCategory: {
@@ -95,17 +107,22 @@ const KPI_DATA = {
       labels: ROUTE_NAMES,
       values: [1.55, 0.80, 2.98, 6.08, 0.47, 1.59, 2.20],
     },
+    // Real June (last closed month) worst 10 micro-markets by shrink %, from
+    // Tim's Market Shrink Project 2026.xlsx / "June" tab. Ranked worst-to-least-bad,
+    // no status tiers — update this each month to the newest closed month.
+    // Note: Tenaris Front's 58.51% is real, not a data error — a kiosk issue
+    // that has since been fixed.
     topLocations: [
-      { location: "Riverbend Office Park", shrinkPct: 4.8, shrinkDollars: 1120, status: "critical" },
-      { location: "Union Station Depot", shrinkPct: 4.3, shrinkDollars: 990, status: "critical" },
-      { location: "Lakeside Manufacturing", shrinkPct: 3.6, shrinkDollars: 940, status: "warning" },
-      { location: "Northgate Distribution", shrinkPct: 3.4, shrinkDollars: 870, status: "warning" },
-      { location: "Midtown Business Center", shrinkPct: 3.1, shrinkDollars: 810, status: "warning" },
-      { location: "Ashford Medical Plaza", shrinkPct: 2.9, shrinkDollars: 745, status: "warning" },
-      { location: "Harbor Logistics Hub", shrinkPct: 2.7, shrinkDollars: 605, status: "warning" },
-      { location: "Southpark Corporate Center", shrinkPct: 2.2, shrinkDollars: 510, status: "warning" },
-      { location: "Willow Creek Campus", shrinkPct: 1.8, shrinkDollars: 385, status: "warning" },
-      { location: "Cedar Grove Campus", shrinkPct: 1.4, shrinkDollars: 260, status: "good" },
+      { location: "Tenaris Front", shrinkPct: 58.51, shrinkDollars: 3677.21 },
+      { location: "HealthLink", shrinkPct: 30.08, shrinkDollars: 774.84 },
+      { location: "Nidec Motors", shrinkPct: 26.50, shrinkDollars: 1256.93 },
+      { location: "Emerson", shrinkPct: 19.62, shrinkDollars: 519.44 },
+      { location: "Cooper Lighting", shrinkPct: 18.00, shrinkDollars: 731.55 },
+      { location: "AWG Market", shrinkPct: 14.79, shrinkDollars: 6016.81 },
+      { location: "Bristol on Union", shrinkPct: 12.98, shrinkDollars: 188.06 },
+      { location: "Southeastern Freight Main", shrinkPct: 11.97, shrinkDollars: 1422.53 },
+      { location: "Jabil Front Market", shrinkPct: 10.92, shrinkDollars: 6776.09 },
+      { location: "Skyline Steel", shrinkPct: 10.30, shrinkDollars: 486.75 },
     ],
   },
 

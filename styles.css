@@ -734,19 +734,6 @@ table.kpi-table .history-panel {
   box-shadow: 0 1px 0 var(--gridline);
 }
 
-.status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 11.5px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 999px;
-}
-.status-pill.good { color: var(--status-good); background: color-mix(in srgb, var(--status-good) 14%, transparent); }
-.status-pill.warning { color: #8a5a00; background: color-mix(in srgb, var(--status-warning) 22%, transparent); }
-.status-pill.critical { color: var(--status-critical); background: color-mix(in srgb, var(--status-critical) 14%, transparent); }
-
 footer.site-footer {
   text-align: center;
   color: var(--text-muted);

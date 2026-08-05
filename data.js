@@ -147,6 +147,23 @@ const KPI_DATA = {
       labels: ROUTE_NAMES,
       values: [108574.45, 123920.31, 148899.70, 134606.34, 121454.81, 119268.06, 112049.46],
     },
+    // Previous-month (May) comparison set for the "Compare to Previous Month"
+    // toggle — same 3 metrics, same route order, from the same source files.
+    previousMonth: {
+      label: "May",
+      revenueByRoute: {
+        labels: ROUTE_NAMES,
+        values: [100220.43, 115250.48, 151108.86, 116553.71, 117963.22, 91654.47, 89877.68],
+      },
+      spoilageByRoute: {
+        labels: ROUTE_NAMES,
+        values: [1538.45, 2540.26, 1298.01, 987.49, 1642.71, 846.69, 1268.75],
+      },
+      shrinkByRoute: {
+        labels: ROUTE_NAMES,
+        values: [349.19, 67.86, 77.89, 696.20, 31.41, 1256.90, 77.18],
+      },
+    },
   },
 
   // ----------------------------------------------------------- DELIVERY ---

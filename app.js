@@ -156,8 +156,14 @@ function renderRoute() {
 
   renderStatGrid(panel, data.stats);
 
-  panel.appendChild(el("div", { class: "section-label" }, "By Route"));
+  const { row: byRouteRow, panel: comparePanel } = sectionLabelWithToggle("By Route", "Compare to Previous Month");
+  panel.appendChild(byRouteRow);
   panel.appendChild(el("div", { class: "grid" }, [
+    chartCard(
+      "$ Revenue per Route (June)",
+      createPieChart({ labels: data.revenueByRoute.labels, values: data.revenueByRoute.values, format: "currency", colors: ROUTE_COLORS }),
+      () => createPieChart({ labels: data.revenueByRoute.labels, values: data.revenueByRoute.values, format: "currency", colors: ROUTE_COLORS, size: 380, expanded: true })
+    ),
     chartCard(
       "$ Spoilage per Route (June)",
       createPieChart({ labels: data.spoilageByRoute.labels, values: data.spoilageByRoute.values, format: "currency", colors: ROUTE_COLORS }),
@@ -168,12 +174,27 @@ function renderRoute() {
       createPieChart({ labels: KPI_DATA.shrink.byRoute.labels, values: KPI_DATA.shrink.byRoute.values, format: "currency", colors: ROUTE_COLORS }),
       () => createPieChart({ labels: KPI_DATA.shrink.byRoute.labels, values: KPI_DATA.shrink.byRoute.values, format: "currency", colors: ROUTE_COLORS, size: 380, expanded: true })
     ),
+  ]));
+
+  const prev = data.previousMonth;
+  comparePanel.appendChild(el("div", { class: "grid" }, [
     chartCard(
-      "$ Revenue per Route (June)",
-      createPieChart({ labels: data.revenueByRoute.labels, values: data.revenueByRoute.values, format: "currency", colors: ROUTE_COLORS }),
-      () => createPieChart({ labels: data.revenueByRoute.labels, values: data.revenueByRoute.values, format: "currency", colors: ROUTE_COLORS, size: 380, expanded: true })
+      `$ Revenue per Route (${prev.label})`,
+      createPieChart({ labels: prev.revenueByRoute.labels, values: prev.revenueByRoute.values, format: "currency", colors: ROUTE_COLORS }),
+      () => createPieChart({ labels: prev.revenueByRoute.labels, values: prev.revenueByRoute.values, format: "currency", colors: ROUTE_COLORS, size: 380, expanded: true })
+    ),
+    chartCard(
+      `$ Spoilage per Route (${prev.label})`,
+      createPieChart({ labels: prev.spoilageByRoute.labels, values: prev.spoilageByRoute.values, format: "currency", colors: ROUTE_COLORS }),
+      () => createPieChart({ labels: prev.spoilageByRoute.labels, values: prev.spoilageByRoute.values, format: "currency", colors: ROUTE_COLORS, size: 380, expanded: true })
+    ),
+    chartCard(
+      `$ Shrink per Route (${prev.label})`,
+      createPieChart({ labels: prev.shrinkByRoute.labels, values: prev.shrinkByRoute.values, format: "currency", colors: ROUTE_COLORS }),
+      () => createPieChart({ labels: prev.shrinkByRoute.labels, values: prev.shrinkByRoute.values, format: "currency", colors: ROUTE_COLORS, size: 380, expanded: true })
     ),
   ]));
+  panel.appendChild(comparePanel);
 
   panel.appendChild(el("div", { class: "grid" }, [
     chartCard(

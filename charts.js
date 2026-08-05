@@ -124,6 +124,24 @@ function renderStatGrid(container, stats) {
   container.appendChild(grid);
 }
 
+// A section-label heading with a toggle button beside it that opens/closes
+// a panel below (e.g. "Compare to Previous Month"). Caller appends content
+// to the returned panel node.
+function sectionLabelWithToggle(labelText, toggleText) {
+  const label = el("div", { class: "section-label" }, labelText);
+  const toggle = el("button", { class: "compare-toggle", type: "button" }, [
+    el("span", {}, toggleText),
+    el("span", { class: "chevron" }, "▾"),
+  ]);
+  const row = el("div", { class: "section-label-row" }, [label, toggle]);
+  const panel = el("div", { class: "compare-panel" });
+  toggle.addEventListener("click", () => {
+    const open = panel.classList.toggle("open");
+    toggle.classList.toggle("open", open);
+  });
+  return { row, panel };
+}
+
 /* -------------------------------------------------------------- tooltip */
 
 function makeTooltip(wrap) {

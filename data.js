@@ -292,12 +292,19 @@ const KPI_DATA = {
   },
 
   // --------------------------------------------------------- OPERATIONS ---
+  // Grouped into the three areas this tab actually covers. Add a metric by
+  // dropping it into the right group — the tab renders whatever is in each.
+  // NOTE: every number here is still placeholder — no real Operations data yet.
   operations: {
-    stats: [
+    warehouse: [
       { label: "Picks per Hour", value: 142, format: "number", goalPct: 88 },
       { label: "Total Receives — Last Week", value: 36, format: "number", goalPct: 95 },
       { label: "Total Inventories Run", value: 21, format: "number", goalPct: 70 },
+    ],
+    scheduling: [
       { label: "Average Fill", value: 78.4, format: "percent", delta: 1.6, deltaLabel: "vs last month" },
+    ],
+    maintenance: [
       { label: "RPC Compatibility", value: 91.2, format: "percent", delta: 0.8, deltaLabel: "vs last month" },
     ],
   },

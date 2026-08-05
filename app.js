@@ -55,14 +55,16 @@ function renderOverview() {
   const shrink = KPI_DATA.shrink;
   const delivery = KPI_DATA.delivery;
   const finance = KPI_DATA.finance;
-  const operations = KPI_DATA.operations;
+  // Looked up by label rather than position, so regrouping or reordering the
+  // Operations metrics can't silently point this tile at the wrong number.
+  const avgFill = operationsStats().find((s) => s.label === "Average Fill");
 
   const headline = [
     { label: "YTD Revenue", value: rev.goalMeter.ytdSales, format: "currency", delta: rev.goalMeter.yoyPercent, deltaLabel: "YoY",
       history: rev.monthlyActual.labels.map((label, i) => ({ label, value: rev.monthlyActual.values[i] })) },
     { label: "Micro-Market Shrink %", value: shrink.stats[1].value, format: "percent", delta: shrink.stats[1].delta, deltaLabel: "vs last month", inverse: true, history: shrink.stats[1].history },
     { label: "Weekly $ per Delivery", value: delivery.stats[2].value, format: "currency", delta: delivery.stats[2].delta, deltaLabel: "vs last month" },
-    { label: "Average Fill", value: operations.stats[3].value, format: "percent", delta: operations.stats[3].delta, deltaLabel: "vs last month" },
+    { label: "Average Fill", value: avgFill.value, format: "percent", delta: avgFill.delta, deltaLabel: "vs last month" },
     { label: "Gross Margin", value: finance.stats[0].value, format: "percent", delta: finance.stats[0].delta, deltaLabel: "vs last month", history: finance.stats[0].history },
     { label: "Net Income (MTD)", value: finance.stats[1].value, format: "currency", delta: finance.stats[1].delta, deltaLabel: "vs last month" },
   ];
@@ -304,9 +306,31 @@ function renderProducts() {
 
 /* ------------------------------------------------------------- operations */
 
+// [display heading, key in KPI_DATA.operations] — drives both the tab's
+// section order and the flattened lookup used by the Overview tile.
+const OPERATIONS_GROUPS = [
+  ["Warehouse", "warehouse"],
+  ["Scheduling", "scheduling"],
+  ["Maintenance", "maintenance"],
+];
+
+function operationsStats() {
+  return OPERATIONS_GROUPS.flatMap(([, key]) => KPI_DATA.operations[key] || []);
+}
+
 function renderOperations() {
   const panel = document.getElementById("panel-operations");
   const data = KPI_DATA.operations;
 
-  renderStatGrid(panel, data.stats);
+  OPERATIONS_GROUPS.forEach(([heading, key]) => {
+    const stats = data[key] || [];
+    panel.appendChild(el("div", { class: "section-label" }, heading));
+    if (stats.length) {
+      renderStatGrid(panel, stats);
+    } else {
+      panel.appendChild(el("div", { class: "grid" }, [
+        el("div", { class: "card card-wide empty-note" }, "Nothing tracked here yet"),
+      ]));
+    }
+  });
 }

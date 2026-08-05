@@ -327,6 +327,12 @@ main {
   font-size: 13px;
 }
 
+.empty-note {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-style: italic;
+}
+
 .section-label {
   font-size: 12px;
   font-weight: 700;

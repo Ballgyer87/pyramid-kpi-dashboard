@@ -127,11 +127,6 @@ function renderShrink() {
 
   panel.appendChild(el("div", { class: "grid" }, [
     chartCard(
-      "Shrink $ by Category (MTD)",
-      createBarChart({ labels: data.byCategory.labels, values: data.byCategory.values, colorVar: "var(--cat-8)", format: "currency" }),
-      () => createBarChart({ labels: data.byCategory.labels, values: data.byCategory.values, colorVar: "var(--cat-8)", format: "currency", height: 380 })
-    ),
-    chartCard(
       "% Shrink by Route (June)",
       createBarChart({ labels: data.byRoutePct.labels, values: data.byRoutePct.values, colors: ROUTE_COLORS, format: "percent" }),
       () => createBarChart({ labels: data.byRoutePct.labels, values: data.byRoutePct.values, colors: ROUTE_COLORS, format: "percent", height: 380 })

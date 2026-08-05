@@ -100,10 +100,6 @@ const KPI_DATA = {
         { name: "Micro-Market Shrink %", color: "var(--cat-8)", values: [3.67, 3.45, 3.61, 3.70, 4.29, 7.06] },
       ],
     },
-    byCategory: {
-      labels: ["Snacks", "Beverages", "Fresh Food", "Water/OCS Supplies"],
-      values: [3200, 2650, 1890, 680],
-    },
     // Real June (latest closed month) shrink $ per route, from PFS Analysis copy.xlsx / "2026 Shrink Charts".
     byRoute: {
       labels: ROUTE_NAMES,

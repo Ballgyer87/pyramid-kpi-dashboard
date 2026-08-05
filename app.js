@@ -126,14 +126,6 @@ function renderShrink() {
   ]));
 
   panel.appendChild(el("div", { class: "grid" }, [
-    chartCard(
-      "% Shrink by Route (June)",
-      createBarChart({ labels: data.byRoutePct.labels, values: data.byRoutePct.values, colors: ROUTE_COLORS, format: "percent" }),
-      () => createBarChart({ labels: data.byRoutePct.labels, values: data.byRoutePct.values, colors: ROUTE_COLORS, format: "percent", height: 380 })
-    ),
-  ]));
-
-  panel.appendChild(el("div", { class: "grid" }, [
     el("div", { class: "card card-wide" }, [
       el("div", { class: "card-title" }, "Top 10 Worst Micro-Markets by Shrink % (June)"),
       createTable(
@@ -145,6 +137,14 @@ function renderShrink() {
         data.topLocations
       ),
     ]),
+  ]));
+
+  panel.appendChild(el("div", { class: "grid" }, [
+    chartCard(
+      "% Shrink by Route (June)",
+      createBarChart({ labels: data.byRoutePct.labels, values: data.byRoutePct.values, colors: ROUTE_COLORS, format: "percent" }),
+      () => createBarChart({ labels: data.byRoutePct.labels, values: data.byRoutePct.values, colors: ROUTE_COLORS, format: "percent", height: 380 })
+    ),
   ]));
 }
 

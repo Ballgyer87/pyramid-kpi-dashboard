@@ -190,6 +190,11 @@ const KPI_DATA = {
   // Category stats are June (latest closed month); momChangePts is June vs May.
   products: {
     stats: [
+      { label: "Month Total Margin", value: 48.26, format: "percent", delta: 1.79, deltaLabel: "vs last month", decimals: 2, highlight: true,
+        history: [
+          { label: "Dec '25", value: 47.08 }, { label: "Jan", value: 47.06 }, { label: "Feb", value: 46.25 },
+          { label: "Mar", value: 46.01 }, { label: "Apr", value: 45.81 }, { label: "May", value: 46.47 }, { label: "Jun", value: 48.26 },
+        ] },
       { label: "Total Food Spoiled %", value: 11.0, format: "percent", delta: 0.06, deltaLabel: "vs last month", inverse: true, decimals: 2,
         history: [
           { label: "Dec '25", value: 12.1 }, { label: "Jan", value: 11.88 }, { label: "Feb", value: 10 },
@@ -199,11 +204,6 @@ const KPI_DATA = {
         history: [
           { label: "Dec '25", value: 1.4 }, { label: "Jan", value: 1.49 }, { label: "Feb", value: 1.23 },
           { label: "Mar", value: 1.42 }, { label: "Apr", value: 1.56 }, { label: "May", value: 1.16 }, { label: "Jun", value: 1.16 },
-        ] },
-      { label: "Month Total Margin", value: 48.26, format: "percent", delta: 1.79, deltaLabel: "vs last month", decimals: 2,
-        history: [
-          { label: "Dec '25", value: 47.08 }, { label: "Jan", value: 47.06 }, { label: "Feb", value: 46.25 },
-          { label: "Mar", value: 46.01 }, { label: "Apr", value: 45.81 }, { label: "May", value: 46.47 }, { label: "Jun", value: 48.26 },
         ] },
     ],
     marginByCategory: [

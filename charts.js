@@ -67,7 +67,7 @@ function formatCompactCurrency(value) {
 function createStatTile(stat) {
   const decimals = stat.decimals != null ? stat.decimals : 1;
   const value = formatValue(stat.value, stat.format, decimals);
-  const tile = el("div", { class: "card stat-tile" }, [
+  const tile = el("div", { class: `card stat-tile${stat.highlight ? " highlight" : ""}` }, [
     el("div", { class: "label" }, stat.label),
     el("div", { class: "value" }, value),
   ]);

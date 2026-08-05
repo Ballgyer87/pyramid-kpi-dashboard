@@ -410,6 +410,13 @@ main {
 
 .stat-tile .sparkline { margin-top: 8px; display: block; }
 
+.stat-tile.highlight {
+  background: color-mix(in srgb, var(--status-warning) 12%, var(--surface-1));
+  border-color: color-mix(in srgb, var(--status-warning) 45%, transparent);
+}
+.stat-tile.highlight .label { color: var(--brand-550); font-weight: 600; }
+.stat-tile.highlight .value { font-size: 30px; color: var(--brand-700); }
+
 .history-toggle {
   appearance: none;
   border: none;

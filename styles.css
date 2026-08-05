@@ -285,6 +285,10 @@ main {
   margin-bottom: 20px;
 }
 
+/* Stat tiles size to their own content instead of stretching to match
+   whichever tile in the row has its history dropdown open. */
+.stat-grid { align-items: start; }
+
 .card {
   background: var(--surface-1);
   border: 1px solid var(--border);

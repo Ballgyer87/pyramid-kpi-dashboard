@@ -119,7 +119,7 @@ function createStatTile(stat) {
 }
 
 function renderStatGrid(container, stats) {
-  const grid = el("div", { class: "grid" });
+  const grid = el("div", { class: "grid stat-grid" });
   stats.forEach((s) => grid.appendChild(createStatTile(s)));
   container.appendChild(grid);
 }

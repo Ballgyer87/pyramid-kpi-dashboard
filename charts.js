@@ -504,6 +504,9 @@ function createTable(columns, rows) {
         toggle.addEventListener("click", () => {
           const open = detailRow.classList.toggle("open");
           toggle.classList.toggle("open", open);
+          // Pull the chart fully into view inside the scrolling table body,
+          // so opening a row near the bottom never leaves it half-cut.
+          if (open) detailRow.scrollIntoView({ block: "nearest", behavior: "smooth" });
         });
         td.appendChild(el("div", { class: "cell-value-row" }, [valueSpan, toggle]));
         detailRow = buildHistoryDetailRow(columns, row, c);
@@ -540,11 +543,13 @@ function buildHistoryDetailRow(columns, row, col) {
       decimals: col.decimals != null ? col.decimals : 2,
       ...opts,
     });
-    td.appendChild(chartCard(
-      title,
-      build({ height: 180 }),
-      () => build({ height: 420, expanded: true })
-    ));
+    // Deliberately spare chrome — this sits inside a scrolling table, so the
+    // whole thing needs to stay roughly as short as the old value list was.
+    const head = el("div", { class: "history-chart-head" }, [
+      el("span", { class: "history-chart-title" }, title),
+      createExpandButton(title, () => build({ height: 420, expanded: true })),
+    ]);
+    td.appendChild(el("div", { class: "history-chart" }, [head, build({ height: 120 })]));
   } else {
     td.appendChild(el("div", { class: "history-empty" }, "No history logged yet"));
   }

@@ -838,9 +838,35 @@ table.kpi-table tr:last-child td { border-bottom: none; }
 tr.history-detail { display: none; }
 tr.history-detail.open { display: table-row; }
 tr.history-detail > td {
-  padding: 0 10px 14px;
+  padding: 0 10px 10px;
   background: color-mix(in srgb, var(--brand-400) 5%, transparent);
 }
+
+/* .chart-svg is width:100% against a 600-unit viewBox, so rendered height
+   scales with container width. Capping the width is what actually keeps this
+   chart small — the height passed to createLineChart alone will not. */
+.history-chart {
+  max-width: 580px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 7px 10px 2px;
+}
+/* The card title already names the metric — the one-item legend is noise. */
+.history-chart .legend { display: none; }
+.history-chart-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.history-chart-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.history-chart .expand-btn { width: 22px; height: 22px; }
+.history-chart .expand-btn svg { width: 12px; height: 12px; }
 
 .table-scroll {
   max-height: 420px;

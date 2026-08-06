@@ -488,39 +488,25 @@ function createTable(columns, rows) {
   const tbody = el("tbody");
   rows.forEach((row) => {
     const tr = el("tr");
+    let detailRow = null;   // set below when a column opts into history
     columns.forEach((c) => {
       const raw = row[c.key];
       const content = c.render ? c.render(raw, row) : raw;
       const td = el("td", { class: c.numeric ? "num" : "" });
 
       if (c.history) {
-        const valueRow = el("div", { class: "cell-value-row" });
         const valueSpan = el("span", {});
         if (content instanceof Node) valueSpan.appendChild(content);
         else valueSpan.textContent = content;
         const toggle = el("button", { class: "history-toggle", type: "button", "aria-label": "Show history" }, [
           el("span", { class: "chevron" }, "▾"),
         ]);
-        valueRow.appendChild(valueSpan);
-        valueRow.appendChild(toggle);
-        td.appendChild(valueRow);
-
-        const panel = el("div", { class: "history-panel" });
-        if (row.history && row.history.length) {
-          [...row.history].reverse().forEach((h) => {
-            panel.appendChild(el("div", { class: "history-row" }, [
-              el("span", { class: "period" }, h.label),
-              el("span", { class: "val" }, c.render ? c.render(h.value, row) : h.value),
-            ]));
-          });
-        } else {
-          panel.appendChild(el("div", { class: "history-empty" }, "No history logged yet"));
-        }
         toggle.addEventListener("click", () => {
-          const open = panel.classList.toggle("open");
+          const open = detailRow.classList.toggle("open");
           toggle.classList.toggle("open", open);
         });
-        td.appendChild(panel);
+        td.appendChild(el("div", { class: "cell-value-row" }, [valueSpan, toggle]));
+        detailRow = buildHistoryDetailRow(columns, row, c);
       } else if (content instanceof Node) {
         td.appendChild(content);
       } else {
@@ -530,10 +516,40 @@ function createTable(columns, rows) {
       tr.appendChild(td);
     });
     tbody.appendChild(tr);
+    if (detailRow) tbody.appendChild(detailRow);
   });
   table.appendChild(thead);
   table.appendChild(tbody);
   return table;
+}
+
+// One row's history, as a mini trend chart that can be blown up to the shared
+// chart modal. It gets its own full-width <tr> rather than living inside the
+// value cell, so the chart has the whole table to draw in instead of one column.
+function buildHistoryDetailRow(columns, row, col) {
+  const td = el("td", { colspan: columns.length });
+
+  if (row.history && row.history.length) {
+    const title = `${row[columns[0].key]} — ${col.label}`;
+    const labels = row.history.map((h) => h.label);
+    const values = row.history.map((h) => h.value);
+    const build = (opts) => createLineChart({
+      labels,
+      series: [{ name: col.label, color: "var(--cat-6)", values }],
+      format: col.format || "percent",
+      decimals: col.decimals != null ? col.decimals : 2,
+      ...opts,
+    });
+    td.appendChild(chartCard(
+      title,
+      build({ height: 180 }),
+      () => build({ height: 420, expanded: true })
+    ));
+  } else {
+    td.appendChild(el("div", { class: "history-empty" }, "No history logged yet"));
+  }
+
+  return el("tr", { class: "history-detail" }, [td]);
 }
 
 /* ---------------------------------------------------------- goal meter -*/

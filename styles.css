@@ -834,10 +834,12 @@ table.kpi-table tr:last-child td { border-bottom: none; }
   gap: 4px;
 }
 .cell-value-row .history-toggle { margin-top: 0; }
-table.kpi-table .history-panel {
-  text-align: left;
-  min-width: 130px;
-  margin-left: auto;
+
+tr.history-detail { display: none; }
+tr.history-detail.open { display: table-row; }
+tr.history-detail > td {
+  padding: 0 10px 14px;
+  background: color-mix(in srgb, var(--brand-400) 5%, transparent);
 }
 
 .table-scroll {

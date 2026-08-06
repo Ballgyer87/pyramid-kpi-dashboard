@@ -842,11 +842,10 @@ tr.history-detail > td {
   background: color-mix(in srgb, var(--brand-400) 5%, transparent);
 }
 
-/* .chart-svg is width:100% against a 600-unit viewBox, so rendered height
-   scales with container width. Capping the width is what actually keeps this
-   chart small — the height passed to createLineChart alone will not. */
+/* Fills the row. The chart stays short because it's built on a wide 1200-unit
+   viewBox (see createLineChart) rather than by capping this width — capping
+   would leave grey space, stretching a 600-unit chart would balloon the text. */
 .history-chart {
-  max-width: 580px;
   background: var(--surface-1);
   border: 1px solid var(--border);
   border-radius: var(--radius);

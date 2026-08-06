@@ -373,8 +373,12 @@ function createBarChart({ labels, values, colorVar = "var(--cat-1)", colors = nu
 
 /* ---------------------------------------------------------- line chart */
 
-function createLineChart({ labels, series, format = "number", height = 240, decimals = 1, yMax = null, expanded = false }) {
-  const W = 600, H = height;
+// `width`/`height` are viewBox units, not pixels — the SVG is width:100%, so
+// rendered size is (container width) and (container width / width * height).
+// Raising `width` therefore makes a wider, shorter chart at the SAME text size,
+// which is how to fill a wide row without ballooning the labels.
+function createLineChart({ labels, series, format = "number", width = 600, height = 240, decimals = 1, yMax = null, expanded = false }) {
+  const W = width, H = height;
   const padL = 56, padR = 16, padT = 16, padB = 34;
   const plotW = W - padL - padR, plotH = H - padT - padB;
 
@@ -549,7 +553,9 @@ function buildHistoryDetailRow(columns, row, col) {
       el("span", { class: "history-chart-title" }, title),
       createExpandButton(title, () => build({ height: 420, expanded: true })),
     ]);
-    td.appendChild(el("div", { class: "history-chart" }, [head, build({ height: 120 })]));
+    // width ~= the row's real pixel width, so the scale factor lands near 1:1
+    // and the axis labels render at their intended size.
+    td.appendChild(el("div", { class: "history-chart" }, [head, build({ width: 900, height: 120 })]));
   } else {
     td.appendChild(el("div", { class: "history-empty" }, "No history logged yet"));
   }

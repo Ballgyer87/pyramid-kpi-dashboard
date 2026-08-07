@@ -82,7 +82,7 @@ const KPI_DATA = {
           { label: "Apr", value: 17749.49 }, { label: "May", value: 21220.95 }, { label: "Jun", value: 37949.84 },
           { label: "Jul", value: 27398.52 },
         ] },
-      { label: "Micro-Market Shrink %", value: 4.97, format: "percent", delta: -2.09, deltaLabel: "vs last month", inverse: true,
+      { label: "Micro-Market Shrink %", value: 4.97, format: "percent", delta: -2.09, deltaLabel: "vs last month", inverse: true, decimals: 2,
         history: [
           { label: "Jan", value: 3.67 }, { label: "Feb", value: 3.45 }, { label: "Mar", value: 3.61 },
           { label: "Apr", value: 3.70 }, { label: "May", value: 4.29 }, { label: "Jun", value: 7.06 },

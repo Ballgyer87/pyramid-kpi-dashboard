@@ -79,14 +79,17 @@ function renderOverview() {
   const avgFill = operationsStats().find((s) => s.label === "Average Fill");
   const yoy = computeYoY(rev.cumulativeTracker);
 
+  // These reuse the source stat objects wholesale rather than re-listing each
+  // field, so formatting details (decimals, exact, inverse, history) can't drift
+  // out of sync with how the same metric renders on its own tab.
   const headline = [
     { label: "YTD Revenue", value: rev.goalMeter.ytdSales, format: "currency", delta: yoy.percent, deltaLabel: yoy.label,
       history: rev.monthlyActual.labels.map((label, i) => ({ label, value: rev.monthlyActual.values[i] })) },
-    { label: "Micro-Market Shrink %", value: shrink.stats[1].value, format: "percent", delta: shrink.stats[1].delta, deltaLabel: "vs last month", inverse: true, history: shrink.stats[1].history },
-    { label: "Weekly $ per Delivery", value: delivery.stats[2].value, format: "currency", delta: delivery.stats[2].delta, deltaLabel: "vs last month" },
-    { label: "Average Fill", value: avgFill.value, format: "percent", delta: avgFill.delta, deltaLabel: "vs last month" },
-    { label: "Gross Margin", value: finance.stats[0].value, format: "percent", delta: finance.stats[0].delta, deltaLabel: "vs last month", history: finance.stats[0].history },
-    { label: "Net Income (MTD)", value: finance.stats[1].value, format: "currency", delta: finance.stats[1].delta, deltaLabel: "vs last month" },
+    { ...shrink.stats[1] },
+    { ...delivery.stats[2] },
+    { ...avgFill },
+    { ...finance.stats[0] },
+    { ...finance.stats[1] },
   ];
 
   const meterCard = createGoalMeter(rev.goalMeter, "2026 Sales Goal Tracker", { thermometer: true, hero: true });
@@ -141,8 +144,8 @@ function renderShrink() {
   panel.appendChild(el("div", { class: "grid" }, [
     chartCard(
       "Micro-Market Shrink % — Month by Month",
-      createLineChart({ labels: data.trend.labels, series: data.trend.series, format: "percent" }),
-      () => createLineChart({ labels: data.trend.labels, series: data.trend.series, format: "percent", height: 420, expanded: true }),
+      createLineChart({ labels: data.trend.labels, series: data.trend.series, format: "percent", decimals: 2 }),
+      () => createLineChart({ labels: data.trend.labels, series: data.trend.series, format: "percent", decimals: 2, height: 420, expanded: true }),
       "card-wide"
     ),
   ]));

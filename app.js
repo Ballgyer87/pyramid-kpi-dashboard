@@ -101,15 +101,20 @@ function renderOverview() {
   // Looked up by label rather than position, so regrouping or reordering the
   // Operations metrics can't silently point this tile at the wrong number.
   const avgFill = operationsStats().find((s) => s.label === "Average Fill");
+  // The shrink % label carries the current month ("July Shrink %") and changes
+  // every month, so match on the fixed suffix rather than the full label.
+  const shrinkPct = shrink.stats.find((s) => s.label.endsWith("Shrink %"));
   const yoy = computeYoY(rev.cumulativeTracker);
 
   // These reuse the source stat objects wholesale rather than re-listing each
   // field, so formatting details (decimals, exact, inverse, history) can't drift
-  // out of sync with how the same metric renders on its own tab.
+  // out of sync with how the same metric renders on its own tab. highlight is
+  // explicitly turned off — that styling should stay specific to each metric's
+  // home tab, not repeat across every highlighted stat's Overview tile too.
   const headline = [
     { label: "YTD Revenue", value: rev.goalMeter.ytdSales, format: "currency", delta: yoy.percent, deltaLabel: yoy.label,
       history: rev.monthlyActual.labels.map((label, i) => ({ label, value: rev.monthlyActual.values[i] })) },
-    { ...shrink.stats[1] },
+    { ...shrinkPct, highlight: false },
     { ...delivery.stats[2] },
     { ...avgFill },
     { ...finance.stats[0] },
@@ -181,7 +186,6 @@ function renderShrink() {
         [
           { key: "location", label: "Customer" },
           { key: "shrinkPct", label: "Shrink %", numeric: true, render: (v) => `${v.toFixed(2)}%` },
-          { key: "shrinkDollars", label: "Shrink $", numeric: true, render: (v) => formatFull(v, "currency") },
         ],
         data.topLocations
       ),

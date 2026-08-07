@@ -58,9 +58,10 @@ const KPI_DATA = {
           values: [713050.18, 1392245.19, 2162894.10, 2943028.48, 3720990.33, 4495348.97, 5305122.37, 6089178.86, 6909086.01, 7770062.97, 8510491.25, 9368699.79] },
       ],
     },
+    // OCS is folded into "Delivery" here rather than shown as its own slice.
     byChannel: {
       labels: ["Vending", "Micro-Markets", "Delivery"],
-      values: [2650000, 1200000, 1577039],
+      values: [2155939.52, 3531088.87, 671932.34],
     },
     // Monthly actual revenue (not cumulative) — feeds the Overview "YTD Revenue" history dropdown.
     monthlyActual: {
@@ -76,17 +77,19 @@ const KPI_DATA = {
   // separately below (byRoute/byRoutePct, from PFS Analysis copy.xlsx).
   shrink: {
     stats: [
+      // Label ends in "Shrink %" so app.js can find this stat by name (for the
+      // Overview tile) even though the leading month text changes every month.
+      { label: `${CURRENT_MONTH} Shrink %`, value: 4.97, format: "percent", delta: -2.09, deltaLabel: "vs last month", inverse: true, decimals: 2, highlight: true,
+        history: [
+          { label: "Jan", value: 3.67 }, { label: "Feb", value: 3.45 }, { label: "Mar", value: 3.61 },
+          { label: "Apr", value: 3.70 }, { label: "May", value: 4.29 }, { label: "Jun", value: 7.06 },
+          { label: "Jul", value: 4.97 },
+        ] },
       { label: "Micro-Market Shrink $ (MTD)", value: 27398.52, format: "currency", delta: -27.8, deltaLabel: "vs last month", inverse: true, exact: true,
         history: [
           { label: "Jan", value: 13952.53 }, { label: "Feb", value: 15595.69 }, { label: "Mar", value: 18133.83 },
           { label: "Apr", value: 17749.49 }, { label: "May", value: 21220.95 }, { label: "Jun", value: 37949.84 },
           { label: "Jul", value: 27398.52 },
-        ] },
-      { label: "Micro-Market Shrink %", value: 4.97, format: "percent", delta: -2.09, deltaLabel: "vs last month", inverse: true, decimals: 2,
-        history: [
-          { label: "Jan", value: 3.67 }, { label: "Feb", value: 3.45 }, { label: "Mar", value: 3.61 },
-          { label: "Apr", value: 3.70 }, { label: "May", value: 4.29 }, { label: "Jun", value: 7.06 },
-          { label: "Jul", value: 4.97 },
         ] },
       { label: "Shrink Goal", value: 2.0, format: "percent", delta: null, deltaLabel: "target ceiling" },
       // Real count of active July micro-markets over the 2% goal (59 of 71), from

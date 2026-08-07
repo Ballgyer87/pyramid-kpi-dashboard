@@ -265,17 +265,11 @@ function renderRoute() {
 function renderWeeklyAssets(panel, weekly, avgStat) {
   const labels = weekly.rows.map((r) => r.route);
   const totals = weekly.rows.map((r) => r.total);
-  const routeTotal = totals.reduce((a, b) => a + b, 0);
-  // Delivery assets riding on other routes aren't in the table, so state the
-  // difference instead of leaving the tile and the table looking contradictory.
-  const otherAssets = weekly.companyTotal - routeTotal;
 
   panel.appendChild(el("div", { class: "section-label" }, "Total Assets Serviced — Last Week"));
 
   const stats = [
-    { label: "Total Assets Serviced", value: weekly.companyTotal, format: "number", delta: null,
-      deltaLabel: `${routeTotal.toLocaleString("en-US")} on the 7 routes + ${otherAssets} delivery assets on other routes`,
-      highlight: true },
+    { label: "Total Assets Serviced", value: weekly.companyTotal, format: "number", delta: null, highlight: true },
   ];
   if (avgStat) stats.push(avgStat);
   renderStatGrid(panel, stats);

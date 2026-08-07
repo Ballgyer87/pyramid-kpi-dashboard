@@ -148,7 +148,10 @@ function renderRevenue() {
     chartCard(
       "Sales Goal Tracker — Cumulative Goal vs Actual vs Last Year",
       createLineChart({ labels: data.cumulativeTracker.labels, series: data.cumulativeTracker.series, format: "currency", yMax: 12000000 }),
-      () => createLineChart({ labels: data.cumulativeTracker.labels, series: data.cumulativeTracker.series, format: "currency", yMax: 12000000, height: 420, expanded: true }),
+      // No `expanded: true` here on purpose: with 3 series x 12 months, the
+      // per-point value chips that flag adds overlap into a jumbled mess.
+      // Bigger, not busier — same look as the small chart, just more room.
+      () => createLineChart({ labels: data.cumulativeTracker.labels, series: data.cumulativeTracker.series, format: "currency", yMax: 12000000, height: 420 }),
       "card-wide"
     ),
   ]));
@@ -207,7 +210,9 @@ function renderRoute() {
   const panel = document.getElementById("panel-route");
   const data = KPI_DATA.route;
 
-  renderStatGrid(panel, data.stats);
+  // Leads the tab: the highlighted weekly total, with the average-per-day
+  // stat beside it rather than in its own separate row further down.
+  renderWeeklyAssets(panel, data.weeklyAssets, data.stats[0]);
 
   const { row: byRouteRow, panel: comparePanel } = sectionLabelWithToggle("By Route", "Compare to Previous Month");
   panel.appendChild(byRouteRow);
@@ -251,14 +256,13 @@ function renderRoute() {
       () => createPieChart({ labels: KPI_DATA.shrink.byRoute.labels, values: KPI_DATA.shrink.byRoute.values, format: "currency", colors: ROUTE_COLORS, size: 380, expanded: true })
     ),
   ]));
-
-  renderWeeklyAssets(panel, data.weeklyAssets);
 }
 
-// "Total Assets Serviced — Last Week": a grand-total tile, the by-route bar
-// chart, and the day-by-day breakdown. Totals are summed from the rows rather
-// than stored separately, so the three views can never disagree.
-function renderWeeklyAssets(panel, weekly) {
+// "Total Assets Serviced — Last Week": a grand-total tile (with the
+// average-per-day stat beside it), the by-route bar chart, and the
+// day-by-day breakdown. Totals are summed from the rows rather than stored
+// separately, so the three views can never disagree.
+function renderWeeklyAssets(panel, weekly, avgStat) {
   const labels = weekly.rows.map((r) => r.route);
   const totals = weekly.rows.map((r) => r.total);
   const routeTotal = totals.reduce((a, b) => a + b, 0);
@@ -268,11 +272,13 @@ function renderWeeklyAssets(panel, weekly) {
 
   panel.appendChild(el("div", { class: "section-label" }, "Total Assets Serviced — Last Week"));
 
-  renderStatGrid(panel, [
+  const stats = [
     { label: "Total Assets Serviced", value: weekly.companyTotal, format: "number", delta: null,
       deltaLabel: `${routeTotal.toLocaleString("en-US")} on the 7 routes + ${otherAssets} delivery assets on other routes`,
       highlight: true },
-  ]);
+  ];
+  if (avgStat) stats.push(avgStat);
+  renderStatGrid(panel, stats);
 
   panel.appendChild(el("div", { class: "grid" }, [
     chartCard(

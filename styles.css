@@ -731,6 +731,12 @@ main {
   color: var(--success-text);
 }
 
+.fun-fact-sub {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
 .height-compare { margin-top: 16px; }
 .height-compare-row {
   display: flex;

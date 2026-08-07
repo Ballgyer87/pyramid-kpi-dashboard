@@ -669,10 +669,12 @@ function createHeightComparison({ items, caption }) {
 
 function createFunFactCard(cfg) {
   const text = typeof cfg === "string" ? cfg : cfg.text;
+  const sub = typeof cfg === "object" ? cfg.sub : null;
   const visual = typeof cfg === "object" && cfg.visual ? createHeightComparison(cfg.visual) : null;
   return el("div", { class: "card fun-fact-card" }, [
     el("div", { class: "fun-fact-label" }, "🎉 Fun Fact of the Week"),
     el("div", { class: "fun-fact-body" }, text),
+    sub ? el("div", { class: "fun-fact-sub" }, sub) : null,
     visual,
   ]);
 }

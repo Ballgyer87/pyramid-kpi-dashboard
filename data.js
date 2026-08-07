@@ -14,31 +14,32 @@ const ROUTE_NAMES = ["Bulls", "Celtics", "Kings", "Lakers", "Magic", "Suns", "Th
 
 const MONTHS_YTD = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+// Latest closed month. Chart titles read from this, so bumping it here renames
+// every "(month)" label on the site at once instead of one hardcoded string
+// per chart. Also update route.previousMonth.label below when this changes.
+const CURRENT_MONTH = "July";
+
 const KPI_DATA = {
 
   // ------------------------------------------------------------ REVENUE ---
   // Real numbers below, synced from the PFS KPI Master Tracker.xlsx Revenue tab.
-  // ytdSales/cumulative are through June (last closed month); lastWeekSales is
+  // ytdSales/cumulative are through July (last closed month); lastWeekSales is
   // the most recent complete week (7/19-7/25) from the weekly tracker.
   revenue: {
+    // ytdSales here is through the latest *week*, so it runs ahead of the
+    // monthly figures below (which stop at July month-end).
     goalMeter: {
-      ytdSales: 6352097.66,
+      ytdSales: 6560449,
       annualGoal: 11900000,
-      lastWeekSales: 219612.07,
-      weeklyTargetNeeded: 252177.38,
-      weeksLeft: 22,
+      lastWeekSales: 228937,
+      weeklyTargetNeeded: 254264,
+      weeksLeft: 21,
       yoyPercent: 29.3, // used by the "YTD Revenue" headline tile on the Overview tab
       // Update this before each week's meeting — whatever's worth calling out.
-      // "visual" is optional — omit it (or the whole field) for a text-only fact.
+      // "sub" and "visual" are both optional — omit for a text-only fact.
       funFact: {
-        text: "14,480 Coke bottles sold YTD",
-        visual: {
-          items: [
-            { label: "Empire State Building", height: "1,454 ft", heightFt: 1454, icon: "building", color: "var(--text-muted)" },
-            { label: "Coke bottles stacked", height: "10,257 ft", heightFt: 10257, icon: "bottles", color: "#D0242A" },
-          ],
-          caption: "Stacked bottles = 7x taller than the Empire State Building",
-        },
+        text: "Energy Drinks up 24.8% YoY",
+        sub: "+$106,467 vs Jan–Jul 2025",
       },
     },
     // Cumulative running-total tracker: goal pace (dashed) vs actual 2026 (stops at
@@ -69,63 +70,64 @@ const KPI_DATA = {
 
   // ------------------------------------------------------------- SHRINK ---
   // Micro-Market Shrink $/% below are real, from Tim's Market Shrink Project
-  // 2026.xlsx (company-wide monthly totals, Jan-Jun — July isn't closed yet).
+  // 2026.xlsx (company-wide monthly totals, Jan-Jul — August isn't closed yet).
   // This tab is exclusively micro-markets — vending route shrink is tracked
   // separately below (byRoute/byRoutePct, from PFS Analysis copy.xlsx).
   shrink: {
     stats: [
-      { label: "Micro-Market Shrink $ (MTD)", value: 37949.84, format: "currency", delta: 78.8, deltaLabel: "vs last month", inverse: true,
+      { label: "Micro-Market Shrink $ (MTD)", value: 27398.52, format: "currency", delta: -27.8, deltaLabel: "vs last month", inverse: true,
         history: [
           { label: "Jan", value: 13952.53 }, { label: "Feb", value: 15595.69 }, { label: "Mar", value: 18133.83 },
           { label: "Apr", value: 17749.49 }, { label: "May", value: 21220.95 }, { label: "Jun", value: 37949.84 },
+          { label: "Jul", value: 27398.52 },
         ] },
-      { label: "Micro-Market Shrink %", value: 7.06, format: "percent", delta: 2.77, deltaLabel: "vs last month", inverse: true,
+      { label: "Micro-Market Shrink %", value: 4.97, format: "percent", delta: -2.09, deltaLabel: "vs last month", inverse: true,
         history: [
           { label: "Jan", value: 3.67 }, { label: "Feb", value: 3.45 }, { label: "Mar", value: 3.61 },
           { label: "Apr", value: 3.70 }, { label: "May", value: 4.29 }, { label: "Jun", value: 7.06 },
+          { label: "Jul", value: 4.97 },
         ] },
       { label: "Shrink Goal", value: 2.0, format: "percent", delta: null, deltaLabel: "target ceiling" },
-      // Real count of active June micro-markets over the 2% goal (56 of 70), from
+      // Real count of active July micro-markets over the 2% goal (59 of 71), from
       // Tim's Market Shrink Project 2026.xlsx. Recount each month the same way:
       // active markets (nonzero sales) with Shrink % > 2%.
-      { label: "Locations Over Target", value: 56, format: "number", delta: 8, deltaType: "count", deltaLabel: "vs last month", inverse: true,
+      { label: "Locations Over Target", value: 59, format: "number", delta: 3, deltaType: "count", deltaLabel: "vs last month", inverse: true,
         history: [
           { label: "Jan", value: 46 }, { label: "Feb", value: 42 }, { label: "Mar", value: 52 },
           { label: "Apr", value: 50 }, { label: "May", value: 48 }, { label: "Jun", value: 56 },
+          { label: "Jul", value: 59 },
         ] },
     ],
     trend: {
-      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
       series: [
-        { name: "Micro-Market Shrink %", color: "var(--cat-8)", values: [3.67, 3.45, 3.61, 3.70, 4.29, 7.06] },
+        { name: "Micro-Market Shrink %", color: "var(--cat-8)", values: [3.67, 3.45, 3.61, 3.70, 4.29, 7.06, 4.97] },
       ],
     },
-    // Real June (latest closed month) shrink $ per route, from PFS Analysis copy.xlsx / "2026 Shrink Charts".
+    // Real July (latest closed month) shrink $ per route, from PFS Analysis copy.xlsx / "2026 Shrink Charts".
     byRoute: {
       labels: ROUTE_NAMES,
-      values: [1687.82, 997.32, 4440.69, 8188.42, 565.06, 1892.56, 2468.84],
+      values: [1863.92, 991.46, 4230.68, 1558.76, 1333.27, 1543.62, 803.23],
     },
-    // Shrink $ above, as a % of that route's June revenue.
+    // Shrink $ above, as a % of that route's July revenue.
     byRoutePct: {
       labels: ROUTE_NAMES,
-      values: [1.55, 0.80, 2.98, 6.08, 0.47, 1.59, 2.20],
+      values: [1.61, 0.79, 2.58, 1.14, 1.07, 1.33, 0.65],
     },
-    // Real June (last closed month) worst 10 micro-markets by shrink %, from
-    // Tim's Market Shrink Project 2026.xlsx / "June" tab. Ranked worst-to-least-bad,
+    // Real July (last closed month) worst 10 micro-markets by shrink %, from
+    // Tim's Market Shrink Project 2026.xlsx / "July" tab. Ranked worst-to-least-bad,
     // no status tiers — update this each month to the newest closed month.
-    // Note: Tenaris Front's 58.51% is real, not a data error — a kiosk issue
-    // that has since been fixed.
     topLocations: [
-      { location: "Tenaris Front", shrinkPct: 58.51, shrinkDollars: 3677.21 },
-      { location: "HealthLink", shrinkPct: 30.08, shrinkDollars: 774.84 },
-      { location: "Nidec Motors", shrinkPct: 26.50, shrinkDollars: 1256.93 },
-      { location: "Emerson", shrinkPct: 19.62, shrinkDollars: 519.44 },
-      { location: "Cooper Lighting", shrinkPct: 18.00, shrinkDollars: 731.55 },
-      { location: "AWG Market", shrinkPct: 14.79, shrinkDollars: 6016.81 },
-      { location: "Bristol on Union", shrinkPct: 12.98, shrinkDollars: 188.06 },
-      { location: "Southeastern Freight Main", shrinkPct: 11.97, shrinkDollars: 1422.53 },
-      { location: "Jabil Front Market", shrinkPct: 10.92, shrinkDollars: 6776.09 },
-      { location: "Skyline Steel", shrinkPct: 10.30, shrinkDollars: 486.75 },
+      { location: "Niagara Water", shrinkPct: 13.30, shrinkDollars: 403.58 },
+      { location: "Fox 13", shrinkPct: 12.48, shrinkDollars: 315.78 },
+      { location: "Skyline Steel", shrinkPct: 12.14, shrinkDollars: 663.10 },
+      { location: "WM Barr Distribution", shrinkPct: 10.48, shrinkDollars: 361.44 },
+      { location: "Bryce-Hickory Hill", shrinkPct: 8.77, shrinkDollars: 136.80 },
+      { location: "Jabil Front Market", shrinkPct: 8.65, shrinkDollars: 5823.14 },
+      { location: "Tenaris Back", shrinkPct: 8.35, shrinkDollars: 707.23 },
+      { location: "Tenaris Warehouse", shrinkPct: 8.09, shrinkDollars: 552.88 },
+      { location: "Pyramid Foodservice Inc.", shrinkPct: 7.21, shrinkDollars: 75.66 },
+      { location: "Golden Bolt-Panama", shrinkPct: 6.81, shrinkDollars: 1865.53 },
     ],
   },
 
@@ -138,30 +140,30 @@ const KPI_DATA = {
       labels: ROUTE_NAMES,
       values: [142, 128, 156, 119, 133, 147, 121],
     },
-    // Real June (latest closed month) numbers below, from PFS Analysis copy.xlsx.
+    // Real July (latest closed month) numbers below, from PFS Analysis copy.xlsx.
     spoilageByRoute: {
       labels: ROUTE_NAMES,
-      values: [1498.44, 2785.83, 1564.67, 655.67, 1502.47, 767.76, 1675.36],
+      values: [1956.67, 2091.67, 1221.52, 1248.13, 1420.29, 1352.41, 1481.04],
     },
     revenueByRoute: {
       labels: ROUTE_NAMES,
-      values: [108574.45, 123920.31, 148899.70, 134606.34, 121454.81, 119268.06, 112049.46],
+      values: [115478.25, 125898.55, 164113.76, 136889.52, 124596.75, 115912.58, 122710.27],
     },
-    // Previous-month (May) comparison set for the "Compare to Previous Month"
+    // Previous-month (June) comparison set for the "Compare to Previous Month"
     // toggle — same 3 metrics, same route order, from the same source files.
     previousMonth: {
-      label: "May",
+      label: "June",
       revenueByRoute: {
         labels: ROUTE_NAMES,
-        values: [100220.43, 115250.48, 151108.86, 116553.71, 117963.22, 91654.47, 89877.68],
+        values: [108574.45, 123920.31, 148899.70, 134606.34, 121454.81, 119268.06, 112049.46],
       },
       spoilageByRoute: {
         labels: ROUTE_NAMES,
-        values: [1538.45, 2540.26, 1298.01, 987.49, 1642.71, 846.69, 1268.75],
+        values: [1498.44, 2785.83, 1564.67, 655.67, 1502.47, 767.76, 1675.36],
       },
       shrinkByRoute: {
         labels: ROUTE_NAMES,
-        values: [349.19, 67.86, 77.89, 696.20, 31.41, 1256.90, 77.18],
+        values: [1687.82, 997.32, 4440.69, 8188.42, 565.06, 1892.56, 2468.84],
       },
     },
   },
@@ -204,89 +206,92 @@ const KPI_DATA = {
 
   // ----------------------------------------------------------- PRODUCTS ---
   // Real numbers below, from Item Category Margin Report copy.xlsx / "2026" tab.
-  // Category stats are June (latest closed month); momChangePts is June vs May.
+  // Category stats are July (latest closed month); momChangePts is July vs June.
   products: {
     stats: [
-      { label: "Month Total Margin", value: 48.26, format: "percent", delta: 1.79, deltaLabel: "vs last month", decimals: 2, highlight: true,
+      { label: "Month Total Margin", value: 49.14, format: "percent", delta: 0.88, deltaLabel: "vs last month", decimals: 2, highlight: true,
         history: [
           { label: "Dec '25", value: 47.08 }, { label: "Jan", value: 47.06 }, { label: "Feb", value: 46.25 },
-          { label: "Mar", value: 46.01 }, { label: "Apr", value: 45.81 }, { label: "May", value: 46.47 }, { label: "Jun", value: 48.26 },
+          { label: "Mar", value: 46.01 }, { label: "Apr", value: 45.81 }, { label: "May", value: 46.47 },
+          { label: "Jun", value: 48.26 }, { label: "Jul", value: 49.14 },
         ] },
-      { label: "Total Food Spoiled %", value: 11.0, format: "percent", delta: 0.06, deltaLabel: "vs last month", inverse: true, decimals: 2,
+      { label: "Total Food Spoiled %", value: 10.53, format: "percent", delta: -0.47, deltaLabel: "vs last month", inverse: true, decimals: 2,
         history: [
           { label: "Dec '25", value: 12.1 }, { label: "Jan", value: 11.88 }, { label: "Feb", value: 10 },
-          { label: "Mar", value: 12.06 }, { label: "Apr", value: 14.06 }, { label: "May", value: 10.94 }, { label: "Jun", value: 11.0 },
+          { label: "Mar", value: 12.06 }, { label: "Apr", value: 14.06 }, { label: "May", value: 10.94 },
+          { label: "Jun", value: 11.0 }, { label: "Jul", value: 10.53 },
         ] },
-      { label: "Total % Spoiled Cost", value: 1.16, format: "percent", delta: 0.0, deltaLabel: "vs last month", inverse: true, decimals: 2,
+      { label: "Total % Spoiled Cost", value: 1.12, format: "percent", delta: -0.04, deltaLabel: "vs last month", inverse: true, decimals: 2,
         history: [
           { label: "Dec '25", value: 1.4 }, { label: "Jan", value: 1.49 }, { label: "Feb", value: 1.23 },
-          { label: "Mar", value: 1.42 }, { label: "Apr", value: 1.56 }, { label: "May", value: 1.16 }, { label: "Jun", value: 1.16 },
+          { label: "Mar", value: 1.42 }, { label: "Apr", value: 1.56 }, { label: "May", value: 1.16 },
+          { label: "Jun", value: 1.16 }, { label: "Jul", value: 1.12 },
         ] },
     ],
     marginByCategory: [
-      { category: "BAG CANDY", marginPct: 46.56, momChangePts: 0.48,
-        history: [{ label: "Dec '25", value: 46.33 }, { label: "Jan", value: 46.79 }, { label: "Feb", value: 47.18 }, { label: "Mar", value: 45.94 }, { label: "Apr", value: 45.48 }, { label: "May", value: 46.08 }, { label: "Jun", value: 46.56 }] },
-      { category: "CAN SODA", marginPct: 52.82, momChangePts: 2.34,
-        history: [{ label: "Dec '25", value: 51.78 }, { label: "Jan", value: 53.89 }, { label: "Feb", value: 53.48 }, { label: "Mar", value: 50.63 }, { label: "Apr", value: 50.15 }, { label: "May", value: 50.48 }, { label: "Jun", value: 52.82 }] },
-      { category: "CANDY", marginPct: 41.27, momChangePts: 0.23,
-        history: [{ label: "Dec '25", value: 39.77 }, { label: "Jan", value: 39.71 }, { label: "Feb", value: 39.42 }, { label: "Mar", value: 39.73 }, { label: "Apr", value: 39.91 }, { label: "May", value: 41.04 }, { label: "Jun", value: 41.27 }] },
-      { category: "CCN", marginPct: 67.91, momChangePts: 1.36,
-        history: [{ label: "Dec '25", value: 65.1 }, { label: "Jan", value: 65.66 }, { label: "Feb", value: 65.7 }, { label: "Mar", value: 65.84 }, { label: "Apr", value: 65.35 }, { label: "May", value: 66.55 }, { label: "Jun", value: 67.91 }] },
-      { category: "CONDIMENTS", marginPct: 45.22, momChangePts: -1.25,
-        history: [{ label: "Dec '25", value: 47.81 }, { label: "Jan", value: 57.66 }, { label: "Feb", value: 42.62 }, { label: "Mar", value: 42.65 }, { label: "Apr", value: 38.74 }, { label: "May", value: 46.47 }, { label: "Jun", value: 45.22 }] },
-      { category: "CORE BOTTLE SODA", marginPct: 45.63, momChangePts: -0.17,
-        history: [{ label: "Dec '25", value: 47.9 }, { label: "Jan", value: 47.38 }, { label: "Feb", value: 46 }, { label: "Mar", value: 45.99 }, { label: "Apr", value: 45.61 }, { label: "May", value: 45.8 }, { label: "Jun", value: 45.63 }] },
-      { category: "ENERGY DRINKS", marginPct: 45.48, momChangePts: 2.75,
-        history: [{ label: "Dec '25", value: 43.7 }, { label: "Jan", value: 43 }, { label: "Feb", value: 40.05 }, { label: "Mar", value: 40.43 }, { label: "Apr", value: 40.02 }, { label: "May", value: 42.73 }, { label: "Jun", value: 45.48 }] },
-      { category: "FOOD 2.25", marginPct: 48.4, momChangePts: 14.2,
-        history: [{ label: "Dec '25", value: 42.04 }, { label: "Jan", value: 44.37 }, { label: "Feb", value: 42.96 }, { label: "Mar", value: 42.57 }, { label: "Apr", value: 40.76 }, { label: "May", value: 34.2 }, { label: "Jun", value: 48.4 }] },
-      { category: "FOOD 2.75", marginPct: 34.85, momChangePts: 8.35,
-        history: [{ label: "Dec '25", value: 34.97 }, { label: "Jan", value: 35.3 }, { label: "Feb", value: 35.87 }, { label: "Mar", value: 33.58 }, { label: "Apr", value: 31.87 }, { label: "May", value: 26.5 }, { label: "Jun", value: 34.85 }] },
-      { category: "FOOD 3.25", marginPct: 33.44, momChangePts: 21.23,
-        history: [{ label: "Dec '25", value: 34.93 }, { label: "Jan", value: 32.53 }, { label: "Feb", value: 28 }, { label: "Mar", value: 28.11 }, { label: "Apr", value: 27.11 }, { label: "May", value: 12.21 }, { label: "Jun", value: 33.44 }] },
-      { category: "FOOD 3.75", marginPct: 27.86, momChangePts: 3.77,
-        history: [{ label: "Dec '25", value: 27.59 }, { label: "Jan", value: 27.76 }, { label: "Feb", value: 26.52 }, { label: "Mar", value: 28.03 }, { label: "Apr", value: 23.14 }, { label: "May", value: 24.09 }, { label: "Jun", value: 27.86 }] },
-      { category: "FOOD 4.75", marginPct: 27.97, momChangePts: 1.4,
-        history: [{ label: "Dec '25", value: 24.94 }, { label: "Jan", value: 24.95 }, { label: "Feb", value: 28.53 }, { label: "Mar", value: 27.36 }, { label: "Apr", value: 25.11 }, { label: "May", value: 26.57 }, { label: "Jun", value: 27.97 }] },
-      { category: "FROZEN", marginPct: 43.72, momChangePts: -0.31,
-        history: [{ label: "Dec '25", value: 41.11 }, { label: "Jan", value: 44.54 }, { label: "Feb", value: 44.75 }, { label: "Mar", value: 42.21 }, { label: "Apr", value: 45.52 }, { label: "May", value: 44.03 }, { label: "Jun", value: 43.72 }] },
-      { category: "GUM & MINTS", marginPct: 45.84, momChangePts: 0.06,
-        history: [{ label: "Dec '25", value: 47.24 }, { label: "Jan", value: 46.57 }, { label: "Feb", value: 45.23 }, { label: "Mar", value: 44.71 }, { label: "Apr", value: 44.69 }, { label: "May", value: 45.78 }, { label: "Jun", value: 45.84 }] },
-      { category: "HEALTHY SNACKS", marginPct: 40.37, momChangePts: 0.13,
-        history: [{ label: "Dec '25", value: 39.35 }, { label: "Jan", value: 39.71 }, { label: "Feb", value: 39.66 }, { label: "Mar", value: 39.1 }, { label: "Apr", value: 39.3 }, { label: "May", value: 40.24 }, { label: "Jun", value: 40.37 }] },
-      { category: "HOT BEVERAGE", marginPct: 45.34, momChangePts: -3.15,
-        history: [{ label: "Dec '25", value: 44.18 }, { label: "Jan", value: 47.37 }, { label: "Feb", value: 46.84 }, { label: "Mar", value: 45.1 }, { label: "Apr", value: 45.91 }, { label: "May", value: 48.49 }, { label: "Jun", value: 45.34 }] },
-      { category: "JUICE 15.2oz BOTTLE", marginPct: 50.07, momChangePts: -0.26,
-        history: [{ label: "Dec '25", value: 50.53 }, { label: "Jan", value: 50.68 }, { label: "Feb", value: 50.54 }, { label: "Mar", value: 50.03 }, { label: "Apr", value: 49.53 }, { label: "May", value: 50.33 }, { label: "Jun", value: 50.07 }] },
-      { category: "KS CANDY", marginPct: 32.4, momChangePts: 0.24,
-        history: [{ label: "Dec '25", value: 35.36 }, { label: "Jan", value: 33.12 }, { label: "Feb", value: 32.09 }, { label: "Mar", value: 31.99 }, { label: "Apr", value: 32.1 }, { label: "May", value: 32.16 }, { label: "Jun", value: 32.4 }] },
-      { category: "LSS CHIPS", marginPct: 52.25, momChangePts: 0.24,
-        history: [{ label: "Dec '25", value: 45.82 }, { label: "Jan", value: 45.32 }, { label: "Feb", value: 45.7 }, { label: "Mar", value: 45.75 }, { label: "Apr", value: 46.7 }, { label: "May", value: 52.01 }, { label: "Jun", value: 52.25 }] },
-      { category: "MEDICINE", marginPct: 39.45, momChangePts: 0.53,
-        history: [{ label: "Dec '25", value: 36.32 }, { label: "Jan", value: 36.96 }, { label: "Feb", value: 36.81 }, { label: "Mar", value: 37.06 }, { label: "Apr", value: 37.69 }, { label: "May", value: 38.92 }, { label: "Jun", value: 39.45 }] },
-      { category: "NON CORE BOTTLE SODA", marginPct: 51.38, momChangePts: -0.14,
-        history: [{ label: "Dec '25", value: 54.15 }, { label: "Jan", value: 53.13 }, { label: "Feb", value: 51.78 }, { label: "Mar", value: 52.05 }, { label: "Apr", value: 51.3 }, { label: "May", value: 51.52 }, { label: "Jun", value: 51.38 }] },
-      { category: "OCS", marginPct: 43.91, momChangePts: 0.49,
-        history: [{ label: "Dec '25", value: 46.19 }, { label: "Jan", value: 45.4 }, { label: "Feb", value: 47.06 }, { label: "Mar", value: 43.43 }, { label: "Apr", value: 43.37 }, { label: "May", value: 43.42 }, { label: "Jun", value: 43.91 }] },
-      { category: "PASTRY", marginPct: 54.24, momChangePts: -1.8,
-        history: [{ label: "Dec '25", value: 56.13 }, { label: "Jan", value: 56.09 }, { label: "Feb", value: 56.9 }, { label: "Mar", value: 57.46 }, { label: "Apr", value: 57.04 }, { label: "May", value: 56.04 }, { label: "Jun", value: 54.24 }] },
-      { category: "PREMIUM SNACKS", marginPct: 48.55, momChangePts: 0.39,
-        history: [{ label: "Dec '25", value: 47.15 }, { label: "Jan", value: 46.61 }, { label: "Feb", value: 46.27 }, { label: "Mar", value: 45.95 }, { label: "Apr", value: 46.15 }, { label: "May", value: 48.16 }, { label: "Jun", value: 48.55 }] },
-      { category: "SMALL JUICE", marginPct: 41.88, momChangePts: 55.21,
-        history: [{ label: "Dec '25", value: 36.88 }, { label: "Jan", value: 39.25 }, { label: "Feb", value: 33.06 }, { label: "Mar", value: 38.18 }, { label: "Apr", value: 41.16 }, { label: "May", value: -13.33 }, { label: "Jun", value: 41.88 }] },
-      { category: "SPORT DRINKS", marginPct: 52.72, momChangePts: 4.67,
-        history: [{ label: "Dec '25", value: 52.74 }, { label: "Jan", value: 52.61 }, { label: "Feb", value: 51.35 }, { label: "Mar", value: 51.61 }, { label: "Apr", value: 51.07 }, { label: "May", value: 48.05 }, { label: "Jun", value: 52.72 }] },
-      { category: "WATER", marginPct: 56.27, momChangePts: 0.32,
-        history: [{ label: "Dec '25", value: 54.76 }, { label: "Jan", value: 55.71 }, { label: "Feb", value: 56.08 }, { label: "Mar", value: 56.51 }, { label: "Apr", value: 55.85 }, { label: "May", value: 55.95 }, { label: "Jun", value: 56.27 }] },
-      { category: "Water Program", marginPct: 64.65, momChangePts: 5.3,
-        history: [{ label: "Dec '25", value: 80.36 }, { label: "Jan", value: 63.43 }, { label: "Feb", value: 55.61 }, { label: "Mar", value: 67.16 }, { label: "Apr", value: 54.88 }, { label: "May", value: 59.35 }, { label: "Jun", value: 64.65 }] },
-      { category: "XVL CHIPS", marginPct: 43.95, momChangePts: 4.12,
-        history: [{ label: "Dec '25", value: 35.07 }, { label: "Jan", value: 36.65 }, { label: "Feb", value: 37.05 }, { label: "Mar", value: 37.14 }, { label: "Apr", value: 37.06 }, { label: "May", value: 39.83 }, { label: "Jun", value: 43.95 }] },
+      { category: "BAG CANDY", marginPct: 47.17, momChangePts: 0.61,
+        history: [{ label: "Dec '25", value: 46.33 }, { label: "Jan", value: 46.79 }, { label: "Feb", value: 47.18 }, { label: "Mar", value: 45.94 }, { label: "Apr", value: 45.48 }, { label: "May", value: 46.08 }, { label: "Jun", value: 46.56 }, { label: "Jul", value: 47.17 }] },
+      { category: "CAN SODA", marginPct: 54.31, momChangePts: 1.49,
+        history: [{ label: "Dec '25", value: 51.78 }, { label: "Jan", value: 53.89 }, { label: "Feb", value: 53.48 }, { label: "Mar", value: 50.63 }, { label: "Apr", value: 50.15 }, { label: "May", value: 50.48 }, { label: "Jun", value: 52.82 }, { label: "Jul", value: 54.31 }] },
+      { category: "CANDY", marginPct: 43.69, momChangePts: 2.42,
+        history: [{ label: "Dec '25", value: 39.77 }, { label: "Jan", value: 39.71 }, { label: "Feb", value: 39.42 }, { label: "Mar", value: 39.73 }, { label: "Apr", value: 39.91 }, { label: "May", value: 41.04 }, { label: "Jun", value: 41.27 }, { label: "Jul", value: 43.69 }] },
+      { category: "CCN", marginPct: 67.8, momChangePts: -0.11,
+        history: [{ label: "Dec '25", value: 65.1 }, { label: "Jan", value: 65.66 }, { label: "Feb", value: 65.7 }, { label: "Mar", value: 65.84 }, { label: "Apr", value: 65.35 }, { label: "May", value: 66.55 }, { label: "Jun", value: 67.91 }, { label: "Jul", value: 67.8 }] },
+      { category: "CONDIMENTS", marginPct: 41.97, momChangePts: -3.25,
+        history: [{ label: "Dec '25", value: 47.81 }, { label: "Jan", value: 57.66 }, { label: "Feb", value: 42.62 }, { label: "Mar", value: 42.65 }, { label: "Apr", value: 38.74 }, { label: "May", value: 46.47 }, { label: "Jun", value: 45.22 }, { label: "Jul", value: 41.97 }] },
+      { category: "CORE BOTTLE SODA", marginPct: 47.35, momChangePts: 1.72,
+        history: [{ label: "Dec '25", value: 47.9 }, { label: "Jan", value: 47.38 }, { label: "Feb", value: 46.0 }, { label: "Mar", value: 45.99 }, { label: "Apr", value: 45.61 }, { label: "May", value: 45.8 }, { label: "Jun", value: 45.63 }, { label: "Jul", value: 47.35 }] },
+      { category: "ENERGY DRINKS", marginPct: 46.78, momChangePts: 1.3,
+        history: [{ label: "Dec '25", value: 43.7 }, { label: "Jan", value: 43.0 }, { label: "Feb", value: 40.05 }, { label: "Mar", value: 40.43 }, { label: "Apr", value: 40.02 }, { label: "May", value: 42.73 }, { label: "Jun", value: 45.48 }, { label: "Jul", value: 46.78 }] },
+      { category: "FOOD 2.25", marginPct: 46.82, momChangePts: -1.58,
+        history: [{ label: "Dec '25", value: 42.04 }, { label: "Jan", value: 44.37 }, { label: "Feb", value: 42.96 }, { label: "Mar", value: 42.57 }, { label: "Apr", value: 40.76 }, { label: "May", value: 34.2 }, { label: "Jun", value: 48.4 }, { label: "Jul", value: 46.82 }] },
+      { category: "FOOD 2.75", marginPct: 37.28, momChangePts: 2.43,
+        history: [{ label: "Dec '25", value: 34.97 }, { label: "Jan", value: 35.3 }, { label: "Feb", value: 35.87 }, { label: "Mar", value: 33.58 }, { label: "Apr", value: 31.87 }, { label: "May", value: 26.5 }, { label: "Jun", value: 34.85 }, { label: "Jul", value: 37.28 }] },
+      { category: "FOOD 3.25", marginPct: 35.61, momChangePts: 2.17,
+        history: [{ label: "Dec '25", value: 34.93 }, { label: "Jan", value: 32.53 }, { label: "Feb", value: 28.0 }, { label: "Mar", value: 28.11 }, { label: "Apr", value: 27.11 }, { label: "May", value: 12.21 }, { label: "Jun", value: 33.44 }, { label: "Jul", value: 35.61 }] },
+      { category: "FOOD 3.75", marginPct: 29.13, momChangePts: 1.27,
+        history: [{ label: "Dec '25", value: 27.59 }, { label: "Jan", value: 27.76 }, { label: "Feb", value: 26.52 }, { label: "Mar", value: 28.03 }, { label: "Apr", value: 23.14 }, { label: "May", value: 24.09 }, { label: "Jun", value: 27.86 }, { label: "Jul", value: 29.13 }] },
+      { category: "FOOD 4.75", marginPct: 27.37, momChangePts: -0.6,
+        history: [{ label: "Dec '25", value: 24.94 }, { label: "Jan", value: 24.95 }, { label: "Feb", value: 28.53 }, { label: "Mar", value: 27.36 }, { label: "Apr", value: 25.11 }, { label: "May", value: 26.57 }, { label: "Jun", value: 27.97 }, { label: "Jul", value: 27.37 }] },
+      { category: "FROZEN", marginPct: 41.87, momChangePts: -1.85,
+        history: [{ label: "Dec '25", value: 41.11 }, { label: "Jan", value: 44.54 }, { label: "Feb", value: 44.75 }, { label: "Mar", value: 42.21 }, { label: "Apr", value: 45.52 }, { label: "May", value: 44.03 }, { label: "Jun", value: 43.72 }, { label: "Jul", value: 41.87 }] },
+      { category: "GUM & MINTS", marginPct: 47.33, momChangePts: 1.49,
+        history: [{ label: "Dec '25", value: 47.24 }, { label: "Jan", value: 46.57 }, { label: "Feb", value: 45.23 }, { label: "Mar", value: 44.71 }, { label: "Apr", value: 44.69 }, { label: "May", value: 45.78 }, { label: "Jun", value: 45.84 }, { label: "Jul", value: 47.33 }] },
+      { category: "HEALTHY SNACKS", marginPct: 39.54, momChangePts: -0.83,
+        history: [{ label: "Dec '25", value: 39.35 }, { label: "Jan", value: 39.71 }, { label: "Feb", value: 39.66 }, { label: "Mar", value: 39.1 }, { label: "Apr", value: 39.3 }, { label: "May", value: 40.24 }, { label: "Jun", value: 40.37 }, { label: "Jul", value: 39.54 }] },
+      { category: "HOT BEVERAGE", marginPct: 45.67, momChangePts: 0.33,
+        history: [{ label: "Dec '25", value: 44.18 }, { label: "Jan", value: 47.37 }, { label: "Feb", value: 46.84 }, { label: "Mar", value: 45.1 }, { label: "Apr", value: 45.91 }, { label: "May", value: 48.49 }, { label: "Jun", value: 45.34 }, { label: "Jul", value: 45.67 }] },
+      { category: "JUICE 15.2oz BOTTLE", marginPct: 50.55, momChangePts: 0.48,
+        history: [{ label: "Dec '25", value: 50.53 }, { label: "Jan", value: 50.68 }, { label: "Feb", value: 50.54 }, { label: "Mar", value: 50.03 }, { label: "Apr", value: 49.53 }, { label: "May", value: 50.33 }, { label: "Jun", value: 50.07 }, { label: "Jul", value: 50.55 }] },
+      { category: "KS CANDY", marginPct: 32.46, momChangePts: 0.06,
+        history: [{ label: "Dec '25", value: 35.36 }, { label: "Jan", value: 33.12 }, { label: "Feb", value: 32.09 }, { label: "Mar", value: 31.99 }, { label: "Apr", value: 32.1 }, { label: "May", value: 32.16 }, { label: "Jun", value: 32.4 }, { label: "Jul", value: 32.46 }] },
+      { category: "LSS CHIPS", marginPct: 53.13, momChangePts: 0.88,
+        history: [{ label: "Dec '25", value: 45.82 }, { label: "Jan", value: 45.32 }, { label: "Feb", value: 45.7 }, { label: "Mar", value: 45.75 }, { label: "Apr", value: 46.7 }, { label: "May", value: 52.01 }, { label: "Jun", value: 52.25 }, { label: "Jul", value: 53.13 }] },
+      { category: "MEDICINE", marginPct: 40.55, momChangePts: 1.1,
+        history: [{ label: "Dec '25", value: 36.32 }, { label: "Jan", value: 36.96 }, { label: "Feb", value: 36.81 }, { label: "Mar", value: 37.06 }, { label: "Apr", value: 37.69 }, { label: "May", value: 38.92 }, { label: "Jun", value: 39.45 }, { label: "Jul", value: 40.55 }] },
+      { category: "NON CORE BOTTLE SODA", marginPct: 52.78, momChangePts: 1.4,
+        history: [{ label: "Dec '25", value: 54.15 }, { label: "Jan", value: 53.13 }, { label: "Feb", value: 51.78 }, { label: "Mar", value: 52.05 }, { label: "Apr", value: 51.3 }, { label: "May", value: 51.52 }, { label: "Jun", value: 51.38 }, { label: "Jul", value: 52.78 }] },
+      { category: "OCS", marginPct: 42.99, momChangePts: -0.92,
+        history: [{ label: "Dec '25", value: 46.19 }, { label: "Jan", value: 45.4 }, { label: "Feb", value: 47.06 }, { label: "Mar", value: 43.43 }, { label: "Apr", value: 43.37 }, { label: "May", value: 43.42 }, { label: "Jun", value: 43.91 }, { label: "Jul", value: 42.99 }] },
+      { category: "PASTRY", marginPct: 55.6, momChangePts: 1.36,
+        history: [{ label: "Dec '25", value: 56.13 }, { label: "Jan", value: 56.09 }, { label: "Feb", value: 56.9 }, { label: "Mar", value: 57.46 }, { label: "Apr", value: 57.04 }, { label: "May", value: 56.04 }, { label: "Jun", value: 54.24 }, { label: "Jul", value: 55.6 }] },
+      { category: "PREMIUM SNACKS", marginPct: 48.5, momChangePts: -0.05,
+        history: [{ label: "Dec '25", value: 47.15 }, { label: "Jan", value: 46.61 }, { label: "Feb", value: 46.27 }, { label: "Mar", value: 45.95 }, { label: "Apr", value: 46.15 }, { label: "May", value: 48.16 }, { label: "Jun", value: 48.55 }, { label: "Jul", value: 48.5 }] },
+      { category: "SMALL JUICE", marginPct: 44.97, momChangePts: 3.09,
+        history: [{ label: "Dec '25", value: 36.88 }, { label: "Jan", value: 39.25 }, { label: "Feb", value: 33.06 }, { label: "Mar", value: 38.18 }, { label: "Apr", value: 41.16 }, { label: "May", value: -13.33 }, { label: "Jun", value: 41.88 }, { label: "Jul", value: 44.97 }] },
+      { category: "SPORT DRINKS", marginPct: 54.29, momChangePts: 1.57,
+        history: [{ label: "Dec '25", value: 52.74 }, { label: "Jan", value: 52.61 }, { label: "Feb", value: 51.35 }, { label: "Mar", value: 51.61 }, { label: "Apr", value: 51.07 }, { label: "May", value: 48.05 }, { label: "Jun", value: 52.72 }, { label: "Jul", value: 54.29 }] },
+      { category: "WATER", marginPct: 56.43, momChangePts: 0.16,
+        history: [{ label: "Dec '25", value: 54.76 }, { label: "Jan", value: 55.71 }, { label: "Feb", value: 56.08 }, { label: "Mar", value: 56.51 }, { label: "Apr", value: 55.85 }, { label: "May", value: 55.95 }, { label: "Jun", value: 56.27 }, { label: "Jul", value: 56.43 }] },
+      { category: "Water Program", marginPct: 58.99, momChangePts: -5.66,
+        history: [{ label: "Dec '25", value: 80.36 }, { label: "Jan", value: 63.43 }, { label: "Feb", value: 55.61 }, { label: "Mar", value: 67.16 }, { label: "Apr", value: 54.88 }, { label: "May", value: 59.35 }, { label: "Jun", value: 64.65 }, { label: "Jul", value: 58.99 }] },
+      { category: "XVL CHIPS", marginPct: 42.89, momChangePts: -1.06,
+        history: [{ label: "Dec '25", value: 35.07 }, { label: "Jan", value: 36.65 }, { label: "Feb", value: 37.05 }, { label: "Mar", value: 37.14 }, { label: "Apr", value: 37.06 }, { label: "May", value: 39.83 }, { label: "Jun", value: 43.95 }, { label: "Jul", value: 42.89 }] },
     ],
     marginTrend: {
-      labels: ["Dec '25", "Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+      labels: ["Dec '25", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
       series: [
-        { name: "Total Margin %", color: "var(--cat-6)", values: [47.08, 47.06, 46.25, 46.01, 45.81, 46.47, 48.26] },
+        { name: "Total Margin %", color: "var(--cat-6)", values: [47.08, 47.06, 46.25, 46.01, 45.81, 46.47, 48.26, 49.14] },
       ],
     },
   },

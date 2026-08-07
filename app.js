@@ -129,7 +129,7 @@ function renderShrink() {
 
   panel.appendChild(el("div", { class: "grid" }, [
     el("div", { class: "card card-wide" }, [
-      el("div", { class: "card-title" }, "Top 10 Worst Micro-Markets by Shrink % (June)"),
+      el("div", { class: "card-title" }, `Top 10 Worst Micro-Markets by Shrink % (${CURRENT_MONTH})`),
       createTable(
         [
           { key: "location", label: "Location" },
@@ -143,7 +143,7 @@ function renderShrink() {
 
   panel.appendChild(el("div", { class: "grid" }, [
     chartCard(
-      "% Shrink by Route (June)",
+      `% Shrink by Route (${CURRENT_MONTH})`,
       createBarChart({ labels: data.byRoutePct.labels, values: data.byRoutePct.values, colors: ROUTE_COLORS, format: "percent" }),
       () => createBarChart({ labels: data.byRoutePct.labels, values: data.byRoutePct.values, colors: ROUTE_COLORS, format: "percent", height: 380 })
     ),
@@ -185,17 +185,17 @@ function renderRoute() {
 
   panel.appendChild(el("div", { class: "grid" }, [
     chartCard(
-      "$ Revenue per Route (June)",
+      `$ Revenue per Route (${CURRENT_MONTH})`,
       createPieChart({ labels: data.revenueByRoute.labels, values: data.revenueByRoute.values, format: "currency", colors: ROUTE_COLORS }),
       () => createPieChart({ labels: data.revenueByRoute.labels, values: data.revenueByRoute.values, format: "currency", colors: ROUTE_COLORS, size: 380, expanded: true })
     ),
     chartCard(
-      "$ Spoilage per Route (June)",
+      `$ Spoilage per Route (${CURRENT_MONTH})`,
       createPieChart({ labels: data.spoilageByRoute.labels, values: data.spoilageByRoute.values, format: "currency", colors: ROUTE_COLORS }),
       () => createPieChart({ labels: data.spoilageByRoute.labels, values: data.spoilageByRoute.values, format: "currency", colors: ROUTE_COLORS, size: 380, expanded: true })
     ),
     chartCard(
-      "$ Shrink per Route (June)",
+      `$ Shrink per Route (${CURRENT_MONTH})`,
       createPieChart({ labels: KPI_DATA.shrink.byRoute.labels, values: KPI_DATA.shrink.byRoute.values, format: "currency", colors: ROUTE_COLORS }),
       () => createPieChart({ labels: KPI_DATA.shrink.byRoute.labels, values: KPI_DATA.shrink.byRoute.values, format: "currency", colors: ROUTE_COLORS, size: 380, expanded: true })
     ),

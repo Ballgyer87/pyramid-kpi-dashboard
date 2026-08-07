@@ -210,10 +210,6 @@ function renderRoute() {
   const panel = document.getElementById("panel-route");
   const data = KPI_DATA.route;
 
-  // Leads the tab: the highlighted weekly total, with the average-per-day
-  // stat beside it rather than in its own separate row further down.
-  renderWeeklyAssets(panel, data.weeklyAssets, data.stats[0]);
-
   const { row: byRouteRow, panel: comparePanel } = sectionLabelWithToggle("By Route", "Compare to Previous Month");
   panel.appendChild(byRouteRow);
 
@@ -256,6 +252,10 @@ function renderRoute() {
       () => createPieChart({ labels: KPI_DATA.shrink.byRoute.labels, values: KPI_DATA.shrink.byRoute.values, format: "currency", colors: ROUTE_COLORS, size: 380, expanded: true })
     ),
   ]));
+
+  // Closes the tab: the weekly total is one supplementary stat + drill-down,
+  // not the tab's main content, so it reads better after the route breakdown.
+  renderWeeklyAssets(panel, data.weeklyAssets, data.stats[0]);
 }
 
 // "Total Assets Serviced — Last Week": a grand-total tile (with the

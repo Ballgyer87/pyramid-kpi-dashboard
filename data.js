@@ -140,11 +140,32 @@ const KPI_DATA = {
   // -------------------------------------------------------- ROUTE/DRIVER --
   route: {
     stats: [
-      { label: "Average Assets Serviced (All Routes)", value: 26, format: "number", delta: -1, deltaType: "count", deltaLabel: "vs last month" },
+      // Real: 1,069 total assets / 7 routes / 6 days. Replaces the old
+      // placeholder 26 now that the day-by-day counts below are real.
+      { label: "Average Assets Serviced (All Routes)", value: 25.5, format: "number", decimals: 1, delta: null, deltaLabel: "per route, per day" },
     ],
-    weeklyAssetsByRoute: {
-      labels: ROUTE_NAMES,
-      values: [142, 128, 156, 119, 133, 147, 121],
+    // Real day-by-day asset counts for the last completed week. `null` means the
+    // route didn't run that day. avgPerDay follows the source sheet's convention
+    // of dividing by 6 regardless of days actually run, so a route that worked
+    // five days reads lower here than its true daily pace.
+    // The by-route bar chart derives its totals from these rows — don't add a
+    // second copy of the totals anywhere.
+    weeklyAssets: {
+      // Company-wide total for the week. Higher than the seven route totals
+      // below because it also counts delivery assets that sit on other routes
+      // and so never appear in this table. The gap is shown on the tile rather
+      // than hidden, so the table and the headline number reconcile.
+      companyTotal: 1130,
+      days: ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6"],
+      rows: [
+        { route: "Bulls",   days: [27, 33, 25, 29, 29, 1],    total: 144, avgPerDay: 24.0 },
+        { route: "Celtics", days: [30, 44, 26, 29, 26, null], total: 155, avgPerDay: 25.8 },
+        { route: "Kings",   days: [29, 37, 29, 34, 29, null], total: 158, avgPerDay: 26.3 },
+        { route: "Lakers",  days: [35, 30, 27, 31, 28, null], total: 151, avgPerDay: 25.2 },
+        { route: "Magic",   days: [28, 34, 20, 35, 30, null], total: 147, avgPerDay: 24.5 },
+        { route: "Suns",    days: [24, 36, 26, 32, 24, 33],   total: 175, avgPerDay: 29.2 },
+        { route: "Thunder", days: [24, 30, 26, 24, 35, null], total: 139, avgPerDay: 23.2 },
+      ],
     },
     // Real July (latest closed month) numbers below, from PFS Analysis copy.xlsx.
     spoilageByRoute: {

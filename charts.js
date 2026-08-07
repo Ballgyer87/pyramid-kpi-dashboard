@@ -75,9 +75,15 @@ function createStatTile(stat) {
   const decimals = stat.decimals != null ? stat.decimals : 1;
   // `exact: true` shows the full figure to the cent instead of compacting it
   // to "$27.4K". Used for the value and its history alike, so they agree.
-  const fmt = (v) => (stat.exact && stat.format === "currency")
-    ? formatExactCurrency(v)
-    : formatValue(v, stat.format, decimals);
+  const fmt = (v) => {
+    if (stat.exact && stat.format === "currency") return formatExactCurrency(v);
+    // Plain numbers round to whole units by default; setting `decimals` opts a
+    // stat out of that, so e.g. 25.5 doesn't surface as 26.
+    if (stat.format === "number" && stat.decimals != null) {
+      return v.toLocaleString("en-US", { minimumFractionDigits: stat.decimals, maximumFractionDigits: stat.decimals });
+    }
+    return formatValue(v, stat.format, decimals);
+  };
   const tile = el("div", { class: `card stat-tile${stat.highlight ? " highlight" : ""}` }, [
     el("div", { class: "label" }, stat.label),
     el("div", { class: "value" }, fmt(stat.value)),

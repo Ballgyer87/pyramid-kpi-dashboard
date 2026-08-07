@@ -248,13 +248,63 @@ function renderRoute() {
     ),
   ]));
 
+  renderWeeklyAssets(panel, data.weeklyAssets);
+}
+
+// "Total Assets Serviced — Last Week": a grand-total tile, the by-route bar
+// chart, and the day-by-day breakdown. Totals are summed from the rows rather
+// than stored separately, so the three views can never disagree.
+function renderWeeklyAssets(panel, weekly) {
+  const labels = weekly.rows.map((r) => r.route);
+  const totals = weekly.rows.map((r) => r.total);
+  const routeTotal = totals.reduce((a, b) => a + b, 0);
+  // Delivery assets riding on other routes aren't in the table, so state the
+  // difference instead of leaving the tile and the table looking contradictory.
+  const otherAssets = weekly.companyTotal - routeTotal;
+
+  panel.appendChild(el("div", { class: "section-label" }, "Total Assets Serviced — Last Week"));
+
+  renderStatGrid(panel, [
+    { label: "Total Assets Serviced", value: weekly.companyTotal, format: "number", delta: null,
+      deltaLabel: `${routeTotal.toLocaleString("en-US")} on the 7 routes + ${otherAssets} delivery assets on other routes`,
+      highlight: true },
+  ]);
+
   panel.appendChild(el("div", { class: "grid" }, [
     chartCard(
-      "Total Assets Serviced This Week (by Route)",
-      createBarChart({ labels: data.weeklyAssetsByRoute.labels, values: data.weeklyAssetsByRoute.values, colors: ROUTE_COLORS, format: "number" }),
-      () => createBarChart({ labels: data.weeklyAssetsByRoute.labels, values: data.weeklyAssetsByRoute.values, colors: ROUTE_COLORS, format: "number", height: 380 }),
+      "Total Assets Serviced by Route (Last Week)",
+      createBarChart({ labels, values: totals, colors: ROUTE_COLORS, format: "number" }),
+      () => createBarChart({ labels, values: totals, colors: ROUTE_COLORS, format: "number", height: 380 }),
       "card-wide"
     ),
+  ]));
+
+  const dayColumns = weekly.days.map((label, i) => ({
+    key: `d${i}`,
+    label,
+    numeric: true,
+    render: (v) => (v == null ? "—" : String(v)),
+  }));
+
+  const rows = weekly.rows.map((r) => {
+    const row = { route: r.route, total: r.total, avgPerDay: r.avgPerDay };
+    r.days.forEach((v, i) => { row[`d${i}`] = v; });
+    return row;
+  });
+
+  panel.appendChild(el("div", { class: "grid" }, [
+    el("div", { class: "card card-wide" }, [
+      el("div", { class: "card-title" }, "Assets Serviced by Day (Last Week)"),
+      createTable(
+        [
+          { key: "route", label: "Route" },
+          ...dayColumns,
+          { key: "total", label: "Total", numeric: true },
+          { key: "avgPerDay", label: "Avg/Day", numeric: true, render: (v) => v.toFixed(1) },
+        ],
+        rows
+      ),
+    ]),
   ]));
 }
 

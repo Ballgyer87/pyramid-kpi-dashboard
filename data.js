@@ -199,11 +199,12 @@ const KPI_DATA = {
   },
 
   // ----------------------------------------------------------- DELIVERY ---
+  // Real: YTD counts and last week's $/delivery.
   delivery: {
     stats: [
-      { label: "YTD Pallet Water Deliveries", value: 486, format: "number", delta: 5.4, deltaLabel: "vs last year" },
-      { label: "YTD 5-Gallon Deliveries", value: 12840, format: "number", delta: 3.1, deltaLabel: "vs last year" },
-      { label: "Weekly $ per Delivery", value: 186, format: "currency", delta: 2.8, deltaLabel: "vs last month" },
+      { label: "YTD Pallet Water Deliveries", value: 111, format: "number", delta: null },
+      { label: "YTD 5-Gallon Deliveries", value: 1613, format: "number", delta: null },
+      { label: "Weekly $ per Delivery", value: 351.30, format: "currency", delta: null, deltaLabel: "last week" },
     ],
   },
 
@@ -329,18 +330,20 @@ const KPI_DATA = {
   // --------------------------------------------------------- OPERATIONS ---
   // Grouped into the three areas this tab actually covers. Add a metric by
   // dropping it into the right group — the tab renders whatever is in each.
-  // NOTE: every number here is still placeholder — no real Operations data yet.
+  // Picks per Hour, Average Fill, and RPC Compatibility are real (last week).
+  // Total Receives and Total Inventories Run are still placeholder.
   operations: {
     warehouse: [
-      { label: "Picks per Hour", value: 142, format: "number", goalPct: 88 },
+      // Real: 1,953 last week against a goal of 2,000 (97.65%, rounded to 98).
+      { label: "Picks per Hour", value: 1953, format: "number", goalPct: 98 },
       { label: "Total Receives — Last Week", value: 36, format: "number", goalPct: 95 },
       { label: "Total Inventories Run", value: 21, format: "number", goalPct: 70 },
     ],
     scheduling: [
-      { label: "Average Fill", value: 78.4, format: "percent", delta: 1.6, deltaLabel: "vs last month" },
+      { label: "Average Fill", value: 94, format: "percent", delta: null, deltaLabel: "last week" },
     ],
     maintenance: [
-      { label: "RPC Compatibility", value: 91.2, format: "percent", delta: 0.8, deltaLabel: "vs last month" },
+      { label: "RPC Compatibility", value: 77, format: "percent", delta: null, deltaLabel: "last week" },
     ],
   },
 

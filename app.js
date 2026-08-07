@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
   renderShrink();
   renderRoute();
   renderDelivery();
-  renderFinance();
   renderProducts();
   renderOperations();
 });
@@ -195,13 +194,8 @@ function renderShrink() {
     ]),
   ]));
 
-  panel.appendChild(el("div", { class: "grid" }, [
-    chartCard(
-      `% Shrink by Route (${CURRENT_MONTH})`,
-      createBarChart({ labels: data.byRoutePct.labels, values: data.byRoutePct.values, colors: ROUTE_COLORS, format: "percent" }),
-      () => createBarChart({ labels: data.byRoutePct.labels, values: data.byRoutePct.values, colors: ROUTE_COLORS, format: "percent", height: 380 })
-    ),
-  ]));
+  // % Shrink by Route pulled off the tab for now, per Brent — easy to bring
+  // back via git history (data.byRoutePct is untouched).
 }
 
 /* ------------------------------------------------------------------ route */
@@ -321,32 +315,10 @@ function renderDelivery() {
   renderStatGrid(panel, data.stats);
 }
 
-/* ---------------------------------------------------------------- finance */
-
-function renderFinance() {
-  const panel = document.getElementById("panel-finance");
-  const data = KPI_DATA.finance;
-
-  renderStatGrid(panel, data.stats);
-
-  panel.appendChild(el("div", { class: "grid" }, [
-    chartCard(
-      "Revenue vs Expenses",
-      createLineChart({ labels: data.revenueVsExpenses.labels, series: data.revenueVsExpenses.series, format: "currency" }),
-      () => createLineChart({ labels: data.revenueVsExpenses.labels, series: data.revenueVsExpenses.series, format: "currency", height: 420, expanded: true }),
-      "card-wide"
-    ),
-  ]));
-
-  panel.appendChild(el("div", { class: "grid" }, [
-    chartCard(
-      "Gross Margin Trend",
-      createLineChart({ labels: data.marginTrend.labels, series: data.marginTrend.series, format: "percent" }),
-      () => createLineChart({ labels: data.marginTrend.labels, series: data.marginTrend.series, format: "percent", height: 420, expanded: true }),
-      "card-wide"
-    ),
-  ]));
-}
+// Finance tab pulled off the site for now, per Brent — nav item and panel
+// removed from index.html too. KPI_DATA.finance is untouched: Overview's
+// Gross Margin and Net Income tiles still read from it directly, and this
+// function is easy to restore from git history whenever the tab comes back.
 
 /* --------------------------------------------------------------- products */
 

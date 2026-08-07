@@ -227,6 +227,14 @@ img { max-width: 100%; }
   align-items: center;
 }
 
+.side-nav-controls {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+.side-nav.collapsed .side-nav-controls { flex-direction: column; align-items: center; }
+
 .sidebar-toggle {
   appearance: none;
   border: 1px solid var(--border);
@@ -234,15 +242,21 @@ img { max-width: 100%; }
   color: var(--text-secondary);
   width: 26px;
   height: 26px;
+  flex: none;
   border-radius: 50%;
   cursor: pointer;
-  align-self: flex-end;
-  margin-bottom: 10px;
   font-size: 14px;
   line-height: 1;
 }
 .sidebar-toggle:hover { color: var(--text-primary); }
-.side-nav.collapsed .sidebar-toggle { align-self: center; }
+
+/* Hiding the top bar reclaims its 93px for the charts. The sidebar is sticky
+   below the header, so its offset has to collapse to 0 at the same time. */
+body.header-hidden .site-header { display: none; }
+body.header-hidden .side-nav { top: 0; }
+@media (min-width: 769px) {
+  body.header-hidden .side-nav { height: 100vh; }
+}
 
 .tab-btn {
   appearance: none;

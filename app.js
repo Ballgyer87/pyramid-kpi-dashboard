@@ -6,6 +6,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   setupTabs();
   setupSidebarToggle();
+  setupHeaderToggle();
   renderOverview();
   renderRevenue();
   renderShrink();
@@ -44,6 +45,29 @@ function setupSidebarToggle() {
     const collapsed = !nav.classList.contains("collapsed");
     applyState(collapsed);
     localStorage.setItem("sidebarCollapsed", collapsed);
+  });
+}
+
+// Collapses the top bar to free up vertical room — handy when comparing two
+// months of charts side by side. Remembered like the sidebar's collapse state.
+function setupHeaderToggle() {
+  const btn = document.getElementById("header-toggle");
+  if (!btn) return;   // never let a missing control stop the panels rendering
+
+  const applyState = (hidden) => {
+    document.body.classList.toggle("header-hidden", hidden);
+    btn.textContent = hidden ? "▾" : "▴";
+    const label = hidden ? "Show top bar" : "Hide top bar";
+    btn.setAttribute("aria-label", label);
+    btn.setAttribute("title", label);
+  };
+
+  applyState(localStorage.getItem("headerHidden") === "true");
+
+  btn.addEventListener("click", () => {
+    const hidden = !document.body.classList.contains("header-hidden");
+    applyState(hidden);
+    localStorage.setItem("headerHidden", hidden);
   });
 }
 

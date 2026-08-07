@@ -118,18 +118,20 @@ const KPI_DATA = {
     // Real July (last closed month) worst 10 by shrink %, from Tim's Market
     // Shrink Project 2026.xlsx / "July" tab. Ranked worst-to-least-bad, no
     // status tiers — update this each month to the newest closed month.
-    // Names come from the file's Customer column (A), not Location (B). A
-    // customer with several markets can therefore appear more than once —
-    // Tenaris does in July (its Back and Warehouse markets both rank).
+    // Names use the file's Customer column (A), except where that customer runs
+    // more than one market — then the Location column (B) is used instead, since
+    // "Jabil Circuit" or "Tenaris" alone wouldn't say which site. Eight customers
+    // are multi-site in July: Blues City, Bryce, Ford, Hino, Jabil Circuit,
+    // Owens Corning, Rockwool, Tenaris.
     topLocations: [
       { location: "Niagara Water", shrinkPct: 13.30, shrinkDollars: 403.58 },
       { location: "Fox 13", shrinkPct: 12.48, shrinkDollars: 315.78 },
       { location: "Nucor", shrinkPct: 12.14, shrinkDollars: 663.10 },
       { location: "WM Barr Distribution", shrinkPct: 10.48, shrinkDollars: 361.44 },
-      { location: "Bryce", shrinkPct: 8.77, shrinkDollars: 136.80 },
-      { location: "Jabil Circuit", shrinkPct: 8.65, shrinkDollars: 5823.14 },
-      { location: "Tenaris", shrinkPct: 8.35, shrinkDollars: 707.23 },
-      { location: "Tenaris", shrinkPct: 8.09, shrinkDollars: 552.88 },
+      { location: "Bryce-Hickory Hill", shrinkPct: 8.77, shrinkDollars: 136.80 },
+      { location: "Jabil Front Market", shrinkPct: 8.65, shrinkDollars: 5823.14 },
+      { location: "Tenaris Back", shrinkPct: 8.35, shrinkDollars: 707.23 },
+      { location: "Tenaris Warehouse", shrinkPct: 8.09, shrinkDollars: 552.88 },
       { location: "Pyramid Foodservice Inc.", shrinkPct: 7.21, shrinkDollars: 75.66 },
       { location: "Golden Bolt- Panama", shrinkPct: 6.81, shrinkDollars: 1865.53 },
     ],

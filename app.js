@@ -49,6 +49,25 @@ function setupSidebarToggle() {
 
 /* -------------------------------------------------------------- overview */
 
+// Year-over-year is derived from the cumulative tracker rather than stored as a
+// number, so it can't silently go stale the way a hardcoded figure does. It
+// compares 2026 and 2025 at the last month 2026 actually has an actual for, so
+// both sides always cover the same span of the year.
+function computeYoY(cumulativeTracker) {
+  const seriesBy = (name) => cumulativeTracker.series.find((s) => s.name === name);
+  const actual = seriesBy("Actual Cumulative Total").values;
+  const prior = seriesBy("2025 Cumulative Total").values;
+
+  let last = -1;
+  actual.forEach((v, i) => { if (v != null) last = i; });
+  if (last < 0 || !prior[last]) return { percent: null, label: "vs last year" };
+
+  return {
+    percent: ((actual[last] - prior[last]) / prior[last]) * 100,
+    label: `vs Jan–${cumulativeTracker.labels[last]} 2025`,
+  };
+}
+
 function renderOverview() {
   const panel = document.getElementById("panel-overview");
   const rev = KPI_DATA.revenue;
@@ -58,9 +77,10 @@ function renderOverview() {
   // Looked up by label rather than position, so regrouping or reordering the
   // Operations metrics can't silently point this tile at the wrong number.
   const avgFill = operationsStats().find((s) => s.label === "Average Fill");
+  const yoy = computeYoY(rev.cumulativeTracker);
 
   const headline = [
-    { label: "YTD Revenue", value: rev.goalMeter.ytdSales, format: "currency", delta: rev.goalMeter.yoyPercent, deltaLabel: "YoY",
+    { label: "YTD Revenue", value: rev.goalMeter.ytdSales, format: "currency", delta: yoy.percent, deltaLabel: yoy.label,
       history: rev.monthlyActual.labels.map((label, i) => ({ label, value: rev.monthlyActual.values[i] })) },
     { label: "Micro-Market Shrink %", value: shrink.stats[1].value, format: "percent", delta: shrink.stats[1].delta, deltaLabel: "vs last month", inverse: true, history: shrink.stats[1].history },
     { label: "Weekly $ per Delivery", value: delivery.stats[2].value, format: "currency", delta: delivery.stats[2].delta, deltaLabel: "vs last month" },
@@ -132,7 +152,7 @@ function renderShrink() {
       el("div", { class: "card-title" }, `Top 10 Worst Micro-Markets by Shrink % (${CURRENT_MONTH})`),
       createTable(
         [
-          { key: "location", label: "Location" },
+          { key: "location", label: "Customer" },
           { key: "shrinkPct", label: "Shrink %", numeric: true, render: (v) => `${v.toFixed(2)}%` },
           { key: "shrinkDollars", label: "Shrink $", numeric: true, render: (v) => formatFull(v, "currency") },
         ],

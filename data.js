@@ -34,7 +34,8 @@ const KPI_DATA = {
       lastWeekSales: 228937,
       weeklyTargetNeeded: 254264,
       weeksLeft: 21,
-      yoyPercent: 29.3, // used by the "YTD Revenue" headline tile on the Overview tab
+      // NOTE: year-over-year is not stored here — it's computed in app.js from
+      // cumulativeTracker (2026 vs 2025 at the same month), so it can't go stale.
       // Update this before each week's meeting — whatever's worth calling out.
       // "sub" and "visual" are both optional — omit for a text-only fact.
       funFact: {
@@ -75,7 +76,7 @@ const KPI_DATA = {
   // separately below (byRoute/byRoutePct, from PFS Analysis copy.xlsx).
   shrink: {
     stats: [
-      { label: "Micro-Market Shrink $ (MTD)", value: 27398.52, format: "currency", delta: -27.8, deltaLabel: "vs last month", inverse: true,
+      { label: "Micro-Market Shrink $ (MTD)", value: 27398.52, format: "currency", delta: -27.8, deltaLabel: "vs last month", inverse: true, exact: true,
         history: [
           { label: "Jan", value: 13952.53 }, { label: "Feb", value: 15595.69 }, { label: "Mar", value: 18133.83 },
           { label: "Apr", value: 17749.49 }, { label: "May", value: 21220.95 }, { label: "Jun", value: 37949.84 },
@@ -114,20 +115,23 @@ const KPI_DATA = {
       labels: ROUTE_NAMES,
       values: [1.61, 0.79, 2.58, 1.14, 1.07, 1.33, 0.65],
     },
-    // Real July (last closed month) worst 10 micro-markets by shrink %, from
-    // Tim's Market Shrink Project 2026.xlsx / "July" tab. Ranked worst-to-least-bad,
-    // no status tiers — update this each month to the newest closed month.
+    // Real July (last closed month) worst 10 by shrink %, from Tim's Market
+    // Shrink Project 2026.xlsx / "July" tab. Ranked worst-to-least-bad, no
+    // status tiers — update this each month to the newest closed month.
+    // Names come from the file's Customer column (A), not Location (B). A
+    // customer with several markets can therefore appear more than once —
+    // Tenaris does in July (its Back and Warehouse markets both rank).
     topLocations: [
       { location: "Niagara Water", shrinkPct: 13.30, shrinkDollars: 403.58 },
       { location: "Fox 13", shrinkPct: 12.48, shrinkDollars: 315.78 },
-      { location: "Skyline Steel", shrinkPct: 12.14, shrinkDollars: 663.10 },
+      { location: "Nucor", shrinkPct: 12.14, shrinkDollars: 663.10 },
       { location: "WM Barr Distribution", shrinkPct: 10.48, shrinkDollars: 361.44 },
-      { location: "Bryce-Hickory Hill", shrinkPct: 8.77, shrinkDollars: 136.80 },
-      { location: "Jabil Front Market", shrinkPct: 8.65, shrinkDollars: 5823.14 },
-      { location: "Tenaris Back", shrinkPct: 8.35, shrinkDollars: 707.23 },
-      { location: "Tenaris Warehouse", shrinkPct: 8.09, shrinkDollars: 552.88 },
+      { location: "Bryce", shrinkPct: 8.77, shrinkDollars: 136.80 },
+      { location: "Jabil Circuit", shrinkPct: 8.65, shrinkDollars: 5823.14 },
+      { location: "Tenaris", shrinkPct: 8.35, shrinkDollars: 707.23 },
+      { location: "Tenaris", shrinkPct: 8.09, shrinkDollars: 552.88 },
       { location: "Pyramid Foodservice Inc.", shrinkPct: 7.21, shrinkDollars: 75.66 },
-      { location: "Golden Bolt-Panama", shrinkPct: 6.81, shrinkDollars: 1865.53 },
+      { location: "Golden Bolt- Panama", shrinkPct: 6.81, shrinkDollars: 1865.53 },
     ],
   },
 

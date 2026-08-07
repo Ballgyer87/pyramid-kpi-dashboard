@@ -55,6 +55,13 @@ function formatFull(value, format, decimals = 1) {
   }
 }
 
+// Full currency to the cent, no compacting and no rounding — for figures where
+// the exact number is the point (opt in with `exact: true` on a stat).
+function formatExactCurrency(value) {
+  if (value == null) return "—";
+  return `$${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
 function formatCompactCurrency(value) {
   const abs = Math.abs(value);
   if (abs >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`;
@@ -66,10 +73,14 @@ function formatCompactCurrency(value) {
 
 function createStatTile(stat) {
   const decimals = stat.decimals != null ? stat.decimals : 1;
-  const value = formatValue(stat.value, stat.format, decimals);
+  // `exact: true` shows the full figure to the cent instead of compacting it
+  // to "$27.4K". Used for the value and its history alike, so they agree.
+  const fmt = (v) => (stat.exact && stat.format === "currency")
+    ? formatExactCurrency(v)
+    : formatValue(v, stat.format, decimals);
   const tile = el("div", { class: `card stat-tile${stat.highlight ? " highlight" : ""}` }, [
     el("div", { class: "label" }, stat.label),
-    el("div", { class: "value" }, value),
+    el("div", { class: "value" }, fmt(stat.value)),
   ]);
 
   if (stat.delta != null) {
@@ -102,7 +113,7 @@ function createStatTile(stat) {
     [...stat.history].reverse().forEach((h) => {
       panel.appendChild(el("div", { class: "history-row" }, [
         el("span", { class: "period" }, h.label),
-        el("span", { class: "val" }, formatValue(h.value, stat.format, decimals)),
+        el("span", { class: "val" }, fmt(h.value)),
       ]));
     });
   } else {

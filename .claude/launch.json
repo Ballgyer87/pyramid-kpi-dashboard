@@ -4,8 +4,8 @@
     {
       "name": "kpi-dashboard",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "5374"],
-      "port": 5374
+      "runtimeArgs": ["-m", "http.server", "5386"],
+      "port": 5386
     }
   ]
 }

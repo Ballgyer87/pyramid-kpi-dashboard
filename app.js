@@ -284,8 +284,14 @@ function renderWeeklyAssets(panel, weekly, avgStat) {
     render: (v) => (v == null ? "—" : String(v)),
   }));
 
+  // A route only divides by 6 if it's flagged as having actually worked that
+  // 6th day — a stray non-null value in that slot (Bulls has a "1") doesn't
+  // count as a shift, so it's dropped from both the sum and the day count.
   const rows = weekly.rows.map((r) => {
-    const row = { route: r.route, total: r.total, avgPerDay: r.avgPerDay };
+    const avgPerDay = r.workedSaturday
+      ? r.days.reduce((sum, v) => sum + (v || 0), 0) / r.days.length
+      : r.days.slice(0, 5).reduce((sum, v) => sum + (v || 0), 0) / 5;
+    const row = { route: r.route, total: r.total, avgPerDay };
     r.days.forEach((v, i) => { row[`d${i}`] = v; });
     return row;
   });

@@ -160,14 +160,18 @@ const KPI_DATA = {
       // than hidden, so the table and the headline number reconcile.
       companyTotal: 1130,
       days: ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6"],
+      // avgPerDay isn't stored — app.js computes it from `days`, using only the
+      // routes flagged `workedSaturday` for a real 6th day. Everyone else
+      // divides by 5 regardless of what's in their Day 6 slot: Bulls' "1" is a
+      // stray, not a shift, so it's excluded from both the sum and the count.
       rows: [
-        { route: "Bulls",   days: [27, 33, 25, 29, 29, 1],    total: 144, avgPerDay: 24.0 },
-        { route: "Celtics", days: [30, 44, 26, 29, 26, null], total: 155, avgPerDay: 25.8 },
-        { route: "Kings",   days: [29, 37, 29, 34, 29, null], total: 158, avgPerDay: 26.3 },
-        { route: "Lakers",  days: [35, 30, 27, 31, 28, null], total: 151, avgPerDay: 25.2 },
-        { route: "Magic",   days: [28, 34, 20, 35, 30, null], total: 147, avgPerDay: 24.5 },
-        { route: "Suns",    days: [24, 36, 26, 32, 24, 33],   total: 175, avgPerDay: 29.2 },
-        { route: "Thunder", days: [24, 30, 26, 24, 35, null], total: 139, avgPerDay: 23.2 },
+        { route: "Bulls",   days: [27, 33, 25, 29, 29, 1],    total: 144 },
+        { route: "Celtics", days: [30, 44, 26, 29, 26, null], total: 155 },
+        { route: "Kings",   days: [29, 37, 29, 34, 29, null], total: 158 },
+        { route: "Lakers",  days: [35, 30, 27, 31, 28, null], total: 151 },
+        { route: "Magic",   days: [28, 34, 20, 35, 30, null], total: 147 },
+        { route: "Suns",    days: [24, 36, 26, 32, 24, 33],   total: 175, workedSaturday: true },
+        { route: "Thunder", days: [24, 30, 26, 24, 35, null], total: 139 },
       ],
     },
     // Real July (latest closed month) numbers below, from PFS Analysis copy.xlsx.

@@ -158,13 +158,14 @@ const KPI_DATA = {
     // companyTotal per week is >= the sum of that week's 7 route totals because
     // it also counts delivery assets riding on other routes, which never show
     // up broken out in this table.
-    // NOTE: week labels ("Aug 3", "Aug 10") are inferred Monday-of-week dates,
-    // not numbers Brent gave directly — confirm/correct if that's off.
+    // Week-of labels confirmed with Brent: "Jul 27" then "Aug 3" (the second
+    // entry is last week's data, not the current week's — an earlier version
+    // of this had them one week too late).
     weeklyAssets: {
       days: ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6"],
       weeks: [
         {
-          label: "Aug 3",
+          label: "Jul 27",
           companyTotal: 1130,
           rows: [
             { route: "Bulls",   days: [27, 33, 25, 29, 29, 1],    total: 144 },
@@ -177,7 +178,7 @@ const KPI_DATA = {
           ],
         },
         {
-          label: "Aug 10",
+          label: "Aug 3",
           companyTotal: 1134,
           rows: [
             { route: "Bulls",   days: [28, 35, 23, 20, 29, 30],   total: 165, workedSaturday: true },

@@ -29,18 +29,18 @@ const KPI_DATA = {
     // ytdSales here is through the latest *week*, so it runs ahead of the
     // monthly figures below (which stop at July month-end).
     goalMeter: {
-      ytdSales: 6560449,
+      ytdSales: 6779343,
       annualGoal: 11900000,
-      lastWeekSales: 228937,
-      weeklyTargetNeeded: 254264,
-      weeksLeft: 21,
+      lastWeekSales: 252400,
+      weeklyTargetNeeded: 256033,
+      weeksLeft: 20,
       // NOTE: year-over-year is not stored here — it's computed in app.js from
       // cumulativeTracker (2026 vs 2025 at the same month), so it can't go stale.
       // Update this before each week's meeting — whatever's worth calling out.
       // "sub" and "visual" are both optional — omit for a text-only fact.
       funFact: {
-        text: "Energy Drinks up 24.8% YoY",
-        sub: "+$106,467 vs Jan–Jul 2025",
+        text: "LSS Chips: #1 Category",
+        sub: "Top selling category 3 months in a row",
       },
     },
     // Cumulative running-total tracker: goal pace (dashed) vs actual 2026 (stops at

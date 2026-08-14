@@ -158,20 +158,20 @@ const KPI_DATA = {
       // below because it also counts delivery assets that sit on other routes
       // and so never appear in this table. The gap is shown on the tile rather
       // than hidden, so the table and the headline number reconcile.
-      companyTotal: 1130,
+      companyTotal: 1134,
       days: ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6"],
       // avgPerDay isn't stored — app.js computes it from `days`, using only the
       // routes flagged `workedSaturday` for a real 6th day. Everyone else
-      // divides by 5 regardless of what's in their Day 6 slot: Bulls' "1" is a
-      // stray, not a shift, so it's excluded from both the sum and the count.
+      // divides by 5 regardless of what's in their Day 6 slot. Bulls worked the
+      // full week this time; last week it was Suns — check the flag each week.
       rows: [
-        { route: "Bulls",   days: [27, 33, 25, 29, 29, 1],    total: 144 },
-        { route: "Celtics", days: [30, 44, 26, 29, 26, null], total: 155 },
-        { route: "Kings",   days: [29, 37, 29, 34, 29, null], total: 158 },
-        { route: "Lakers",  days: [35, 30, 27, 31, 28, null], total: 151 },
-        { route: "Magic",   days: [28, 34, 20, 35, 30, null], total: 147 },
-        { route: "Suns",    days: [24, 36, 26, 32, 24, 33],   total: 175, workedSaturday: true },
-        { route: "Thunder", days: [24, 30, 26, 24, 35, null], total: 139 },
+        { route: "Bulls",   days: [28, 35, 23, 20, 29, 30],   total: 165, workedSaturday: true },
+        { route: "Celtics", days: [29, 37, 23, 24, 34, null], total: 147 },
+        { route: "Kings",   days: [27, 34, 36, 29, 38, null], total: 164 },
+        { route: "Lakers",  days: [28, 30, 36, 26, 25, null], total: 145 },
+        { route: "Magic",   days: [30, 26, 26, 30, 36, null], total: 148 },
+        { route: "Suns",    days: [32, 31, 26, 26, 36, null], total: 151 },
+        { route: "Thunder", days: [30, 28, 22, 25, 35, null], total: 140 },
       ],
     },
     // Real July (latest closed month) numbers below, from PFS Analysis copy.xlsx.

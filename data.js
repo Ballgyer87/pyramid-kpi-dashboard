@@ -147,31 +147,50 @@ const KPI_DATA = {
       // placeholder 26 now that the day-by-day counts below are real.
       { label: "Average Assets Serviced (All Routes)", value: 25.5, format: "number", decimals: 1, delta: null, deltaLabel: "per route, per day" },
     ],
-    // Real day-by-day asset counts for the last completed week. `null` means the
-    // route didn't run that day. avgPerDay follows the source sheet's convention
-    // of dividing by 6 regardless of days actually run, so a route that worked
-    // five days reads lower here than its true daily pace.
-    // The by-route bar chart derives its totals from these rows — don't add a
-    // second copy of the totals anywhere.
+    // Weekly log — a new entry gets appended each week rather than overwriting
+    // the last one, same as every other "history" trend on the site. app.js
+    // always renders weeks[weeks.length - 1] as the current week's table/chart,
+    // and builds each history dropdown (the total tile, each route's Avg/Day)
+    // from the full array.
+    // Per-route days: `null` means the route didn't run that day. avgPerDay
+    // isn't stored — app.js computes it per week from `days`, using only routes
+    // flagged `workedSaturday` that week for a real 6th day; everyone else
+    // divides by 5 regardless of what's in their Day 6 slot (a stray non-null
+    // value there, like Bulls' old "1", still doesn't count as a shift).
+    // companyTotal per week is >= the sum of that week's 7 route totals because
+    // it also counts delivery assets riding on other routes, which never show
+    // up broken out in this table.
+    // NOTE: week labels ("Aug 3", "Aug 10") are inferred Monday-of-week dates,
+    // not numbers Brent gave directly — confirm/correct if that's off.
     weeklyAssets: {
-      // Company-wide total for the week. Higher than the seven route totals
-      // below because it also counts delivery assets that sit on other routes
-      // and so never appear in this table. The gap is shown on the tile rather
-      // than hidden, so the table and the headline number reconcile.
-      companyTotal: 1134,
       days: ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6"],
-      // avgPerDay isn't stored — app.js computes it from `days`, using only the
-      // routes flagged `workedSaturday` for a real 6th day. Everyone else
-      // divides by 5 regardless of what's in their Day 6 slot. Bulls worked the
-      // full week this time; last week it was Suns — check the flag each week.
-      rows: [
-        { route: "Bulls",   days: [28, 35, 23, 20, 29, 30],   total: 165, workedSaturday: true },
-        { route: "Celtics", days: [29, 37, 23, 24, 34, null], total: 147 },
-        { route: "Kings",   days: [27, 34, 36, 29, 38, null], total: 164 },
-        { route: "Lakers",  days: [28, 30, 36, 26, 25, null], total: 145 },
-        { route: "Magic",   days: [30, 26, 26, 30, 36, null], total: 148 },
-        { route: "Suns",    days: [32, 31, 26, 26, 36, null], total: 151 },
-        { route: "Thunder", days: [30, 28, 22, 25, 35, null], total: 140 },
+      weeks: [
+        {
+          label: "Aug 3",
+          companyTotal: 1130,
+          rows: [
+            { route: "Bulls",   days: [27, 33, 25, 29, 29, 1],    total: 144 },
+            { route: "Celtics", days: [30, 44, 26, 29, 26, null], total: 155 },
+            { route: "Kings",   days: [29, 37, 29, 34, 29, null], total: 158 },
+            { route: "Lakers",  days: [35, 30, 27, 31, 28, null], total: 151 },
+            { route: "Magic",   days: [28, 34, 20, 35, 30, null], total: 147 },
+            { route: "Suns",    days: [24, 36, 26, 32, 24, 33],   total: 175, workedSaturday: true },
+            { route: "Thunder", days: [24, 30, 26, 24, 35, null], total: 139 },
+          ],
+        },
+        {
+          label: "Aug 10",
+          companyTotal: 1134,
+          rows: [
+            { route: "Bulls",   days: [28, 35, 23, 20, 29, 30],   total: 165, workedSaturday: true },
+            { route: "Celtics", days: [29, 37, 23, 24, 34, null], total: 147 },
+            { route: "Kings",   days: [27, 34, 36, 29, 38, null], total: 164 },
+            { route: "Lakers",  days: [28, 30, 36, 26, 25, null], total: 145 },
+            { route: "Magic",   days: [30, 26, 26, 30, 36, null], total: 148 },
+            { route: "Suns",    days: [32, 31, 26, 26, 36, null], total: 151 },
+            { route: "Thunder", days: [30, 28, 22, 25, 35, null], total: 140 },
+          ],
+        },
       ],
     },
     // Real July (latest closed month) numbers below, from PFS Analysis copy.xlsx.

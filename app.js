@@ -256,21 +256,33 @@ function renderRoute() {
 // average-per-day stat beside it), the by-route bar chart, and the
 // day-by-day breakdown. Totals are summed from the rows rather than stored
 // separately, so the three views can never disagree.
-function renderWeeklyAssets(panel, weekly, avgStat) {
-  const labels = weekly.rows.map((r) => r.route);
-  const totals = weekly.rows.map((r) => r.total);
+//
+// A route only divides by 6 if that week flags it `workedSaturday` — a stray
+// non-null value in the Day 6 slot (Bulls once had a "1") doesn't count as a
+// shift, so it's dropped from both the sum and the day count.
+function routeAvgPerDay(row) {
+  return row.workedSaturday
+    ? row.days.reduce((sum, v) => sum + (v || 0), 0) / row.days.length
+    : row.days.slice(0, 5).reduce((sum, v) => sum + (v || 0), 0) / 5;
+}
 
-  panel.appendChild(el("div", { class: "section-label" }, "Total Assets Serviced — Last Week"));
+function renderWeeklyAssets(panel, weekly, avgStat) {
+  const current = weekly.weeks[weekly.weeks.length - 1];
+  const labels = current.rows.map((r) => r.route);
+  const totals = current.rows.map((r) => r.total);
+
+  panel.appendChild(el("div", { class: "section-label" }, `Total Assets Serviced — Week of ${current.label}`));
 
   const stats = [
-    { label: "Total Assets Serviced", value: weekly.companyTotal, format: "number", delta: null, highlight: true },
+    { label: "Total Assets Serviced", value: current.companyTotal, format: "number", delta: null, highlight: true,
+      history: weekly.weeks.map((w) => ({ label: w.label, value: w.companyTotal })) },
   ];
   if (avgStat) stats.push(avgStat);
   renderStatGrid(panel, stats);
 
   panel.appendChild(el("div", { class: "grid" }, [
     chartCard(
-      "Total Assets Serviced by Route (Last Week)",
+      `Total Assets Serviced by Route (Week of ${current.label})`,
       createBarChart({ labels, values: totals, colors: ROUTE_COLORS, format: "number" }),
       () => createBarChart({ labels, values: totals, colors: ROUTE_COLORS, format: "number", height: 380 }),
       "card-wide"
@@ -284,27 +296,28 @@ function renderWeeklyAssets(panel, weekly, avgStat) {
     render: (v) => (v == null ? "—" : String(v)),
   }));
 
-  // A route only divides by 6 if it's flagged as having actually worked that
-  // 6th day — a stray non-null value in that slot (Bulls has a "1") doesn't
-  // count as a shift, so it's dropped from both the sum and the day count.
-  const rows = weekly.rows.map((r) => {
-    const avgPerDay = r.workedSaturday
-      ? r.days.reduce((sum, v) => sum + (v || 0), 0) / r.days.length
-      : r.days.slice(0, 5).reduce((sum, v) => sum + (v || 0), 0) / 5;
-    const row = { route: r.route, total: r.total, avgPerDay };
+  const rows = current.rows.map((r) => {
+    const row = { route: r.route, total: r.total, avgPerDay: routeAvgPerDay(r) };
     r.days.forEach((v, i) => { row[`d${i}`] = v; });
+    // Avg/Day history across every logged week for this route, so the mini
+    // chart behind its chevron shows the true daily-pace trend rather than
+    // being thrown off by which route happened to work Saturday that week.
+    row.history = weekly.weeks
+      .map((w) => w.rows.find((wr) => wr.route === r.route))
+      .filter(Boolean)
+      .map((wr, i) => ({ label: weekly.weeks[i].label, value: routeAvgPerDay(wr) }));
     return row;
   });
 
   panel.appendChild(el("div", { class: "grid" }, [
     el("div", { class: "card card-wide" }, [
-      el("div", { class: "card-title" }, "Assets Serviced by Day (Last Week)"),
+      el("div", { class: "card-title" }, `Assets Serviced by Day (Week of ${current.label})`),
       createTable(
         [
           { key: "route", label: "Route" },
           ...dayColumns,
           { key: "total", label: "Total", numeric: true },
-          { key: "avgPerDay", label: "Avg/Day", numeric: true, render: (v) => v.toFixed(1) },
+          { key: "avgPerDay", label: "Avg/Day", numeric: true, history: true, format: "decimal", decimals: 1, render: (v) => v.toFixed(1) },
         ],
         rows
       ),

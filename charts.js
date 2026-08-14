@@ -36,6 +36,12 @@ function formatValue(value, format, decimals = 1) {
       return `${value.toFixed(decimals)}%`;
     case "minutes":
       return `${value.toFixed(1)} min`;
+    // Opt-in, decimal-respecting sibling of the default "number" case below —
+    // that one always rounds to a whole number regardless of `decimals` (every
+    // existing "number" caller relies on that), so this exists instead of
+    // changing it, for charts like Avg/Day where the fraction matters.
+    case "decimal":
+      return value.toFixed(decimals);
     default:
       return Math.round(value).toLocaleString("en-US");
   }

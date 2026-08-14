@@ -142,11 +142,9 @@ const KPI_DATA = {
 
   // -------------------------------------------------------- ROUTE/DRIVER --
   route: {
-    stats: [
-      // Real: 1,069 total assets / 7 routes / 6 days. Replaces the old
-      // placeholder 26 now that the day-by-day counts below are real.
-      { label: "Average Assets Serviced (All Routes)", value: 25.5, format: "number", decimals: 1, delta: null, deltaLabel: "per route, per day" },
-    ],
+    // "Average Assets Serviced (All Routes)" isn't stored — app.js computes it
+    // from weeklyAssets below (mean of the 7 routes' own Avg/Day for that
+    // week), so it can't go stale like the old hand-typed 25.5 did.
     // Weekly log — a new entry gets appended each week rather than overwriting
     // the last one, same as every other "history" trend on the site. app.js
     // always renders weeks[weeks.length - 1] as the current week's table/chart,

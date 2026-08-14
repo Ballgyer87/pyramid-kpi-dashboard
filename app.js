@@ -249,7 +249,7 @@ function renderRoute() {
 
   // Closes the tab: the weekly total is one supplementary stat + drill-down,
   // not the tab's main content, so it reads better after the route breakdown.
-  renderWeeklyAssets(panel, data.weeklyAssets, data.stats[0]);
+  renderWeeklyAssets(panel, data.weeklyAssets);
 }
 
 // "Total Assets Serviced — Last Week": a grand-total tile (with the
@@ -266,10 +266,25 @@ function routeAvgPerDay(row) {
     : row.days.slice(0, 5).reduce((sum, v) => sum + (v || 0), 0) / 5;
 }
 
-function renderWeeklyAssets(panel, weekly, avgStat) {
+// Mean of that week's 7 routeAvgPerDay values — "the average route's average
+// day," which is what "per route, per day" is supposed to mean. Not the same
+// as total assets / 7 / 6, which is what the old hand-typed 25.5 actually was
+// and why it never matched any real route's own average.
+function weekAvgPerDay(week) {
+  const avgs = week.rows.map(routeAvgPerDay);
+  return avgs.reduce((a, b) => a + b, 0) / avgs.length;
+}
+
+function renderWeeklyAssets(panel, weekly) {
   const current = weekly.weeks[weekly.weeks.length - 1];
   const labels = current.rows.map((r) => r.route);
   const totals = current.rows.map((r) => r.total);
+
+  const avgStat = {
+    label: "Average Assets Serviced (All Routes)", format: "decimal", decimals: 1, delta: null, deltaLabel: "per route, per day",
+    value: weekAvgPerDay(current),
+    history: weekly.weeks.map((w) => ({ label: w.label, value: weekAvgPerDay(w) })),
+  };
 
   panel.appendChild(el("div", { class: "section-label" }, `Total Assets Serviced — Week of ${current.label}`));
 
